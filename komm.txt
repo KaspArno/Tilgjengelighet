@@ -1,0 +1,426 @@
+101	Halden	Østfold
+104	Moss	Østfold
+105	Sarpsborg	Østfold
+106	Fredrikstad	Østfold
+111	Hvaler	Østfold
+118	Aremark	Østfold
+119	Marker	Østfold
+121	Rømskog	Østfold
+122	Trøgstad	Østfold
+123	Spydeberg	Østfold
+124	Askim	Østfold
+125	Eidsberg	Østfold
+127	Skiptvet	Østfold
+128	Rakkestad	Østfold
+135	Råde	Østfold
+136	Rygge	Østfold
+137	Våler (Østf.)	Østfold
+138	Hobøl	Østfold
+211	Vestby	Akershus
+213	Ski	Akershus
+214	Ås	Akershus
+215	Frogn	Akershus
+216	Nesodden	Akershus
+217	Oppegård	Akershus
+219	Bærum	Akershus
+220	Asker	Akershus
+221	Aurskog-Høland	Akershus
+226	Sørum	Akershus
+227	Fet	Akershus
+228	Rælingen	Akershus
+229	Enebakk	Akershus
+230	Lørenskog	Akershus
+231	Skedsmo	Akershus
+233	Nittedal	Akershus
+234	Gjerdrum	Akershus
+235	Ullensaker	Akershus
+236	Nes (Ak.)	Akershus
+237	Eidsvoll	Akershus
+238	Nannestad	Akershus
+239	Hurdal	Akershus
+301	Oslo kommune	Oslo
+402	Kongsvinger	Hedmark
+403	Hamar	Hedmark
+412	Ringsaker	Hedmark
+415	Løten	Hedmark
+417	Stange	Hedmark
+418	Nord-Odal	Hedmark
+419	Sør-Odal	Hedmark
+420	Eidskog	Hedmark
+423	Grue	Hedmark
+425	Åsnes	Hedmark
+426	Våler (Hedm.)	Hedmark
+427	Elverum	Hedmark
+428	Trysil	Hedmark
+429	Åmot	Hedmark
+430	Stor-Elvdal	Hedmark
+432	Rendalen	Hedmark
+434	Engerdal	Hedmark
+436	Tolga	Hedmark
+437	Tynset	Hedmark
+438	Alvdal	Hedmark
+439	Folldal	Hedmark
+441	Os (Hedm.)	Hedmark
+501	Lillehammer	Oppland
+502	Gjøvik	Oppland
+511	Dovre	Oppland
+512	Lesja	Oppland
+513	Skjåk	Oppland
+514	Lom	Oppland
+515	Vågå	Oppland
+516	Nord-Fron	Oppland
+517	Sel	Oppland
+519	Sør-Fron	Oppland
+520	Ringebu	Oppland
+521	Øyer	Oppland
+522	Gausdal	Oppland
+528	Østre Toten	Oppland
+529	Vestre Toten	Oppland
+532	Jevnaker	Oppland
+533	Lunner	Oppland
+534	Gran	Oppland
+536	Søndre Land	Oppland
+538	Nordre Land	Oppland
+540	Sør-Aurdal	Oppland
+541	Etnedal	Oppland
+542	Nord-Aurdal	Oppland
+543	Vestre Slidre	Oppland
+544	Øystre Slidre	Oppland
+545	Vang	Oppland
+602	Drammen	Buskerud
+604	Kongsberg	Buskerud
+605	Ringerike	Buskerud
+612	Hole	Buskerud
+615	Flå	Buskerud
+616	Nes (Busk.)	Buskerud
+617	Gol	Buskerud
+618	Hemsedal	Buskerud
+619	Ål	Buskerud
+620	Hol	Buskerud
+621	Sigdal	Buskerud
+622	Krødsherad	Buskerud
+623	Modum	Buskerud
+624	Øvre Eiker	Buskerud
+625	Nedre Eiker	Buskerud
+626	Lier	Buskerud
+627	Røyken	Buskerud
+628	Hurum	Buskerud
+631	Flesberg	Buskerud
+632	Rollag	Buskerud
+633	Nore og Uvdal	Buskerud
+701	Horten	Vestfold
+702	Holmestrand	Vestfold
+704	Tønsberg	Vestfold
+709	Larvik	Vestfold
+710	Sandefjord	Vestfold
+711	Svelvik	Vestfold
+713	Sande (Vestf.)	Vestfold
+714	Hof	Vestfold
+716	Re	Vestfold
+722	Nøtterøy	Vestfold
+723	Tjøme	Vestfold
+728	Lardal	Vestfold
+805	Porsgrunn	Telemark
+806	Skien	Telemark
+807	Notodden	Telemark
+811	Siljan	Telemark
+814	Bamble	Telemark
+815	Kragerø	Telemark
+817	Drangedal	Telemark
+819	Nome	Telemark
+821	Bø (Telem.)	Telemark
+822	Sauherad	Telemark
+826	Tinn	Telemark
+827	Hjartdal	Telemark
+828	Seljord	Telemark
+829	Kviteseid	Telemark
+830	Nissedal	Telemark
+831	Fyresdal	Telemark
+833	Tokke	Telemark
+834	Vinje	Telemark
+901	Risør	Aust-Agder
+904	Grimstad	Aust-Agder
+906	Arendal	Aust-Agder
+911	Gjerstad	Aust-Agder
+912	Vegårshei	Aust-Agder
+914	Tvedestrand	Aust-Agder
+919	Froland	Aust-Agder
+926	Lillesand	Aust-Agder
+928	Birkenes	Aust-Agder
+929	Åmli	Aust-Agder
+935	Iveland	Aust-Agder
+937	Evje og Hornnes	Aust-Agder
+938	Bygland	Aust-Agder
+940	Valle	Aust-Agder
+941	Bykle	Aust-Agder
+1001	Kristiansand	Vest-Agder
+1002	Mandal	Vest-Agder
+1003	Farsund	Vest-Agder
+1004	Flekkefjord	Vest-Agder
+1014	Vennesla	Vest-Agder
+1017	Songdalen	Vest-Agder
+1018	Søgne	Vest-Agder
+1021	Marnardal	Vest-Agder
+1026	Åseral	Vest-Agder
+1027	Audnedal	Vest-Agder
+1029	Lindesnes	Vest-Agder
+1032	Lyngdal	Vest-Agder
+1034	Hægebostad	Vest-Agder
+1037	Kvinesdal	Vest-Agder
+1046	Sirdal	Vest-Agder
+1101	Eigersund	Rogaland
+1102	Sandnes	Rogaland
+1103	Stavanger	Rogaland
+1106	Haugesund	Rogaland
+1111	Sokndal	Rogaland
+1112	Lund	Rogaland
+1114	Bjerkreim	Rogaland
+1119	Hå	Rogaland
+1120	Klepp	Rogaland
+1121	Time	Rogaland
+1122	Gjesdal	Rogaland
+1124	Sola	Rogaland
+1127	Randaberg	Rogaland
+1129	Forsand	Rogaland
+1130	Strand	Rogaland
+1133	Hjelmeland	Rogaland
+1134	Suldal	Rogaland
+1135	Sauda	Rogaland
+1141	Finnøy	Rogaland
+1142	Rennesøy	Rogaland
+1144	Kvitsøy	Rogaland
+1145	Bokn	Rogaland
+1146	Tysvær	Rogaland
+1149	Karmøy	Rogaland
+1151	Utsira	Rogaland
+1160	Vindafjord	Rogaland
+1201	Bergen	Hordaland
+1211	Etne	Hordaland
+1216	Sveio	Hordaland
+1219	Bømlo	Hordaland
+1221	Stord	Hordaland
+1222	Fitjar	Hordaland
+1223	Tysnes	Hordaland
+1224	Kvinnherad	Hordaland
+1227	Jondal	Hordaland
+1228	Odda	Hordaland
+1231	Ullensvang	Hordaland
+1232	Eidfjord	Hordaland
+1233	Ulvik	Hordaland
+1234	Granvin	Hordaland
+1235	Voss	Hordaland
+1238	Kvam	Hordaland
+1241	Fusa	Hordaland
+1242	Samnanger	Hordaland
+1243	Os (Hord.)	Hordaland
+1244	Austevoll	Hordaland
+1245	Sund	Hordaland
+1246	Fjell	Hordaland
+1247	Askøy	Hordaland
+1251	Vaksdal	Hordaland
+1252	Modalen	Hordaland
+1253	Osterøy	Hordaland
+1256	Meland	Hordaland
+1259	Øygarden	Hordaland
+1260	Radøy	Hordaland
+1263	Lindås	Hordaland
+1264	Austrheim	Hordaland
+1265	Fedje	Hordaland
+1266	Masfjorden	Hordaland
+1401	Flora	Sogn og fjordane
+1411	Gulen	Sogn og fjordane
+1412	Solund	Sogn og fjordane
+1413	Hyllestad	Sogn og fjordane
+1416	Høyanger	Sogn og fjordane
+1417	Vik	Sogn og fjordane
+1418	Balestrand	Sogn og fjordane
+1419	Leikanger	Sogn og fjordane
+1420	Sogndal	Sogn og fjordane
+1421	Aurland	Sogn og fjordane
+1422	Lærdal	Sogn og fjordane
+1424	Årdal	Sogn og fjordane
+1426	Luster	Sogn og fjordane
+1428	Askvoll	Sogn og fjordane
+1429	Fjaler	Sogn og fjordane
+1430	Gaular	Sogn og fjordane
+1431	Jølster	Sogn og fjordane
+1432	Førde	Sogn og fjordane
+1433	Naustdal	Sogn og fjordane
+1438	Bremanger	Sogn og fjordane
+1439	Vågsøy	Sogn og fjordane
+1441	Selje	Sogn og fjordane
+1443	Eid	Sogn og fjordane
+1444	Hornindal	Sogn og fjordane
+1445	Gloppen	Sogn og fjordane
+1449	Stryn	Sogn og fjordane
+1502	Molde	Møre og Romsdal
+1504	Ålesund	Møre og Romsdal
+1505	Kristiansund	Møre og Romsdal
+1511	Vanylven	Møre og Romsdal
+1514	Sande (M. og R.)	Møre og Romsdal
+1515	Herøy (M. og R.)	Møre og Romsdal
+1516	Ulstein	Møre og Romsdal
+1517	Hareid	Møre og Romsdal
+1519	Volda	Møre og Romsdal
+1520	Ørsta	Møre og Romsdal
+1523	Ørskog	Møre og Romsdal
+1524	Norddal	Møre og Romsdal
+1525	Stranda	Møre og Romsdal
+1526	Stordal	Møre og Romsdal
+1528	Sykkylven	Møre og Romsdal
+1529	Skodje	Møre og Romsdal
+1531	Sula	Møre og Romsdal
+1532	Giske	Møre og Romsdal
+1534	Haram	Møre og Romsdal
+1535	Vestnes	Møre og Romsdal
+1539	Rauma	Møre og Romsdal
+1543	Nesset	Møre og Romsdal
+1545	Midsund	Møre og Romsdal
+1546	Sandøy	Møre og Romsdal
+1547	Aukra	Møre og Romsdal
+1548	Fræna	Møre og Romsdal
+1551	Eide	Møre og Romsdal
+1554	Averøy	Møre og Romsdal
+1557	Gjemnes	Møre og Romsdal
+1560	Tingvoll	Møre og Romsdal
+1563	Sunndal	Møre og Romsdal
+1566	Surnadal	Møre og Romsdal
+1567	Rindal	Møre og Romsdal
+1571	Halsa	Møre og Romsdal
+1573	Smøla	Møre og Romsdal
+1576	Aure	Møre og Romsdal
+1601	Trondheim	Sør-Trøndelag
+1612	Hemne	Sør-Trøndelag
+1613	Snillfjord	Sør-Trøndelag
+1617	Hitra	Sør-Trøndelag
+1620	Frøya	Sør-Trøndelag
+1621	Ørland	Sør-Trøndelag
+1622	Agdenes	Sør-Trøndelag
+1624	Rissa	Sør-Trøndelag
+1627	Bjugn	Sør-Trøndelag
+1630	Åfjord	Sør-Trøndelag
+1632	Roan	Sør-Trøndelag
+1633	Osen	Sør-Trøndelag
+1634	Oppdal	Sør-Trøndelag
+1635	Rennebu	Sør-Trøndelag
+1636	Meldal	Sør-Trøndelag
+1638	Orkdal	Sør-Trøndelag
+1640	Røros	Sør-Trøndelag
+1644	Holtålen	Sør-Trøndelag
+1648	Midtre Gauldal	Sør-Trøndelag
+1653	Melhus	Sør-Trøndelag
+1657	Skaun	Sør-Trøndelag
+1662	Klæbu	Sør-Trøndelag
+1663	Malvik	Sør-Trøndelag
+1664	Selbu	Sør-Trøndelag
+1665	Tydal	Sør-Trøndelag
+1702	Steinkjer	Nord-Trøndelag
+1703	Namsos	Nord-Trøndelag
+1711	Meråker	Nord-Trøndelag
+1714	Stjørdal	Nord-Trøndelag
+1717	Frosta	Nord-Trøndelag
+1718	Leksvik	Nord-Trøndelag
+1719	Levanger	Nord-Trøndelag
+1721	Verdal	Nord-Trøndelag
+1724	Verran	Nord-Trøndelag
+1725	Namdalseid	Nord-Trøndelag
+1736	Snåase - Snåsa	Nord-Trøndelag
+1738	Lierne	Nord-Trøndelag
+1739	Raarvihke - Røyrvik	Nord-Trøndelag
+1740	Namsskogan	Nord-Trøndelag
+1742	Grong	Nord-Trøndelag
+1743	Høylandet	Nord-Trøndelag
+1744	Overhalla	Nord-Trøndelag
+1748	Fosnes	Nord-Trøndelag
+1749	Flatanger	Nord-Trøndelag
+1750	Vikna	Nord-Trøndelag
+1751	Nærøy	Nord-Trøndelag
+1755	Leka	Nord-Trøndelag
+1756	Inderøy	Nord-Trøndelag
+1804	Bodø	Nordland
+1805	Narvik	Nordland
+1811	Bindal	Nordland
+1812	Sømna	Nordland
+1813	Brønnøy	Nordland
+1815	Vega	Nordland
+1816	Vevelstad	Nordland
+1818	Herøy (Nordl.)	Nordland
+1820	Alstahaug	Nordland
+1822	Leirfjord	Nordland
+1824	Vefsn	Nordland
+1825	Grane	Nordland
+1826	Hattfjelldal	Nordland
+1827	Dønna	Nordland
+1828	Nesna	Nordland
+1832	Hemnes	Nordland
+1833	Rana	Nordland
+1834	Lurøy	Nordland
+1835	Træna	Nordland
+1836	Rødøy	Nordland
+1837	Meløy	Nordland
+1838	Gildeskål	Nordland
+1839	Beiarn	Nordland
+1840	Saltdal	Nordland
+1841	Fauske	Nordland
+1845	Sørfold	Nordland
+1848	Steigen	Nordland
+1849	Hamarøy - Hábmer	Nordland
+1850	Divtasvuodna - Tysfjord	Nordland
+1851	Lødingen	Nordland
+1852	Tjeldsund	Nordland
+1853	Evenes	Nordland
+1854	Ballangen	Nordland
+1856	Røst	Nordland
+1857	Værøy	Nordland
+1859	Flakstad	Nordland
+1860	Vestvågøy	Nordland
+1865	Vågan	Nordland
+1866	Hadsel	Nordland
+1867	Bø (Nordl.)	Nordland
+1868	Øksnes	Nordland
+1870	Sortland	Nordland
+1871	Andøy	Nordland
+1874	Moskenes	Nordland
+1902	Tromsø	Troms
+1903	Harstad	Troms
+1911	Kvæfjord	Troms
+1913	Skånland	Troms
+1917	Ibestad	Troms
+1919	Gratangen	Troms
+1920	Loabák - Lavangen	Troms
+1922	Bardu	Troms
+1923	Salangen	Troms
+1924	Målselv	Troms
+1925	Sørreisa	Troms
+1926	Dyrøy	Troms
+1927	Tranøy	Troms
+1928	Torsken	Troms
+1929	Berg	Troms
+1931	Lenvik	Troms
+1933	Balsfjord	Troms
+1936	Karlsøy	Troms
+1938	Lyngen	Troms
+1939	Storfjord - Omasvuotna - Omasvuono	Troms
+1940	Gáivuotna - Kåfjord	Troms
+1941	Skjervøy	Troms
+1942	Nordreisa	Troms
+1943	Kvænangen	Troms
+2002	Vardø	Finnmark
+2003	Vadsø	Finnmark
+2004	Hammerfest	Finnmark
+2011	Guovdageaidnu - Kautokeino	Finnmark
+2012	Alta	Finnmark
+2014	Loppa	Finnmark
+2015	Hasvik	Finnmark
+2017	Kvalsund	Finnmark
+2018	Måsøy	Finnmark
+2019	Nordkapp	Finnmark
+2020	Porsanger - Porsángu - Porsanki	Finnmark
+2021	Kárásjohka - Karasjok	Finnmark
+2022	Lebesby	Finnmark
+2023	Gamvik	Finnmark
+2024	Berlevåg	Finnmark
+2025	Deatnu - Tana	Finnmark
+2027	Unjárga - Nesseby	Finnmark
+2028	Båtsfjord	Finnmark
+2030	Sør-Varanger	Finnmark

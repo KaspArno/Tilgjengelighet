@@ -1,0 +1,39 @@
+# This file contains metadata for your plugin. Since 
+# version 2.0 of QGIS this is the proper way to supply 
+# information about a plugin. The old method of 
+# embedding metadata in __init__.py will 
+# is no longer supported since version 2.0.
+
+# This file should be included when you package your plugin.# Mandatory items:
+
+[general]
+name=Kartverket Tilgjengelighet
+qgisMinimumVersion=2.0
+description=Gir enkel tilgang til kartverkets database for tilgjengelighet
+version=0.1
+author=Kasper Skjeggestad
+email=kasper.skjeggestad@gmial.com
+
+about=This plugin is made as a part of a master thiesis. It's purpuse is to make easy accsess to one of kartverkets databases. Denne plugginen er laget som en del av en master oppgave. Den skal gi enkel tilgang til Kartværkets database for tilgjenglighet, og gi brukeren muligheten til å analysere og konvertere filtrert data.
+
+tracker=github.com
+repository=https://github.com/KaspArno/MasterGUI
+# End of mandatory metadata
+
+# Recommended items:
+
+# Uncomment the following line and add your changelog:
+# changelog=
+
+# Tags are comma separated with spaces allowed
+tags=database
+
+homepage=https://github.com/KaspArno/MasterGUI
+category=Web
+icon=icon.png
+# experimental flag
+experimental=True
+
+# deprecated flag (applies to the whole plugin, not just a single version)
+deprecated=False
+
