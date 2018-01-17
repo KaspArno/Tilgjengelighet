@@ -1,0 +1,1 @@
+A QGIS plugin to make easyer access to a database from kartverket, made as part for a master thiesis
