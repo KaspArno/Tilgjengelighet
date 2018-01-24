@@ -1178,7 +1178,7 @@ class Tilgjengelighet:
 
             layer_name_text = layer_name.text()# + "Memory"
 
-            if len(expr_string) == 0:
+            if len(expr_string) == 0: #tester en liten ting med gitKrakken
                 tempLayer = baselayer
             else:
                 print(datetime.datetime.now().time())
