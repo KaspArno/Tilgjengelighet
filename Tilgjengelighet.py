@@ -248,7 +248,7 @@ class Tilgjengelighet:
         self.infoWidget.pushButton_Select_Object.toggled.connect(self.toolButtonSelect)
         self.infoWidget.pushButton_exporter.clicked.connect(self.open_export_layer_dialog)
         self.infoWidget.pushButton_filtrer.clicked.connect(lambda x: self.dlg.show()) #open main window
-        self.infoWidget.pushButton_filtre_tidligere.clicked.connect(self.get_previus_search) #open main window with prev search options
+        self.infoWidget.pushButton_filtre_tidligere.clicked.connect(self.get_previus_search_activeLayer) #open main window with prev search options
 
         #Export window
         self.export_layer = exportLayerDialog()
@@ -786,6 +786,24 @@ class Tilgjengelighet:
         else:
             self.dlg.show()
 
+    def get_previus_search_activeLayer(self):
+        activeLayer = self.iface.activeLayer()
+        if self.infoWidget.comboBox_search_history.findText(activeLayer.name()) != -1:
+            try:
+                pre_search = self.search_history[activeLayer.name()]
+                for key, value in pre_search.attributes.iteritems():
+                    key.getComboBox().setCurrentIndex(int(value[0]))
+                    if value[1]:
+                        key.getLineEdit().setText(value[1])
+                self.dlg.tabWidget_main.setCurrentIndex(pre_search.tabIndex_main)
+                self.dlg.tabWidget_friluft.setCurrentIndex(pre_search.tabIndex_friluft)
+                self.dlg.tabWidget_tettsted.setCurrentIndex(pre_search.tabIndex_tettsted)
+                pre_search.lineEdit_seach.setText(pre_search.search_name)
+                self.dlg.show()
+
+            except KeyError:
+                raise
+
 
 
     def table_item_clicked(self):
@@ -1158,7 +1176,7 @@ class Tilgjengelighet:
             except (RuntimeError, AttributeError, UnboundLocalError):
                 pass
 
-            layer_name_text = layer_name.text() + "Memory"
+            layer_name_text = layer_name.text()# + "Memory"
 
             if len(expr_string) == 0:
                 tempLayer = baselayer
@@ -1181,7 +1199,7 @@ class Tilgjengelighet:
                 #    if WFSfeature.geometry().intersects(f.geometry()):
                 #      selectedFeatures.append(WFSfeature)
                 # create temp layer, eg use LineString geometry
-                if search_type == "vei_tettsted":
+                if search_type == "Vei":
                     tempLayer = QgsVectorLayer("LineString?crs=epsg:4326", layer_name_text, "memory")
                 elif search_type == search_type_pomrade:
                     tempLayer = QgsVectorLayer("Polygon?crs=epsg:4326", layer_name_text, "memory")
@@ -1201,6 +1219,11 @@ class Tilgjengelighet:
                 temp_data.addFeatures(selectedFeatures)
                 print(datetime.datetime.now().time())
             if tempLayer.featureCount() > 0:
+                existing_layers = self.iface.legendInterface().layers()
+                for layer in existing_layers:
+                    if layer.name() == tempLayer.name():
+                        QgsMapLayerRegistry.instance().removeMapLayers( [layer.id()] )
+
                 # try:
                 #     QgsMapLayerRegistry.instance().removeMapLayer( self.layer_inngang )
                 # except (RuntimeError, AttributeError):
