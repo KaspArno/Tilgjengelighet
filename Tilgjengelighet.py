@@ -212,6 +212,9 @@ class Tilgjengelighet:
             self.iface.addPluginToWebMenu(
                 self.menu,
                 action)
+            self.iface.addPluginToMenu(
+                self.menu,
+                action)
 
         self.actions.append(action)
 
@@ -1120,6 +1123,8 @@ class Tilgjengelighet:
                 expr_string = expr_string + ")"
             else:
                 expr_string = expr_string + " \"kommune\"={0}".format(self.komm_dict_nm[komune])
+        else:
+            expr_string = " \"kommune\" > 0"
         where = "WHERE lokalId > 0"
         if fylke != "Norge":
             if komune == self.uspesifisert:
@@ -1178,8 +1183,11 @@ class Tilgjengelighet:
 
             layer_name_text = layer_name.text()# + "Memory"
 
-            if len(expr_string) == 0: #tester en liten ting med gitKrakken
-                tempLayer = baselayer
+            if False:#len(expr_string) == 0: #tester en liten ting med gitKrakken
+                expr_string = " \"kommune\" > 0"
+                #self.iface.legendInterface().setLayerVisible(baselayer, True)
+                #tempLayer = baselayer
+                #self.iface.legendInterface().setLayerVisible(baselayer, False)
             else:
                 print(datetime.datetime.now().time())
                 expr = QgsExpression(expr_string)
@@ -1220,9 +1228,14 @@ class Tilgjengelighet:
                 print(datetime.datetime.now().time())
             if tempLayer.featureCount() > 0:
                 existing_layers = self.iface.legendInterface().layers()
-                for layer in existing_layers:
-                    if layer.name() == tempLayer.name():
-                        QgsMapLayerRegistry.instance().removeMapLayers( [layer.id()] )
+                try:
+                    for layer in existing_layers:
+                        if layer.name() == tempLayer.name():
+                            QgsMapLayerRegistry.instance().removeMapLayers( [layer.id()] )
+                except Exception as e:
+                    print(str(e))
+                    #raise e
+                
 
                 # try:
                 #     QgsMapLayerRegistry.instance().removeMapLayer( self.layer_inngang )
