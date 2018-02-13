@@ -25,8 +25,8 @@ import os.path
 import io
 
 from qgis.core import QgsDataSourceURI, QgsMapLayerRegistry, QgsVectorLayer, QgsExpression, QgsFeatureRequest, QgsVectorFileWriter, QgsLayerTreeLayer, QgsLayerTreeGroup, QgsMapLayer, QgsProject
-from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QPyNullVariant, QDateTime, QThread, pyqtSignal, Qt
-from PyQt4.QtGui import QAction, QIcon, QDockWidget, QGridLayout, QLineEdit, QTableWidget, QTableWidgetItem, QMessageBox, QApplication, QHBoxLayout, QVBoxLayout, QAbstractItemView, QListWidgetItem, QAbstractItemView, QFileDialog, QLabel
+from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QPyNullVariant, QDateTime, QThread, pyqtSignal, Qt, QRect, QSize
+from PyQt4.QtGui import QAction, QIcon, QDockWidget, QGridLayout, QLineEdit, QTableWidget, QTableWidgetItem, QMessageBox, QApplication, QHBoxLayout, QVBoxLayout, QAbstractItemView, QListWidgetItem, QAbstractItemView, QFileDialog, QLabel, QPixmap, QIcon
 
 # Initialize Qt resources from file resources.py
 import resources
@@ -84,14 +84,15 @@ class Tilgjengelighet:
         self.plugin_dir = os.path.dirname(__file__)
         # initialize locale
         locale = QSettings().value('locale/userLocale')[0:2]
-        locale_path = os.path.join(
+        self.dir = os.path.dirname(__file__)
+        self.locale_path = os.path.join(
             self.plugin_dir,
             'i18n',
             'Tilgjengelighet_{}.qm'.format(locale))
 
-        if os.path.exists(locale_path):
+        if os.path.exists(self.locale_path):
             self.translator = QTranslator()
-            self.translator.load(locale_path)
+            self.translator.load(self.locale_path)
 
             if qVersion() > '4.3.3':
                 QCoreApplication.installTranslator(self.translator)
@@ -252,6 +253,68 @@ class Tilgjengelighet:
         self.infoWidget.pushButton_exporter.clicked.connect(self.open_export_layer_dialog)
         self.infoWidget.pushButton_filtrer.clicked.connect(lambda x: self.dlg.show()) #open main window
         self.infoWidget.pushButton_filtre_tidligere.clicked.connect(self.get_previus_search_activeLayer) #open main window with prev search options
+
+        # self.infoWidget.pushButton_rullestol.setGeometry(QRect(500, 30, 211, 131))
+        # self.icon = QIcon()
+        # self.icon.addFile(':/plugins/Tilgjengelighet/IkkeVurdert.png')
+        # self.infoWidget.pushButton_rullestol.setIcon(self.icon)
+        # self.infoWidget.pushButton_rullestol.setIconSize(QSize(100, 100))
+        # self.icon_rullestol_ikkeVurdert = QPixmap(':/plugins/Tilgjengelighet/IkkeVurdert.png')
+        # self.icon_rullestol = QIcon(self.icon_rullestol_ikkeVurdert)
+        # self.infoWidget.pushButton_rullestol.setIcon(self.icon_rullestol)
+        # self.infoWidget.pushButton_rullestol.setIconSize(self.icon_rullestol_ikkeVurdert.rect().size())
+        #self.infoWidget.pushButton_rullestol.setFixedSize(self.icon_rullestol_ikkeVurdert.rect().size())
+
+        # self.infoWidget.pushButton_rullestol.setIcon(QIcon('IkkeVurdert.png'))
+        # self.infoWidget.pushButton_rullestol.setIconSize(QSize(24,24))
+
+        self.icon_rullestol = QIcon(self.dir + '/Iconer/IkkeVurdert')
+        self.icon_rullestol_el = QIcon(self.dir + '/Iconer/IkkeVurdertEl')
+        self.icon_syn = QIcon(self.dir + '/Iconer/IkkeVurdertSyn')
+
+        self.image_ikkeVurdert = QPixmap(self.dir + '/Iconer/IkkeVurdert')
+        self.image_ikkeVurdert_el = QPixmap(self.dir + '/Iconer/IkkeVurdertEl')
+        self.image_ikkeVurdert_syn = QPixmap(self.dir + '/Iconer/IkkeVurdertSyn')
+
+        self.image_tilgjengelig = QPixmap(self.dir + '/Iconer/Tilgjengelig')
+        self.image_tilgjengelig_el = QPixmap(self.dir + '/Iconer/TilgjengeligEl')
+        self.image_tilgjengelig_syn = QPixmap(self.dir + '/Iconer/TilgjengeligSyn')
+        
+        self.image_vanskeligTilgjengelig = QPixmap(self.dir + '/Iconer/VanskeligTilgjengelig')
+        self.image_vanskeligTilgjengelig_el = QPixmap(self.dir + '/Iconer/VanskeligTilgjengeligEl')
+        self.image_vanskeligTilgjengelig_syn = QPixmap(self.dir + '/Iconer/VanskeligTilgjengeligSyn')
+        
+        self.image_ikkeTilgjengelig = QPixmap(self.dir + '/Iconer/IkkeTilgjengelig')
+        self.image_ikkeTilgjengelig_el = QPixmap(self.dir + '/Iconer/IkkeTilgjengeligEl')
+        self.image_ikkeTilgjengelig_syn = QPixmap(self.dir + '/Iconer/IkkeTilgjengeligSyn')
+
+        
+
+        if not self.icon_rullestol.isNull(): # self.image_ikkeVurdert.load(self.dir + '/Iconer/IkkeVurdert'): #('C:/Users/kaspa_000/.qgis2/python/plugins/Tilgjengelighet/IkkeVurdert.png'):
+            self.icon_rullestol.addPixmap(self.image_ikkeVurdert)
+            self.infoWidget.pushButton_rullestol.setIcon(self.icon_rullestol)
+            self.infoWidget.pushButton_rullestol.setIconSize(self.image_ikkeVurdert.rect().size())
+            self.infoWidget.pushButton_rullestol.setFixedSize(self.image_ikkeVurdert.rect().size())
+        else:
+            self.infoWidget.pushButton_rullestol.setText('X')
+
+        if not self.icon_rullestol_el.isNull(): #self.image_ikkeVurdert_el.load(self.dir + '/Iconer/IkkeVurdertEl'): #('C:/Users/kaspa_000/.qgis2/python/plugins/Tilgjengelighet/IkkeVurdert.png'):
+            self.icon_rullestol_el.addPixmap(self.image_ikkeVurdert_el)
+            self.infoWidget.pushButton_elrullestol.setIcon(self.icon_rullestol_el)
+            self.infoWidget.pushButton_elrullestol.setIconSize(self.image_ikkeVurdert_el.rect().size())
+            self.infoWidget.pushButton_elrullestol.setFixedSize(self.image_ikkeVurdert_el.rect().size())
+        else:
+            self.infoWidget.pushButton_elrullestol.setText('X')
+
+        if not self.icon_syn.isNull(): #self.image_ikkeVurdert_syn.load(self.dir + '/Iconer/IkkeVurdertSyn'): #('C:/Users/kaspa_000/.qgis2/python/plugins/Tilgjengelighet/IkkeVurdert.png'):
+            self.icon_syn.addPixmap(self.image_ikkeVurdert_syn)
+            self.infoWidget.pushButton_syn.setIcon(self.icon_syn)
+            self.infoWidget.pushButton_syn.setIconSize(self.image_ikkeVurdert_syn.rect().size())
+            self.infoWidget.pushButton_syn.setFixedSize(self.image_ikkeVurdert_syn.rect().size())
+        else:
+            self.infoWidget.pushButton_syn.setText('X')
+
+
 
         #Export window
         self.export_layer = exportLayerDialog()
@@ -818,6 +881,10 @@ class Tilgjengelighet:
                 self.current_seartch_layer.setSelectedFeatures([self.feature_id[self.dock.tableWidget.item(index.row(), 0).text()]])
                 selection = self.current_seartch_layer.selectedFeatures()
                 for feature in selection:
+                    #self.set_availebility_icon(feature)
+                    self.set_availebility_icon(feature, "tilgjengvurderingRullestol", self.icon_rullestol, [self.image_tilgjengelig, self.image_vanskeligTilgjengelig, self.image_ikkeTilgjengelig, self.image_ikkeVurdert], self.infoWidget.pushButton_rullestol)
+                    self.set_availebility_icon(feature, "tilgjengvurderingElRull", self.icon_rullestol_el, [self.image_tilgjengelig_el, self.image_vanskeligTilgjengelig_el, self.image_ikkeTilgjengelig_el, self.image_ikkeVurdert_el], self.infoWidget.pushButton_elrullestol)
+                    self.set_availebility_icon(feature, "tilgjengvurderingSyn", self.icon_syn, [self.image_tilgjengelig_syn, self.image_vanskeligTilgjengelig_syn, self.image_ikkeTilgjengelig_syn, self.image_ikkeVurdert_syn], self.infoWidget.pushButton_syn)
                     for i in range(0, len(self.current_attributes)): #self.infoWidget.gridLayout.rowCount()):
                         try:
                             if isinstance(feature[self.to_unicode(self.current_attributes[i].getAttribute())], (int, float, long)):
@@ -831,6 +898,84 @@ class Tilgjengelighet:
                             print(self.current_attributes[i].getAttribute())
                             print(feature[self.to_unicode(self.current_attributes[i].getAttribute())])
                             print(str(e))
+
+
+    def set_availebility_icon(self, feature, tilgjenglighetsvurdering, icon, images, button):
+
+        image_tilgjengelig = images[0]
+        image_vanskeligTilgjengelig = images[1]
+        image_ikkeTilgjengelig = images[2]
+        image_ikkeVurdert = images[3]
+
+        if feature[self.to_unicode(tilgjenglighetsvurdering)] == "tilgjengelig":
+            icon.addPixmap(image_tilgjengelig)
+            button.setIcon(icon)
+            button.setIconSize(image_tilgjengelig.rect().size())
+            button.setFixedSize(image_tilgjengelig.rect().size())
+
+        elif feature[self.to_unicode(tilgjenglighetsvurdering)] == "vanskeligTilgjengelig":
+            icon.addPixmap(image_vanskeligTilgjengelig)
+            button.setIcon(icon)
+            button.setIconSize(image_vanskeligTilgjengelig.rect().size())
+            button.setFixedSize(image_vanskeligTilgjengelig.rect().size())
+
+        elif feature[self.to_unicode(tilgjenglighetsvurdering)] == "ikkeTilgjengelig":
+            icon.addPixmap(image_ikkeTilgjengelig)
+            button.setIcon(icon)
+            button.setIconSize(image_ikkeTilgjengelig.rect().size())
+            button.setFixedSize(image_ikkeTilgjengelig.rect().size())
+        else:
+            icon.addPixmap(image_ikkeVurdert)
+            button.setIcon(icon)
+            button.setIconSize(image_ikkeVurdert.rect().size())
+            button.setFixedSize(image_ikkeVurdert.rect().size())
+
+
+        # if feature[self.to_unicode("tilgjengvurderingRullestol")] == "tilgjengelig":
+        #     self.icon_rullestol.addPixmap(self.image_tilgjengelig)
+        #     self.infoWidget.pushButton_rullestol.setIcon(self.icon_rullestol)
+        #     self.infoWidget.pushButton_rullestol.setIconSize(self.image_tilgjengelig.rect().size())
+        #     self.infoWidget.pushButton_rullestol.setFixedSize(self.image_tilgjengelig.rect().size())
+        # elif feature[self.to_unicode("tilgjengvurderingRullestol")] == "vanskeligTilgjengelig":
+        #     self.icon_rullestol.addPixmap(self.image_vanskeligTilgjengelig)
+        #     self.infoWidget.pushButton_rullestol.setIcon(self.icon_rullestol)
+        #     self.infoWidget.pushButton_rullestol.setIconSize(self.image_vanskeligTilgjengelig.rect().size())
+        #     self.infoWidget.pushButton_rullestol.setFixedSize(self.image_vanskeligTilgjengelig.rect().size())
+        # elif feature[self.to_unicode("tilgjengvurderingRullestol")] == "ikkeTilgjengelig":
+        #     self.icon_rullestol.addPixmap(self.image_ikkeTilgjengelig)
+        #     self.infoWidget.pushButton_rullestol.setIcon(self.icon_rullestol)
+        #     self.infoWidget.pushButton_rullestol.setIconSize(self.image_ikkeTilgjengelig.rect().size())
+        #     self.infoWidget.pushButton_rullestol.setFixedSize(self.image_ikkeTilgjengelig.rect().size())
+        # else:
+        #     self.icon_rullestol.addPixmap(self.image_ikkeVurdert)
+        #     self.infoWidget.pushButton_rullestol.setIcon(self.icon_rullestol)
+        #     self.infoWidget.pushButton_rullestol.setIconSize(self.image_ikkeVurdert.rect().size())
+        #     self.infoWidget.pushButton_rullestol.setFixedSize(self.image_ikkeVurdert.rect().size())
+
+
+        # if feature[self.to_unicode("tilgjengvurderingElRull")] == "tilgjengelig":
+        #     self.icon_rullestol_el.addPixmap(self.image_tilgjengelig)
+        #     self.infoWidget.pushButton_elrullestol.setIcon(self.icon_rullestol_el)
+        #     self.infoWidget.pushButton_elrullestol.setIconSize(self.image_tilgjengelig_el.rect().size())
+        #     self.infoWidget.pushButton_elrullestol.setFixedSize(self.image_tilgjengelig_el.rect().size())
+        # elif feature[self.to_unicode("tilgjengvurderingElRull")] == "vanskeligTilgjengelig":
+        #     self.icon_rullestol_el.addPixmap(self.image_vanskeligTilgjengelig)
+        #     self.infoWidget.pushButton_elrullestol.setIcon(self.icon_rullestol_el)
+        #     self.infoWidget.pushButton_elrullestol.setIconSize(self.image_vanskeligTilgjengelig_el.rect().size())
+        #     self.infoWidget.pushButton_elrullestol.setFixedSize(self.image_vanskeligTilgjengelig_el.rect().size())
+        # elif feature[self.to_unicode("tilgjengvurderingElRull")] == "ikkeTilgjengelig":
+        #     self.icon_rullestol_el.addPixmap(self.image_ikkeTilgjengelig)
+        #     self.infoWidget.pushButton_elrullestol.setIcon(self.icon_rullestol_el)
+        #     self.infoWidget.pushButton_elrullestol.setIconSize(self.image_ikkeTilgjengelig_el.rect().size())
+        #     self.infoWidget.pushButton_elrullestol.setFixedSize(self.image_ikkeTilgjengelig_el.rect().size())
+        # else:
+        #     self.icon_rullestol_el.addPixmap(self.image_ikkeVurdert_el)
+        #     self.infoWidget.pushButton_elrullestol.setIcon(self.icon_rullestol_el)
+        #     self.infoWidget.pushButton_elrullestol.setIconSize(self.image_ikkeVurdert_el.rect().size())
+        #     self.infoWidget.pushButton_elrullestol.setFixedSize(self.image_ikkeVurdert_el.rect().size())
+
+        pass
+
 
 
     def fill_combobox(self, layer, feat_name, combobox):
