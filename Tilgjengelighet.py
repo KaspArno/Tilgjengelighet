@@ -882,9 +882,9 @@ class Tilgjengelighet:
                 selection = self.current_seartch_layer.selectedFeatures()
                 for feature in selection:
                     #self.set_availebility_icon(feature)
-                    self.set_availebility_icon(feature, "tilgjengvurderingRullestol", self.icon_rullestol, [self.image_tilgjengelig, self.image_vanskeligTilgjengelig, self.image_ikkeTilgjengelig, self.image_ikkeVurdert], self.infoWidget.pushButton_rullestol)
-                    self.set_availebility_icon(feature, "tilgjengvurderingElRull", self.icon_rullestol_el, [self.image_tilgjengelig_el, self.image_vanskeligTilgjengelig_el, self.image_ikkeTilgjengelig_el, self.image_ikkeVurdert_el], self.infoWidget.pushButton_elrullestol)
-                    self.set_availebility_icon(feature, "tilgjengvurderingSyn", self.icon_syn, [self.image_tilgjengelig_syn, self.image_vanskeligTilgjengelig_syn, self.image_ikkeTilgjengelig_syn, self.image_ikkeVurdert_syn], self.infoWidget.pushButton_syn)
+                    #self.set_availebility_icon(feature, "tilgjengvurderingRullestol", self.icon_rullestol, [self.image_tilgjengelig, self.image_vanskeligTilgjengelig, self.image_ikkeTilgjengelig, self.image_ikkeVurdert], self.infoWidget.pushButton_rullestol)
+                    #self.set_availebility_icon(feature, "tilgjengvurderingElRull", self.icon_rullestol_el, [self.image_tilgjengelig_el, self.image_vanskeligTilgjengelig_el, self.image_ikkeTilgjengelig_el, self.image_ikkeVurdert_el], self.infoWidget.pushButton_elrullestol)
+                    #self.set_availebility_icon(feature, "tilgjengvurderingSyn", self.icon_syn, [self.image_tilgjengelig_syn, self.image_vanskeligTilgjengelig_syn, self.image_ikkeTilgjengelig_syn, self.image_ikkeVurdert_syn], self.infoWidget.pushButton_syn)
                     for i in range(0, len(self.current_attributes)): #self.infoWidget.gridLayout.rowCount()):
                         try:
                             if isinstance(feature[self.to_unicode(self.current_attributes[i].getAttribute())], (int, float, long)):
@@ -1079,6 +1079,7 @@ class Tilgjengelighet:
         for i in range(0, self.infoWidget.gridLayout.rowCount()): #Clears infowidget
             self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setText("")
             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("")
+            #self.infoWidget.gridLayout.itemAtPosition(i, 2).widget().setText("")
 
         for i in range(0,len(attributes)): #Fills infowidgets and add new rows if needed
 
@@ -1096,6 +1097,12 @@ class Tilgjengelighet:
             self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setVisible(False)
             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setVisible(False)
 
+
+
+    def selectionChanged(selFeatures):
+        print(selFeatures)
+        number_of_objects = len(selFeatures)
+        self.cur_sel_obj = 0
 
 
     def fill_fylker(self):
@@ -1398,7 +1405,7 @@ class Tilgjengelighet:
                 #self.dock.tabWidget_main.setCurrentIndex(1) #for tettsted
                 #self.dock.tabWidget_tettsted.setCurrentIndex(1) #for inngangbygg
                 #self.infoWidget.tabWidget.setCurrentIndex(1)
-                self.current_seartch_layer = self.filtering_layer
+                self.current_search_layer = self.filtering_layer
 
                 self.fill_infoWidget(attributes)
 
@@ -1416,7 +1423,8 @@ class Tilgjengelighet:
                 self.show_message("Søket fullførte uten at noen objecter ble funnet", "ingen Objecter funnet", msg_info=None, msg_details=None, msg_type=QMessageBox.Information)
                 QgsMapLayerRegistry.instance().removeMapLayer( tempLayer.id() )
             
-        
+        self.filtering_layer.selectionChanged.connect(self.selectionChanged())
+
         print("Filtering End")
         
 
