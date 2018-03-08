@@ -116,7 +116,7 @@ class Tilgjengelighet:
         #layers and search
         self.layers = [] #gather all layers
 
-        self.current_seartch_layer = None #The last searched layer
+        self.current_search_layer = None #The last searched layer
         self.current_attributes = None
         self.search_history = {} #history of all search
 
@@ -248,11 +248,15 @@ class Tilgjengelighet:
 
         #info window
         self.infoWidget = infoWidgetDialog(self.iface.mainWindow())
-        self.infoWidget.pushButton_Select_Object.setCheckable(True)
-        self.infoWidget.pushButton_Select_Object.toggled.connect(self.toolButtonSelect)
+        #self.infoWidget.pushButton_Select_Object.setCheckable(True)
+        #self.infoWidget.pushButton_Select_Object.toggled.connect(self.toolButtonSelect)
+        self.infoWidget.pushButton_polygon.clicked.connect(lambda x: self.iface.actionSelectPolygon().trigger())
+        self.infoWidget.pushButton_punkt.clicked.connect(lambda x: self.iface.actionSelectFreehand().trigger())
         self.infoWidget.pushButton_exporter.clicked.connect(self.open_export_layer_dialog)
         self.infoWidget.pushButton_filtrer.clicked.connect(lambda x: self.dlg.show()) #open main window
         self.infoWidget.pushButton_filtre_tidligere.clicked.connect(self.get_previus_search_activeLayer) #open main window with prev search options
+        self.infoWidget.pushButton_next.clicked.connect(self.infoWidget_next)
+        self.infoWidget.pushButton_prev.clicked.connect(self.infoWidget_prev)
 
         # self.infoWidget.pushButton_rullestol.setGeometry(QRect(500, 30, 211, 131))
         # self.icon = QIcon()
@@ -693,20 +697,21 @@ class Tilgjengelighet:
         #print("httpGetId", self.httpGetId)
         
 
-    def toolButtonSelect(self, checked):
-        """Enabels the tool to select objects in map
+#This method has been made unnececary due to iface.actionSelectFreehand().trigger()
+    # def toolButtonSelect(self, checked):
+    #     """Enabels the tool to select objects in map
 
-        :param checked: bool checking if it is active or not
-        """
-        print("toolButtonSelect Activated")
-        # If the toolButton is checked
-        if checked:
-            print("checked")
-            self.oldMapTool = self.canvas.mapTool()
-            self.canvas.setMapTool(self.sourceMapTool)
+    #     :param checked: bool checking if it is active or not
+    #     """
+    #     print("toolButtonSelect Activated")
+    #     # If the toolButton is checked
+    #     if checked:
+    #         print("checked")
+    #         self.oldMapTool = self.canvas.mapTool()
+    #         self.canvas.setMapTool(self.sourceMapTool)
 
-        else:
-            self.oldMapTool = self.canvas.mapTool()
+    #     else:
+    #         self.oldMapTool = self.canvas.mapTool()
 
     #Not in use
     # def toolButtonAction(self, layer, feature):
@@ -874,30 +879,32 @@ class Tilgjengelighet:
 
     def table_item_clicked(self):
         """Action for item click in table. Selects corrisponding object in map, and fills info widget with its data"""
-        self.current_seartch_layer.setSelectedFeatures([]) #Disabels all selections in current search layer
-        indexes = self.dock.tableWidget.selectionModel().selectedRows() 
-        if self.current_seartch_layer is not None: 
+        self.current_search_layer.setSelectedFeatures([]) #Disabels all selections in current search layer
+        indexes = self.dock.tableWidget.selectionModel().selectedRows()
+        print(indexes)
+        print(indexes[0])
+        if self.current_search_layer is not None: 
             for index in sorted(indexes):
-                self.current_seartch_layer.setSelectedFeatures([self.feature_id[self.dock.tableWidget.item(index.row(), 0).text()]])
-                selection = self.current_seartch_layer.selectedFeatures()
-                for feature in selection:
-                    #self.set_availebility_icon(feature)
-                    #self.set_availebility_icon(feature, "tilgjengvurderingRullestol", self.icon_rullestol, [self.image_tilgjengelig, self.image_vanskeligTilgjengelig, self.image_ikkeTilgjengelig, self.image_ikkeVurdert], self.infoWidget.pushButton_rullestol)
-                    #self.set_availebility_icon(feature, "tilgjengvurderingElRull", self.icon_rullestol_el, [self.image_tilgjengelig_el, self.image_vanskeligTilgjengelig_el, self.image_ikkeTilgjengelig_el, self.image_ikkeVurdert_el], self.infoWidget.pushButton_elrullestol)
-                    #self.set_availebility_icon(feature, "tilgjengvurderingSyn", self.icon_syn, [self.image_tilgjengelig_syn, self.image_vanskeligTilgjengelig_syn, self.image_ikkeTilgjengelig_syn, self.image_ikkeVurdert_syn], self.infoWidget.pushButton_syn)
-                    for i in range(0, len(self.current_attributes)): #self.infoWidget.gridLayout.rowCount()):
-                        try:
-                            if isinstance(feature[self.to_unicode(self.current_attributes[i].getAttribute())], (int, float, long)):
-                                self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(feature[self.to_unicode(self.current_attributes[i].getAttribute())]))
-                            elif isinstance(feature[self.to_unicode(self.current_attributes[i].getAttribute())], (QPyNullVariant)):
-                                self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
-                            else:
-                                self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(feature[self.to_unicode(self.current_attributes[i].getAttribute())])
-                        except Exception as e:
-                            self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
-                            print(self.current_attributes[i].getAttribute())
-                            print(feature[self.to_unicode(self.current_attributes[i].getAttribute())])
-                            print(str(e))
+                self.current_search_layer.setSelectedFeatures([self.feature_id[self.dock.tableWidget.item(index.row(), 0).text()]])
+                # selection = self.current_search_layer.selectedFeatures()
+                # for feature in selection:
+                #     #self.set_availebility_icon(feature)
+                #     #self.set_availebility_icon(feature, "tilgjengvurderingRullestol", self.icon_rullestol, [self.image_tilgjengelig, self.image_vanskeligTilgjengelig, self.image_ikkeTilgjengelig, self.image_ikkeVurdert], self.infoWidget.pushButton_rullestol)
+                #     #self.set_availebility_icon(feature, "tilgjengvurderingElRull", self.icon_rullestol_el, [self.image_tilgjengelig_el, self.image_vanskeligTilgjengelig_el, self.image_ikkeTilgjengelig_el, self.image_ikkeVurdert_el], self.infoWidget.pushButton_elrullestol)
+                #     #self.set_availebility_icon(feature, "tilgjengvurderingSyn", self.icon_syn, [self.image_tilgjengelig_syn, self.image_vanskeligTilgjengelig_syn, self.image_ikkeTilgjengelig_syn, self.image_ikkeVurdert_syn], self.infoWidget.pushButton_syn)
+                #     for i in range(0, len(self.current_attributes)): #self.infoWidget.gridLayout.rowCount()):
+                #         try:
+                #             if isinstance(feature[self.to_unicode(self.current_attributes[i].getAttribute())], (int, float, long)):
+                #                 self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(feature[self.to_unicode(self.current_attributes[i].getAttribute())]))
+                #             elif isinstance(feature[self.to_unicode(self.current_attributes[i].getAttribute())], (QPyNullVariant)):
+                #                 self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
+                #             else:
+                #                 self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(feature[self.to_unicode(self.current_attributes[i].getAttribute())])
+                #         except Exception as e:
+                #             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
+                #             print(self.current_attributes[i].getAttribute())
+                #             print(feature[self.to_unicode(self.current_attributes[i].getAttribute())])
+                #             print(str(e))
 
 
     def set_availebility_icon(self, feature, tilgjenglighetsvurdering, icon, images, button):
@@ -1099,10 +1106,7 @@ class Tilgjengelighet:
 
 
 
-    def selectionChanged(selFeatures):
-        print(selFeatures)
-        number_of_objects = len(selFeatures)
-        self.cur_sel_obj = 0
+
 
 
     def fill_fylker(self):
@@ -1298,23 +1302,23 @@ class Tilgjengelighet:
             layer_name_text = layer_name.text() + "Virtual"
             base_layer_name = baselayer.name()
             query = "SELECT * FROM " + base_layer_name + " " + where
-            self.current_seartch_layer = QgsVectorLayer("?query=%s" % (query), layer_name_text, "virtual" )
+            self.current_search_layer = QgsVectorLayer("?query=%s" % (query), layer_name_text, "virtual" )
 
-            if self.current_seartch_layer.featureCount() > 0: #Lager lag hvis noen objecter er funnet
+            if self.current_search_layer.featureCount() > 0: #Lager lag hvis noen objecter er funnet
                 if len(QgsMapLayerRegistry.instance().mapLayersByName(layer_name_text)) > 0:
                     try:
                         QgsMapLayerRegistry.instance().removeMapLayer( QgsMapLayerRegistry.instance().mapLayersByName(layer_name_text)[0].id() ) #Fjerner lag med samme navn, for å ungå duplicates
                     except (RuntimeError, AttributeError) as e:
                         print(str(e))
 
-                QgsMapLayerRegistry.instance().addMapLayer(self.current_seartch_layer) #Legger inn nytt lag
+                QgsMapLayerRegistry.instance().addMapLayer(self.current_search_layer) #Legger inn nytt lag
                 self.fill_infoWidget(attributes)
-                self.canvas.setExtent(self.current_seartch_layer.extent()) #zoomer inn på nytt lag
+                self.canvas.setExtent(self.current_search_layer.extent()) #zoomer inn på nytt lag
                 self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget ) #legger inn infowidget
-                self.showResults(self.current_seartch_layer) #Legger inn tabell
-                self.sourceMapTool.setLayer(self.current_seartch_layer) #setter nytt lag til å være mål for verktøy
+                self.showResults(self.current_search_layer) #Legger inn tabell
+                self.sourceMapTool.setLayer(self.current_search_layer) #setter nytt lag til å være mål for verktøy
 
-                self.search_history[layer_name_text] = SavedSearch(layer_name_text, self.current_seartch_layer, layer_name, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
+                self.search_history[layer_name_text] = SavedSearch(layer_name_text, self.current_search_layer, layer_name, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
                 for attribute in attributes: #lagrer valg av attributter
                     self.search_history[layer_name_text].add_attribute(attribute, int(attribute.getComboBox().currentIndex()), attribute.getLineEditText())
 
@@ -1409,7 +1413,7 @@ class Tilgjengelighet:
 
                 self.fill_infoWidget(attributes)
 
-                self.search_history[layer_name_text] = SavedSearch(layer_name_text, self.current_seartch_layer, layer_name, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
+                self.search_history[layer_name_text] = SavedSearch(layer_name_text, self.current_search_layer, layer_name, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
                 for attribute in attributes: #lagrer valg av attributter
                     self.search_history[layer_name_text].add_attribute(attribute, int(attribute.getComboBox().currentIndex()), attribute.getLineEditText())
 
@@ -1422,11 +1426,59 @@ class Tilgjengelighet:
             else:
                 self.show_message("Søket fullførte uten at noen objecter ble funnet", "ingen Objecter funnet", msg_info=None, msg_details=None, msg_type=QMessageBox.Information)
                 QgsMapLayerRegistry.instance().removeMapLayer( tempLayer.id() )
-            
-        self.filtering_layer.selectionChanged.connect(self.selectionChanged())
+        
+        print(len(attributes))
+        self.current_search_layer.selectionChanged.connect(self.selectedObjects)
 
         print("Filtering End")
-        
+
+
+    def selectedObjects(self, selFeatures):
+        print(selFeatures)
+        print(len(selFeatures))
+        self.number_of_objects = len(selFeatures)
+        self.cur_sel_obj = 0
+
+        self.infoWidget.label_object_number.setText("{0}/{1}".format(self.cur_sel_obj+1, self.number_of_objects))
+        if self.number_of_objects > 0:
+            self.obj_info()
+
+    def infoWidget_next(self):
+        self.cur_sel_obj+=1
+        if self.cur_sel_obj >= self.number_of_objects:
+            self.cur_sel_obj = 0
+        self.obj_info()
+
+    def infoWidget_prev(self):
+        self.cur_sel_obj-=1
+        if self.cur_sel_obj < 0:
+            self.cur_sel_obj = self.number_of_objects-1
+        self.obj_info()
+
+
+    def obj_info(self):
+        self.infoWidget.label_object_number.setText("{0}/{1}".format(self.cur_sel_obj+1, self.number_of_objects))
+        selection = self.current_search_layer.selectedFeatures()
+        #for feature in selection:
+            #self.set_availebility_icon(feature)
+            #self.set_availebility_icon(feature, "tilgjengvurderingRullestol", self.icon_rullestol, [self.image_tilgjengelig, self.image_vanskeligTilgjengelig, self.image_ikkeTilgjengelig, self.image_ikkeVurdert], self.infoWidget.pushButton_rullestol)
+            #self.set_availebility_icon(feature, "tilgjengvurderingElRull", self.icon_rullestol_el, [self.image_tilgjengelig_el, self.image_vanskeligTilgjengelig_el, self.image_ikkeTilgjengelig_el, self.image_ikkeVurdert_el], self.infoWidget.pushButton_elrullestol)
+            #self.set_availebility_icon(feature, "tilgjengvurderingSyn", self.icon_syn, [self.image_tilgjengelig_syn, self.image_vanskeligTilgjengelig_syn, self.image_ikkeTilgjengelig_syn, self.image_ikkeVurdert_syn], self.infoWidget.pushButton_syn)
+        for i in range(0, len(self.current_attributes)): #self.infoWidget.gridLayout.rowCount()):
+            try:
+                if isinstance(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())], (int, float, long)):
+                    self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())]))
+                elif isinstance(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())], (QPyNullVariant)):
+                    self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
+                else:
+                    self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())])
+            except Exception as e:
+                print(str(e))
+                self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
+                print(self.current_attributes[i].getAttribute())
+                print(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())])
+                
+    
 
     def show_message(self, msg_text, msg_title=None, msg_info=None, msg_details=None, msg_type=None):
         """Show the user a message

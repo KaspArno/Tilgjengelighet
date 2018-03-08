@@ -18,7 +18,7 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
          <widget class="QLabel" name="label_Inngang">
           <property name="text">
@@ -52,14 +52,22 @@
          </layout>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_Select_Object">
-          <property name="whatsThis">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Velg et object for å få inromasjon&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="text">
-           <string>Select Object</string>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QPushButton" name="pushButton_polygon">
+            <property name="text">
+             <string>Polygon</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_punkt">
+            <property name="text">
+             <string>Punkt</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -111,7 +119,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="pushButton_prev">
           <property name="text">
            <string>&lt;</string>
           </property>
@@ -125,14 +133,14 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_hvilke_objekt">
+         <widget class="QLabel" name="label_object_number">
           <property name="text">
            <string>-/-</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="pushButton_next">
           <property name="text">
            <string>&gt;</string>
           </property>

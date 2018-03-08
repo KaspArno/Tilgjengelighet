@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1317</width>
-    <height>967</height>
+    <width>1200</width>
+    <height>690</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -5192,7 +5192,6 @@
                  </item>
                 </layout>
                 <zorder></zorder>
-                <zorder>label</zorder>
                </widget>
                <widget class="QWidget" name="tab_3">
                 <attribute name="title">

@@ -67,22 +67,22 @@ class IdentifyGeometry(QgsMapToolIdentify):
         self.layer.setSelectedFeatures(ids)
         #self.layer.setSelectedFeatures([self.feature_id[results[0].mFeature.attributes()[0]]])
         #print("feature_id; ", "Key: ", results[0].mFeature.attributes()[0], " Value: ", self.feature_id[results[0].mFeature.attributes()[0]])
-        selection = self.layer.selectedFeatures()
+        # selection = self.layer.selectedFeatures()
 
-        for feature in selection:
-            for i in range(0, len(self.current_attributes)): #self.infoWidget.gridLayout.rowCount()):
-                try:
-                    if isinstance(feature[self.to_unicode(self.current_attributes[i].getAttribute())], (int, float, long)):
-                        self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(feature[self.to_unicode(self.current_attributes[i].getAttribute())]))
-                    elif isinstance(feature[self.to_unicode(self.current_attributes[i].getAttribute())], (QPyNullVariant)):
-                        self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
-                    else:
-                        self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(feature[self.to_unicode(self.current_attributes[i].getAttribute())])
-                except Exception as e:
-                    self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
-                    print(self.current_attributes[i].getAttribute())
-                    print(feature[self.to_unicode(self.current_attributes[i].getAttribute())])
-                    print(str(e))
+        # for feature in selection:
+        #     for i in range(0, len(self.current_attributes)): #self.infoWidget.gridLayout.rowCount()):
+        #         try:
+        #             if isinstance(feature[self.to_unicode(self.current_attributes[i].getAttribute())], (int, float, long)):
+        #                 self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(feature[self.to_unicode(self.current_attributes[i].getAttribute())]))
+        #             elif isinstance(feature[self.to_unicode(self.current_attributes[i].getAttribute())], (QPyNullVariant)):
+        #                 self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
+        #             else:
+        #                 self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(feature[self.to_unicode(self.current_attributes[i].getAttribute())])
+        #         except Exception as e:
+        #             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
+        #             print(self.current_attributes[i].getAttribute())
+        #             print(feature[self.to_unicode(self.current_attributes[i].getAttribute())])
+        #             print(str(e))
 
         # infoWidget_label_list = [self.infoWidget.label_avstand_hc_text, self.infoWidget.label_byggningstype_text, self.infoWidget.label_ank_vei_stigning_text, self.infoWidget.label_dortype_text, self.infoWidget.label_dorapner_text, self.infoWidget.label_ringeklokke_text, self.infoWidget.label_ringeklokke_hoyde_text, self.infoWidget.label_terskelhoyde_text, self.infoWidget.label_inngang_bredde_text, self.infoWidget.label_kontrast_text, self.infoWidget.label_rampe_text]
         # values = [results[0].mFeature.attributes()[17], results[0].mFeature.attributes()[10], results[0].mFeature.attributes()[25], results[0].mFeature.attributes()[19], results[0].mFeature.attributes()[20], results[0].mFeature.attributes()[24], results[0].mFeature.attributes()[32], results[0].mFeature.attributes()[21], results[0].mFeature.attributes()[26], results[0].mFeature.attributes()[18]]
