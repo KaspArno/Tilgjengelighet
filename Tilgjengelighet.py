@@ -24,9 +24,9 @@ import sys
 import os.path
 import io
 
-from qgis.core import QgsDataSourceURI, QgsMapLayerRegistry, QgsVectorLayer, QgsExpression, QgsFeatureRequest, QgsVectorFileWriter, QgsLayerTreeLayer, QgsLayerTreeGroup, QgsMapLayer, QgsProject
-from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QPyNullVariant, QDateTime, QThread, pyqtSignal, Qt, QRect, QSize
-from PyQt4.QtGui import QAction, QIcon, QDockWidget, QGridLayout, QLineEdit, QTableWidget, QTableWidgetItem, QMessageBox, QApplication, QHBoxLayout, QVBoxLayout, QAbstractItemView, QListWidgetItem, QAbstractItemView, QFileDialog, QLabel, QPixmap, QIcon
+from qgis.core import * #QgsDataSourceURI, QgsMapLayerRegistry, QgsVectorLayer, QgsExpression, QgsFeatureRequest, QgsVectorFileWriter, QgsLayerTreeLayer, QgsLayerTreeGroup, QgsMapLayer, QgsProject, QgsFeature, QGis
+from PyQt4.QtCore import * #QSettings, QTranslator, qVersion, QCoreApplication, QPyNullVariant, QDateTime, QThread, pyqtSignal, Qt, QRect, QSize, QFileInfo
+from PyQt4.QtGui import * #QAction, QIcon, QDockWidget, QGridLayout, QLineEdit, QTableWidget, QTableWidgetItem, QMessageBox, QApplication, QHBoxLayout, QVBoxLayout, QAbstractItemView, QListWidgetItem, QAbstractItemView, QFileDialog, QLabel, QPixmap, QIcon
 
 # Initialize Qt resources from file resources.py
 import resources
@@ -56,13 +56,16 @@ import string
 from featuretype import FeatureType
 from SavedSearch import SavedSearch
 
-#For selection
-from identifyGeometry import IdentifyGeometry
+
+from identifyGeometry import IdentifyGeometry #For selection
 
 import datetime
 import time
 
 from functools import partial
+
+import utils
+from field_chooser import FieldChooserDialog
 
 
 
@@ -80,6 +83,7 @@ class Tilgjengelighet:
         # Save reference to the QGIS interface
         self.iface = iface
         self.canvas = self.iface.mapCanvas()
+        self.settings = QSettings()
         # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)
         # initialize locale
@@ -119,6 +123,8 @@ class Tilgjengelighet:
         self.current_search_layer = None #The last searched layer
         self.current_attributes = None
         self.search_history = {} #history of all search
+
+        self.feature_type_tettsted = ['app:TettstedHCparkering', 'app:TettstedInngangBygg', u'app:TettstedParkeringsomr\xe5de', 'app:TettstedVei']
 
         #to hide layers
         self.ltv = self.iface.layerTreeView()
@@ -237,7 +243,11 @@ class Tilgjengelighet:
         self.dlg.tabWidget_friluft.currentChanged.connect(self.change_search_name)
         self.dlg.tabWidget_tettsted.currentChanged.connect(self.change_search_name)
 
+        self.dlg.pushButton_HentDataInngang.clicked.connect(self.hentDataInngang) #collecting datata for inngangbygg
+
         self.dlg.pushButton_reset.clicked.connect(self.reset) #resett all choses
+
+        self.dlg.label_Progress.setVisible(False)
 
         #table window
         self.dock = TableDialog(self.iface.mainWindow())
@@ -252,7 +262,9 @@ class Tilgjengelighet:
         #self.infoWidget.pushButton_Select_Object.toggled.connect(self.toolButtonSelect)
         self.infoWidget.pushButton_polygon.clicked.connect(lambda x: self.iface.actionSelectPolygon().trigger())
         self.infoWidget.pushButton_punkt.clicked.connect(lambda x: self.iface.actionSelectFreehand().trigger())
-        self.infoWidget.pushButton_exporter.clicked.connect(self.open_export_layer_dialog)
+        #self.infoWidget.pushButton_exporter.clicked.connect(self.open_export_layer_dialog)
+        self.infoWidget.pushButton_exporter.clicked.connect(self.excelSave)
+        self.infoWidget.pushButton_exporterBilde.clicked.connect(self.imageSave)
         self.infoWidget.pushButton_filtrer.clicked.connect(lambda x: self.dlg.show()) #open main window
         self.infoWidget.pushButton_filtre_tidligere.clicked.connect(self.get_previus_search_activeLayer) #open main window with prev search options
         self.infoWidget.pushButton_next.clicked.connect(self.infoWidget_next)
@@ -524,7 +536,8 @@ class Tilgjengelighet:
 
 
     def updateDataReadProgress(self, bytesRead, totalBytes):
-        self.dlg.label_Progress.setText("Laster inn data: " + self.featuretype.getFeatureType())
+        self.dlg.label_Progress.setVisible(True)
+        self.dlg.label_Progress.setText("Laster inn data: ") # + self.featuretype.getFeatureType())
 
     def httpRequestStartet(self):
         print("The Request has started!")
@@ -637,27 +650,28 @@ class Tilgjengelighet:
                                     self.fill_combobox_mer_mindre(att.getComboBox())
                                 self.toggle_enable(self.attributes_pomrade, True) #enable gui
 
-                            self.featuretype.next()
-                            if self.featuretype.getFeatureType():
-                                self.getFeatures()
-                            else:
-                                self.dlg.label_Progress.setVisible(False)
-                                for baselayer in self.layers:
-                                    QgsMapLayerRegistry.instance().addMapLayer(baselayer)
-                                    self.hideLayer(baselayer)
-                                    self.iface.legendInterface().setLayerVisible(baselayer, False)
+                            #self.featuretype.next()
+                            #if self.featuretype.getFeatureType():
+                            #    self.getFeatures()
+                            #else:
+                            self.dlg.label_Progress.setVisible(False)
+                            for baselayer in self.layers:
+                                QgsMapLayerRegistry.instance().addMapLayer(baselayer)
+                                self.hideLayer(baselayer)
+                                self.iface.legendInterface().setLayerVisible(baselayer, False)
 
-                                self.dlg.pushButton_filtrer.setEnabled(True)
+                            self.dlg.pushButton_filtrer.setEnabled(True)
 
 
-    def getFeatures(self):
+    def getFeatures(self, featuretype):
         """Getting features for TilgjengelighetTettsted"""
         namespace = "http://skjema.geonorge.no/SOSI/produktspesifikasjon/TilgjengelighetTettsted/4.5"
         namespace_prefix = "app"
         online_resource = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted"
 
         #typeNames= urllib.quote(feature_type[1].encode('utf8'))
-        typeNames= urllib.quote(self.featuretype.getFeatureType().encode('utf8'))
+        #typeNames= urllib.quote(self.featuretype.getFeatureType().encode('utf8'))
+        typeNames= urllib.quote(featuretype.encode('utf8'))
         #print("typeNames", typeNames)
         query_string = "?service=WFS&request=GetFeature&version=2.0.0&srsName={0}&typeNames={1}".format( "urn:ogc:def:crs:EPSG::{0}".format(str(self.iface.mapCanvas().mapRenderer().destinationCrs().postgisSrid())).strip(), typeNames)
         query_string += "&namespaces=xmlns({0},{1})".format(namespace_prefix, urllib.quote(namespace,""))
@@ -696,6 +710,11 @@ class Tilgjengelighet:
         self.httpGetId = self.http.get(url.path() + query_string, self.outFile)
         #print("httpGetId", self.httpGetId)
         
+
+
+    def hentDataInngang(self):
+        self.getFeatures(self.feature_type_tettsted[1])
+
 
 #This method has been made unnececary due to iface.actionSelectFreehand().trigger()
     # def toolButtonSelect(self, checked):
@@ -1428,7 +1447,8 @@ class Tilgjengelighet:
                 QgsMapLayerRegistry.instance().removeMapLayer( tempLayer.id() )
         
         print(len(attributes))
-        self.current_search_layer.selectionChanged.connect(self.selectedObjects)
+        if self.current_search_layer is not None:
+            self.current_search_layer.selectionChanged.connect(self.selectedObjects)
 
         print("Filtering End")
 
@@ -1521,6 +1541,144 @@ class Tilgjengelighet:
         print(("value of pressed message box button:", retval))
 
 
+    def excelSave(self):
+        """obtaind from xytools, author: Richard Duivenvoorde"""
+        if self.current_search_layer == None: 
+            QMessageBox.warning(self.iface.mainWindow(), "Finner ingen lag å eksportere")
+            if self.iface.activeLayer():
+                self.currentLayerChanged(self.iface.activeLayer())
+            else:   
+                QMessageBox.warning(self.iface.mainWindow(), "No active layer", "Please make an vector layer active before saving it to excel file.")
+                return
+
+        fieldNames = utils.fieldNames(self.current_search_layer)
+        dlg = FieldChooserDialog(fieldNames)
+
+        names = []
+        while len(names) == 0:
+            dlg.show()
+            if dlg.exec_() == 0:
+                return
+            names = dlg.getSelectedFields()
+            if len(names) == 0:
+                QMessageBox.warning(self.iface.mainWindow(), "No fields selected", "Please select at least one field.")
+
+        dirPath = self.settings.value("/xytools/excelSavePath", ".", type=str)    
+        (filename, filter) = QFileDialog.getSaveFileNameAndFilter(self.iface.mainWindow(),
+                    "Please save excel file as...",
+                    dirPath,
+                    "Excel files (*.xls)",
+                    "Filter list for selecting files from a dialog box")
+        fn, fileExtension = os.path.splitext(unicode(filename))
+        if len(fn) == 0: # user choose cancel
+            return
+        self.settings.setValue("/xytools/excelSavePath", QFileInfo(filename).absolutePath())
+        if fileExtension != '.xls':
+            filename = filename + '.xls'
+        try:
+            from providers import excel
+        except:
+            QMessageBox.warning(self.iface.mainWindow(), "Unable to load Python module", "There is a problem with loading a python module which is needed to read/write Excel files. Please see documentation/help how to install python xlw and xlrd libraries.")
+            return
+        xlw = excel.Writer(filename)
+        #self.layer = self.iface.activeLayer()
+        selection = None
+        if self.current_search_layer.selectedFeatureCount() > 0:
+            if QMessageBox.question(self.iface.mainWindow(), 
+                self.MSG_BOX_TITLE, 
+                ("You have a selection in this layer. Only export this selection?\n" "Click Yes to export selection only, click No to export all rows."), 
+                QMessageBox.No, QMessageBox.Yes) == QMessageBox.Yes:
+                    selection = self.current_search_layer.selectedFeaturesIds()
+        feature = QgsFeature();
+
+        xlw.writeAttributeRow(0, names)
+
+        rowNr = 1
+        if QGis.QGIS_VERSION_INT < 10900:
+            prov = self.current_search_layer.dataProvider()
+            prov.select(prov.attributeIndexes())
+            while prov.nextFeature(feature):
+                # attribute values, either for all or only for selection
+                if selection == None or feature.id() in selection:
+                    values = feature.attributeMap().values()
+                    rowValues = []
+                    for field in names:
+                        rowValues.append(values[field])
+                    xlw.writeAttributeRow(rowNr, values)
+                    rowNr += 1
+        else:
+            prov = self.current_search_layer.getFeatures()
+            while prov.nextFeature(feature):
+                # attribute values, either for all or only for selection
+                if selection == None or feature.id() in selection:
+                    values = []
+                    for field in names:
+                        values.append(feature.attribute(field))
+                    xlw.writeAttributeRow(rowNr, values)
+                    rowNr += 1
+        xlw.saveFile()
+        QMessageBox.information(self.iface.mainWindow(), "Success", "Successfully saved as xls file")
+
+
+    def savePath(self, saveType, saveExtension): #sett inn denne for exel også
+        dirPath = self.settings.value("/Tilgjengelighet/savePath", ".", type=str)    
+        (filename, filter) = QFileDialog.getSaveFileNameAndFilter(self.iface.mainWindow(),
+                    "Please save {0} file as...".format(saveType),
+                    dirPath,
+                    "Image files (*{0})".format(saveExtension),
+                    "Filter list for selecting files from a dialog box")
+        fn, fileExtension = os.path.splitext(unicode(filename))
+        if len(fn) == 0: # user choose cancel
+            return
+        self.settings.setValue("/Tilgjengelighet/savePath", QFileInfo(filename).absolutePath())
+        if fileExtension != saveExtension:
+            filename = filename + saveExtension
+
+        return dirPath, filename
+
+
+    def imageSave(self):
+        #filename1 = QFileDialog.getSaveFileName()
+        #print(filename1)
+
+        # dirPath = self.settings.value("/Tilgjengelighet/savePath", ".", type=str)    
+        # (filename, filter) = QFileDialog.getSaveFileNameAndFilter(self.iface.mainWindow(),
+        #             "Please save image file as...",
+        #             dirPath,
+        #             "Image files (*.png)",
+        #             "Filter list for selecting files from a dialog box")
+        # fn, fileExtension = os.path.splitext(unicode(filename))
+        # if len(fn) == 0: # user choose cancel
+        #     return
+        # self.settings.setValue("/Tilgjengelighet/savePath", QFileInfo(filename).absolutePath())
+        # if fileExtension != '.png':
+        #     filename = filename + '.png'
+
+        dirPath, filename = self.savePath("Image", ".png")
+
+        print("path: " + dirPath + " name: " + filename)
+        size = self.canvas.size()
+        image = QImage(size, QImage.Format_RGB32)
+
+        painter = QPainter(image)
+        settings = self.canvas.mapSettings()
+
+        # You can fine tune the settings here for different
+        # dpi, extent, antialiasing...
+        # Just make sure the size of the target image matches
+
+        # You can also add additional layers. In the case here,
+        # this helps to add layers that haven't been added to the
+        # canvas yet
+        #layers = settings.layers()
+        #settings.setLayers([layerP.id(), layerL.id()] + layers)
+
+        job = QgsMapRendererCustomPainterJob(settings, painter)
+        job.renderSynchronously()
+        painter.end()
+        image.save(filename) #filename1 + ".png")#'C:\\Users\\kaspa_000\\OneDrive\\Documents\\Skole-KaspArno\\Master\\tests\\newimageTest3.png')
+
+
     def open_export_layer_dialog(self):
         """opens the excport gui"""
         self.export_layer.show()
@@ -1555,9 +1713,9 @@ class Tilgjengelighet:
 
         # show the dialog
         self.dlg.show()
-        self.featuretype = FeatureType()
-        if self.featuretype:
-            self.getFeatures()
+        #self.featuretype = FeatureType()
+        #if self.featuretype:
+        #    self.getFeatures()
         
 
         # Run the dialog event loop

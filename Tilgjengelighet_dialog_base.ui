@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1200</width>
-    <height>690</height>
+    <height>719</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -4263,9 +4263,9 @@
                 <attribute name="title">
                  <string>Inngang</string>
                 </attribute>
-                <layout class="QVBoxLayout" name="verticalLayout_24">
+                <layout class="QVBoxLayout" name="verticalLayout_14">
                  <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_23">
+                  <layout class="QVBoxLayout" name="verticalLayout_11">
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_163">
                      <item>
@@ -5176,6 +5176,13 @@
                     </layout>
                    </item>
                    <item>
+                    <widget class="QPushButton" name="pushButton_HentDataInngang">
+                     <property name="text">
+                      <string>Hent Data Inngang</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
                     <spacer name="verticalSpacer_45">
                      <property name="orientation">
                       <enum>Qt::Vertical</enum>
@@ -5192,6 +5199,7 @@
                  </item>
                 </layout>
                 <zorder></zorder>
+                <zorder>pushButton_HentDataInngang</zorder>
                </widget>
                <widget class="QWidget" name="tab_3">
                 <attribute name="title">
