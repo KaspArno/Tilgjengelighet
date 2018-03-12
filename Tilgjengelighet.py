@@ -265,16 +265,46 @@ class Tilgjengelighet:
         self.infoWidget = infoWidgetDialog(self.iface.mainWindow())
         #self.infoWidget.pushButton_Select_Object.setCheckable(True)
         #self.infoWidget.pushButton_Select_Object.toggled.connect(self.toolButtonSelect)
-        self.infoWidget.pushButton_polygon.clicked.connect(lambda x: self.iface.actionSelectPolygon().trigger())
-        self.infoWidget.pushButton_punkt.clicked.connect(lambda x: self.iface.actionSelectFreehand().trigger())
+        #self.infoWidget.pushButton_polygon.clicked.connect(lambda x: self.iface.actionSelectPolygon().trigger())
+        #self.infoWidget.pushButton_punkt.clicked.connect(lambda x: self.iface.actionSelectFreehand().trigger())
         #self.infoWidget.pushButton_exporter.clicked.connect(self.open_export_layer_dialog)
-        self.infoWidget.pushButton_exporter.clicked.connect(self.excelSave)
-        self.infoWidget.pushButton_exporterBilde.clicked.connect(self.imageSave)
+        #self.infoWidget.pushButton_exporter.clicked.connect(self.excelSave)
+        #self.infoWidget.pushButton_exporterBilde.clicked.connect(self.imageSave)
         self.infoWidget.pushButton_filtrer.clicked.connect(lambda x: self.dlg.show()) #open main window
-        self.infoWidget.pushButton_filtrer.clicked.connect(self.addOLmenu) #readd OL menu
-        self.infoWidget.pushButton_filtre_tidligere.clicked.connect(self.get_previus_search_activeLayer) #open main window with prev search options
+        self.infoWidget.pushButton_filtrer.clicked.connect(self.get_previus_search_activeLayer)
+        #self.infoWidget.pushButton_filtrer.clicked.connect(self.addOLmenu) #readd OL menu
+        #self.infoWidget.pushButton_filtre_tidligere.clicked.connect(self.get_previus_search_activeLayer) #open main window with prev search options
         self.infoWidget.pushButton_next.clicked.connect(self.infoWidget_next)
         self.infoWidget.pushButton_prev.clicked.connect(self.infoWidget_prev)
+
+        self.selectPolygon = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Tilgjengelig.png"),
+                                       QCoreApplication.translate("MyPlugin", "Polygon"),
+                                       self.iface.mainWindow())
+        self.selectPoint = QAction(QIcon(":/plugins/Tilgjengelighet/icon"),
+                                       QCoreApplication.translate("MyPlugin", "Punkt/Frihånd"),
+                                       self.iface.mainWindow())
+        self.selectPolygon.triggered.connect(lambda x: self.iface.actionSelectPolygon().trigger())
+        self.selectPoint.triggered.connect(lambda x: self.iface.actionSelectFreehand().trigger())
+
+        self.infoWidget.toolButton_velgikart.addAction(self.selectPolygon)
+        self.infoWidget.toolButton_velgikart.addAction(self.selectPoint)
+
+        self.exportExcel = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Tilgjengelig.png"),
+                                       QCoreApplication.translate("MyPlugin", "Excel"),
+                                       self.iface.mainWindow())
+        self.exportImage = QAction(QIcon(":/plugins/Tilgjengelighet/icon"),
+                                       QCoreApplication.translate("MyPlugin", "Bilde"),
+                                       self.iface.mainWindow())
+        self.exportExcel.triggered.connect(self.excelSave)
+        self.exportImage.triggered.connect(self.imageSave)
+
+        self.infoWidget.toolButton_eksporter.addAction(self.exportExcel)
+        self.infoWidget.toolButton_eksporter.addAction(self.exportImage)
+
+        #self.infoWidget.toolButton_velgikart.addAction(self.iface.actionSelectFreehand().trigger())
+
+        #self.infoWidget.toolButton_eksporter.addAction().connect(self.excelSave)
+        #self.infoWidget.toolButton_eksporter.addAction().connect(self.imageSave)
 
         # self.infoWidget.pushButton_rullestol.setGeometry(QRect(500, 30, 211, 131))
         # self.icon = QIcon()
@@ -290,51 +320,51 @@ class Tilgjengelighet:
         # self.infoWidget.pushButton_rullestol.setIcon(QIcon('IkkeVurdert.png'))
         # self.infoWidget.pushButton_rullestol.setIconSize(QSize(24,24))
 
-        self.icon_rullestol = QIcon(self.dir + '/Iconer/IkkeVurdert')
-        self.icon_rullestol_el = QIcon(self.dir + '/Iconer/IkkeVurdertEl')
-        self.icon_syn = QIcon(self.dir + '/Iconer/IkkeVurdertSyn')
+        # self.icon_rullestol = QIcon(self.dir + '/Iconer/IkkeVurdert')
+        # self.icon_rullestol_el = QIcon(self.dir + '/Iconer/IkkeVurdertEl')
+        # self.icon_syn = QIcon(self.dir + '/Iconer/IkkeVurdertSyn')
 
-        self.image_ikkeVurdert = QPixmap(self.dir + '/Iconer/IkkeVurdert')
-        self.image_ikkeVurdert_el = QPixmap(self.dir + '/Iconer/IkkeVurdertEl')
-        self.image_ikkeVurdert_syn = QPixmap(self.dir + '/Iconer/IkkeVurdertSyn')
+        # self.image_ikkeVurdert = QPixmap(self.dir + '/Iconer/IkkeVurdert')
+        # self.image_ikkeVurdert_el = QPixmap(self.dir + '/Iconer/IkkeVurdertEl')
+        # self.image_ikkeVurdert_syn = QPixmap(self.dir + '/Iconer/IkkeVurdertSyn')
 
-        self.image_tilgjengelig = QPixmap(self.dir + '/Iconer/Tilgjengelig')
-        self.image_tilgjengelig_el = QPixmap(self.dir + '/Iconer/TilgjengeligEl')
-        self.image_tilgjengelig_syn = QPixmap(self.dir + '/Iconer/TilgjengeligSyn')
+        # self.image_tilgjengelig = QPixmap(self.dir + '/Iconer/Tilgjengelig')
+        # self.image_tilgjengelig_el = QPixmap(self.dir + '/Iconer/TilgjengeligEl')
+        # self.image_tilgjengelig_syn = QPixmap(self.dir + '/Iconer/TilgjengeligSyn')
         
-        self.image_vanskeligTilgjengelig = QPixmap(self.dir + '/Iconer/VanskeligTilgjengelig')
-        self.image_vanskeligTilgjengelig_el = QPixmap(self.dir + '/Iconer/VanskeligTilgjengeligEl')
-        self.image_vanskeligTilgjengelig_syn = QPixmap(self.dir + '/Iconer/VanskeligTilgjengeligSyn')
+        # self.image_vanskeligTilgjengelig = QPixmap(self.dir + '/Iconer/VanskeligTilgjengelig')
+        # self.image_vanskeligTilgjengelig_el = QPixmap(self.dir + '/Iconer/VanskeligTilgjengeligEl')
+        # self.image_vanskeligTilgjengelig_syn = QPixmap(self.dir + '/Iconer/VanskeligTilgjengeligSyn')
         
-        self.image_ikkeTilgjengelig = QPixmap(self.dir + '/Iconer/IkkeTilgjengelig')
-        self.image_ikkeTilgjengelig_el = QPixmap(self.dir + '/Iconer/IkkeTilgjengeligEl')
-        self.image_ikkeTilgjengelig_syn = QPixmap(self.dir + '/Iconer/IkkeTilgjengeligSyn')
+        # self.image_ikkeTilgjengelig = QPixmap(self.dir + '/Iconer/IkkeTilgjengelig')
+        # self.image_ikkeTilgjengelig_el = QPixmap(self.dir + '/Iconer/IkkeTilgjengeligEl')
+        # self.image_ikkeTilgjengelig_syn = QPixmap(self.dir + '/Iconer/IkkeTilgjengeligSyn')
 
         
 
-        if not self.icon_rullestol.isNull(): # self.image_ikkeVurdert.load(self.dir + '/Iconer/IkkeVurdert'): #('C:/Users/kaspa_000/.qgis2/python/plugins/Tilgjengelighet/IkkeVurdert.png'):
-            self.icon_rullestol.addPixmap(self.image_ikkeVurdert)
-            self.infoWidget.pushButton_rullestol.setIcon(self.icon_rullestol)
-            self.infoWidget.pushButton_rullestol.setIconSize(self.image_ikkeVurdert.rect().size())
-            self.infoWidget.pushButton_rullestol.setFixedSize(self.image_ikkeVurdert.rect().size())
-        else:
-            self.infoWidget.pushButton_rullestol.setText('X')
+        # if not self.icon_rullestol.isNull(): # self.image_ikkeVurdert.load(self.dir + '/Iconer/IkkeVurdert'): #('C:/Users/kaspa_000/.qgis2/python/plugins/Tilgjengelighet/IkkeVurdert.png'):
+        #     self.icon_rullestol.addPixmap(self.image_ikkeVurdert)
+        #     self.infoWidget.pushButton_rullestol.setIcon(self.icon_rullestol)
+        #     self.infoWidget.pushButton_rullestol.setIconSize(self.image_ikkeVurdert.rect().size())
+        #     self.infoWidget.pushButton_rullestol.setFixedSize(self.image_ikkeVurdert.rect().size())
+        # else:
+        #     self.infoWidget.pushButton_rullestol.setText('X')
 
-        if not self.icon_rullestol_el.isNull(): #self.image_ikkeVurdert_el.load(self.dir + '/Iconer/IkkeVurdertEl'): #('C:/Users/kaspa_000/.qgis2/python/plugins/Tilgjengelighet/IkkeVurdert.png'):
-            self.icon_rullestol_el.addPixmap(self.image_ikkeVurdert_el)
-            self.infoWidget.pushButton_elrullestol.setIcon(self.icon_rullestol_el)
-            self.infoWidget.pushButton_elrullestol.setIconSize(self.image_ikkeVurdert_el.rect().size())
-            self.infoWidget.pushButton_elrullestol.setFixedSize(self.image_ikkeVurdert_el.rect().size())
-        else:
-            self.infoWidget.pushButton_elrullestol.setText('X')
+        # if not self.icon_rullestol_el.isNull(): #self.image_ikkeVurdert_el.load(self.dir + '/Iconer/IkkeVurdertEl'): #('C:/Users/kaspa_000/.qgis2/python/plugins/Tilgjengelighet/IkkeVurdert.png'):
+        #     self.icon_rullestol_el.addPixmap(self.image_ikkeVurdert_el)
+        #     self.infoWidget.pushButton_elrullestol.setIcon(self.icon_rullestol_el)
+        #     self.infoWidget.pushButton_elrullestol.setIconSize(self.image_ikkeVurdert_el.rect().size())
+        #     self.infoWidget.pushButton_elrullestol.setFixedSize(self.image_ikkeVurdert_el.rect().size())
+        # else:
+        #     self.infoWidget.pushButton_elrullestol.setText('X')
 
-        if not self.icon_syn.isNull(): #self.image_ikkeVurdert_syn.load(self.dir + '/Iconer/IkkeVurdertSyn'): #('C:/Users/kaspa_000/.qgis2/python/plugins/Tilgjengelighet/IkkeVurdert.png'):
-            self.icon_syn.addPixmap(self.image_ikkeVurdert_syn)
-            self.infoWidget.pushButton_syn.setIcon(self.icon_syn)
-            self.infoWidget.pushButton_syn.setIconSize(self.image_ikkeVurdert_syn.rect().size())
-            self.infoWidget.pushButton_syn.setFixedSize(self.image_ikkeVurdert_syn.rect().size())
-        else:
-            self.infoWidget.pushButton_syn.setText('X')
+        # if not self.icon_syn.isNull(): #self.image_ikkeVurdert_syn.load(self.dir + '/Iconer/IkkeVurdertSyn'): #('C:/Users/kaspa_000/.qgis2/python/plugins/Tilgjengelighet/IkkeVurdert.png'):
+        #     self.icon_syn.addPixmap(self.image_ikkeVurdert_syn)
+        #     self.infoWidget.pushButton_syn.setIcon(self.icon_syn)
+        #     self.infoWidget.pushButton_syn.setIconSize(self.image_ikkeVurdert_syn.rect().size())
+        #     self.infoWidget.pushButton_syn.setFixedSize(self.image_ikkeVurdert_syn.rect().size())
+        # else:
+        #     self.infoWidget.pushButton_syn.setText('X')
 
 
 
@@ -370,6 +400,8 @@ class Tilgjengelighet:
         
         #Open layer plugin
         self.addOLmenu()
+
+
 
     def addOLmenu(self):
         openLayers = OpenlayersPlugin(self.iface, self.dlg)
@@ -1473,6 +1505,8 @@ class Tilgjengelighet:
         if self.rubberHighlight is not None:
             self.canvas.scene().removeItem(self.rubberHighlight)
 
+        self.infoWidget.label_typeSok.setText(self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()))
+
         print("Filtering End")
 
 
@@ -1526,7 +1560,7 @@ class Tilgjengelighet:
             #self.set_availebility_icon(feature, "tilgjengvurderingRullestol", self.icon_rullestol, [self.image_tilgjengelig, self.image_vanskeligTilgjengelig, self.image_ikkeTilgjengelig, self.image_ikkeVurdert], self.infoWidget.pushButton_rullestol)
             #self.set_availebility_icon(feature, "tilgjengvurderingElRull", self.icon_rullestol_el, [self.image_tilgjengelig_el, self.image_vanskeligTilgjengelig_el, self.image_ikkeTilgjengelig_el, self.image_ikkeVurdert_el], self.infoWidget.pushButton_elrullestol)
             #self.set_availebility_icon(feature, "tilgjengvurderingSyn", self.icon_syn, [self.image_tilgjengelig_syn, self.image_vanskeligTilgjengelig_syn, self.image_ikkeTilgjengelig_syn, self.image_ikkeVurdert_syn], self.infoWidget.pushButton_syn)
-        if selection > 0:
+        if len(selection) > 0:
             for i in range(0, len(self.current_attributes)): #self.infoWidget.gridLayout.rowCount()):
                 try:
                     if isinstance(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())], (int, float, long)):
@@ -1540,6 +1574,9 @@ class Tilgjengelighet:
                     self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
                     print(self.current_attributes[i].getAttribute())
                     print(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())])
+        else:
+            for i in range(0, len(self.current_attributes)): #self.infoWidget.gridLayout.rowCount()):
+                self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
                     
     
 
@@ -1628,7 +1665,7 @@ class Tilgjengelighet:
         selection = None
         if self.current_search_layer.selectedFeatureCount() > 0:
             if QMessageBox.question(self.iface.mainWindow(), 
-                self.MSG_BOX_TITLE, 
+                "Eksporter Til Excel", 
                 ("You have a selection in this layer. Only export this selection?\n" "Click Yes to export selection only, click No to export all rows."), 
                 QMessageBox.No, QMessageBox.Yes) == QMessageBox.Yes:
                     selection = self.current_search_layer.selectedFeaturesIds()
