@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1200</width>
-    <height>719</height>
+    <height>729</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -5176,13 +5176,6 @@
                     </layout>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="pushButton_HentDataInngang">
-                     <property name="text">
-                      <string>Hent Data Inngang</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
                     <spacer name="verticalSpacer_45">
                      <property name="orientation">
                       <enum>Qt::Vertical</enum>
@@ -5199,7 +5192,6 @@
                  </item>
                 </layout>
                 <zorder></zorder>
-                <zorder>pushButton_HentDataInngang</zorder>
                </widget>
                <widget class="QWidget" name="tab_3">
                 <attribute name="title">
@@ -6004,6 +5996,29 @@
          </property>
          <property name="text">
           <string>reset</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_HentDataInngang">
+         <property name="text">
+          <string>Hent Data</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="toolButton_map">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>35</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="popupMode">
+          <enum>QToolButton::MenuButtonPopup</enum>
          </property>
         </widget>
        </item>

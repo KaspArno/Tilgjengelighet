@@ -27,6 +27,8 @@ import io
 from qgis.core import * #QgsDataSourceURI, QgsMapLayerRegistry, QgsVectorLayer, QgsExpression, QgsFeatureRequest, QgsVectorFileWriter, QgsLayerTreeLayer, QgsLayerTreeGroup, QgsMapLayer, QgsProject, QgsFeature, QGis
 from PyQt4.QtCore import * #QSettings, QTranslator, qVersion, QCoreApplication, QPyNullVariant, QDateTime, QThread, pyqtSignal, Qt, QRect, QSize, QFileInfo
 from PyQt4.QtGui import * #QAction, QIcon, QDockWidget, QGridLayout, QLineEdit, QTableWidget, QTableWidgetItem, QMessageBox, QApplication, QHBoxLayout, QVBoxLayout, QAbstractItemView, QListWidgetItem, QAbstractItemView, QFileDialog, QLabel, QPixmap, QIcon
+from qgis.gui import QgsRubberBand
+
 
 # Initialize Qt resources from file resources.py
 import resources
@@ -66,6 +68,8 @@ from functools import partial
 
 import utils
 from field_chooser import FieldChooserDialog
+
+from openlayers_plugin.openlayers_plugin import OpenlayersPlugin
 
 
 
@@ -123,8 +127,9 @@ class Tilgjengelighet:
         self.current_search_layer = None #The last searched layer
         self.current_attributes = None
         self.search_history = {} #history of all search
+        self.rubberHighlight = None 
 
-        self.feature_type_tettsted = ['app:TettstedHCparkering', 'app:TettstedInngangBygg', u'app:TettstedParkeringsomr\xe5de', 'app:TettstedVei']
+        self.feature_type_tettsted = { "HC-Parkering" :'app:TettstedHCparkering', "Inngang" :'app:TettstedInngangBygg', u'Parkeringsomr\xe5de' : u'app:TettstedParkeringsomr\xe5de', "Vei" : 'app:TettstedVei'}
 
         #to hide layers
         self.ltv = self.iface.layerTreeView()
@@ -266,6 +271,7 @@ class Tilgjengelighet:
         self.infoWidget.pushButton_exporter.clicked.connect(self.excelSave)
         self.infoWidget.pushButton_exporterBilde.clicked.connect(self.imageSave)
         self.infoWidget.pushButton_filtrer.clicked.connect(lambda x: self.dlg.show()) #open main window
+        self.infoWidget.pushButton_filtrer.clicked.connect(self.addOLmenu) #readd OL menu
         self.infoWidget.pushButton_filtre_tidligere.clicked.connect(self.get_previus_search_activeLayer) #open main window with prev search options
         self.infoWidget.pushButton_next.clicked.connect(self.infoWidget_next)
         self.infoWidget.pushButton_prev.clicked.connect(self.infoWidget_prev)
@@ -361,7 +367,19 @@ class Tilgjengelighet:
         self.dlg.pushButton_filtrer.clicked.connect(self.filtrer) #Filtering out the serach and show results
 
         #self.sourceMapTool = IdentifyGeometry(self.canvas, self.infoWidget, self.attributes_inngang, pickMode='selection') #For selecting abject in map and showing data
+        
+        #Open layer plugin
+        self.addOLmenu()
 
+    def addOLmenu(self):
+        openLayers = OpenlayersPlugin(self.iface, self.dlg)
+        openLayers.initGui()
+        
+        #self.infoWidget.toolButton_map.connect(self.showOLmenu)
+        #self.infoWidget.toolButton_map.triggered(self.infoWidget.toolButton_map.showMenu())
+
+    def showOLmenu(self):
+        self.infoWidget.toolButton_map.showMenu()
         
 
     def assign_combobox_inngang(self):
@@ -713,7 +731,9 @@ class Tilgjengelighet:
 
 
     def hentDataInngang(self):
-        self.getFeatures(self.feature_type_tettsted[1])
+        #self.getFeatures(self.feature_type_tettsted[1])
+        self.getFeatures(self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())])
+
 
 
 #This method has been made unnececary due to iface.actionSelectFreehand().trigger()
@@ -1450,30 +1470,52 @@ class Tilgjengelighet:
         if self.current_search_layer is not None:
             self.current_search_layer.selectionChanged.connect(self.selectedObjects)
 
+        if self.rubberHighlight is not None:
+            self.canvas.scene().removeItem(self.rubberHighlight)
+
         print("Filtering End")
 
 
     def selectedObjects(self, selFeatures):
+        self.selFeatures = selFeatures
         print(selFeatures)
         print(len(selFeatures))
         self.number_of_objects = len(selFeatures)
         self.cur_sel_obj = 0
 
         self.infoWidget.label_object_number.setText("{0}/{1}".format(self.cur_sel_obj+1, self.number_of_objects))
-        if self.number_of_objects > 0:
-            self.obj_info()
+        self.obj_info()
+
+        self.highlightSelected()
+
+
+    def highlightSelected(self):
+        if self.rubberHighlight is not None:
+            self.canvas.scene().removeItem(self.rubberHighlight)
+
+        selection = self.iface.activeLayer().selectedFeatures()
+        if len(selection) > 0:
+            self.rubberHighlight = QgsRubberBand(self.canvas,QGis.Polygon)
+            self.rubberHighlight.setBorderColor(QColor(255,0,0))
+            self.rubberHighlight.setFillColor(QColor(255,0,0,255))
+            #self.rubberHighlight.setLineStyle(Qt.PenStyle(Qt.DotLine))
+            self.rubberHighlight.setWidth(4)
+            self.rubberHighlight.setToGeometry(selection[self.cur_sel_obj].geometry(), self.current_search_layer)
+            self.rubberHighlight.show()
 
     def infoWidget_next(self):
         self.cur_sel_obj+=1
         if self.cur_sel_obj >= self.number_of_objects:
             self.cur_sel_obj = 0
         self.obj_info()
+        self.highlightSelected()
 
     def infoWidget_prev(self):
         self.cur_sel_obj-=1
         if self.cur_sel_obj < 0:
             self.cur_sel_obj = self.number_of_objects-1
         self.obj_info()
+        self.highlightSelected()
 
 
     def obj_info(self):
@@ -1484,20 +1526,21 @@ class Tilgjengelighet:
             #self.set_availebility_icon(feature, "tilgjengvurderingRullestol", self.icon_rullestol, [self.image_tilgjengelig, self.image_vanskeligTilgjengelig, self.image_ikkeTilgjengelig, self.image_ikkeVurdert], self.infoWidget.pushButton_rullestol)
             #self.set_availebility_icon(feature, "tilgjengvurderingElRull", self.icon_rullestol_el, [self.image_tilgjengelig_el, self.image_vanskeligTilgjengelig_el, self.image_ikkeTilgjengelig_el, self.image_ikkeVurdert_el], self.infoWidget.pushButton_elrullestol)
             #self.set_availebility_icon(feature, "tilgjengvurderingSyn", self.icon_syn, [self.image_tilgjengelig_syn, self.image_vanskeligTilgjengelig_syn, self.image_ikkeTilgjengelig_syn, self.image_ikkeVurdert_syn], self.infoWidget.pushButton_syn)
-        for i in range(0, len(self.current_attributes)): #self.infoWidget.gridLayout.rowCount()):
-            try:
-                if isinstance(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())], (int, float, long)):
-                    self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())]))
-                elif isinstance(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())], (QPyNullVariant)):
+        if selection > 0:
+            for i in range(0, len(self.current_attributes)): #self.infoWidget.gridLayout.rowCount()):
+                try:
+                    if isinstance(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())], (int, float, long)):
+                        self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())]))
+                    elif isinstance(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())], (QPyNullVariant)):
+                        self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
+                    else:
+                        self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())])
+                except Exception as e:
+                    print(str(e))
                     self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
-                else:
-                    self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())])
-            except Exception as e:
-                print(str(e))
-                self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
-                print(self.current_attributes[i].getAttribute())
-                print(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())])
-                
+                    print(self.current_attributes[i].getAttribute())
+                    print(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())])
+                    
     
 
     def show_message(self, msg_text, msg_title=None, msg_info=None, msg_details=None, msg_type=None):
@@ -1708,6 +1751,7 @@ class Tilgjengelighet:
 
 
     def run(self):
+        #reloadPlugin('Tilgjengelighet')
         """Run method that performs all the real work"""
 
 
