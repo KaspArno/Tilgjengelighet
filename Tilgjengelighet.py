@@ -235,7 +235,7 @@ class Tilgjengelighet:
         self.dlg.tabWidget_friluft.currentChanged.connect(self.change_search_name)
         self.dlg.tabWidget_tettsted.currentChanged.connect(self.change_search_name)
 
-        self.dlg.pushButton_HentDataInngang.clicked.connect(self.hentData) #collecting datata for inngangbygg
+        self.dlg.pushButton_HentData.clicked.connect(self.hentData) #collecting datata for inngangbygg
 
         self.dlg.pushButton_reset.clicked.connect(self.reset) #resett all choses
 
@@ -313,7 +313,7 @@ class Tilgjengelighet:
 
 
     def addOLmenu(self):
-        openLayers = OpenlayersPlugin(self.iface, self.dlg)
+        openLayers = OpenlayersPlugin(self.iface, self.infoWidget)
         openLayers.initGui()
         
         #self.infoWidget.toolButton_map.connect(self.showOLmenu)
@@ -569,9 +569,6 @@ class Tilgjengelighet:
                             featurecount = self.layers[-1].featureCount()
                             if featurecount > 0:
                                 pass
-
-                            prov = self.layers[-1].dataProvider()
-          
                             
                             #fill comboboxes
                             if self.layers[-1].name() == "TettstedInngangBygg":
@@ -774,27 +771,6 @@ class Tilgjengelighet:
             if att.getLineEdit():
                 att.getLineEdit().setEnabled(tr_or_fl)
 
-
-    # def get_previus_search(self): #THis might not be in use anymore
-    #     """resets GUI to a sate of previus selected search"""
-    #     layer_name = self.infoWidget.comboBox_search_history.currentText()
-    #     if layer_name != "":
-    #         try:
-    #             pre_search = self.search_history[layer_name]
-    #             for key, value in pre_search.attributes.iteritems():
-    #                 key.getComboBox().setCurrentIndex(int(value[0]))
-    #                 if value[1]:
-    #                     key.getLineEdit().setText(value[1])
-    #             self.dlg.tabWidget_main.setCurrentIndex(pre_search.tabIndex_main)
-    #             self.dlg.tabWidget_friluft.setCurrentIndex(pre_search.tabIndex_friluft)
-    #             self.dlg.tabWidget_tettsted.setCurrentIndex(pre_search.tabIndex_tettsted)
-    #             pre_search.lineEdit_seach.setText(pre_search.search_name)
-    #             self.dlg.show()
-
-    #         except KeyError:
-    #             raise
-    #     else:
-    #         self.dlg.show()
 
     def get_previus_search_activeLayer(self):
         """Open filtering window set to preweus choises"""
@@ -1253,16 +1229,15 @@ class Tilgjengelighet:
                 except Exception as e:
                     print(str(e))
 
-                self.filtering_layer = tempLayer
-                QgsMapLayerRegistry.instance().addMapLayer(self.filtering_layer)
+                self.current_search_layer = tempLayer
+                QgsMapLayerRegistry.instance().addMapLayer(self.current_search_layer)
 
-                self.canvas.setExtent(self.filtering_layer.extent())
+                self.canvas.setExtent(self.current_search_layer.extent())
                 self.canvas.refresh()
                 tempLayer.triggerRepaint()
                 self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget )
-                self.sourceMapTool.setLayer(self.filtering_layer)
-                self.showResults(self.filtering_layer)
-                self.current_search_layer = self.filtering_layer
+                self.sourceMapTool.setLayer(self.current_search_layer)
+                self.showResults(self.current_search_layer)
                 self.fill_infoWidget(attributes)
 
                 self.search_history[layer_name_text] = SavedSearch(layer_name_text, self.current_search_layer, layer_name, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
