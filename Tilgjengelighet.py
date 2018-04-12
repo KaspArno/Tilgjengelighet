@@ -56,28 +56,6 @@ from identifyGeometry import IdentifyGeometry #For selection
 from SavedSearch import SavedSearch #Save search choises for later use
 from openlayers_plugin.openlayers_plugin import OpenlayersPlugin
 
-#import urllib2
-
-#from xml.etree import ElementTree
-
-
-
-
-#from featuretype import FeatureType
-
-
-
-
-
-#import time
-
-#from functools import partial
-
-
-
-
-
-
 
 
 class Tilgjengelighet:
@@ -116,7 +94,6 @@ class Tilgjengelighet:
         # Declare instance attributes
         self.actions = []
         self.menu = self.tr(u'&Kartverket Tilgjengelighet')
-        # TODO: We are going to let the user set this up in a future iteration
         self.toolbar = self.iface.addToolBar(u'Tilgjengelighet')
         self.toolbar.setObjectName(u'Tilgjengelighet')
 
@@ -129,7 +106,7 @@ class Tilgjengelighet:
         self.mindre_eller_lik = "<="
 
         #layers and search
-        self.layers = [] #gather all layers
+        self.layers = [] #gather all baselayers
 
         self.current_search_layer = None #The last searched layer
         self.current_attributes = None
@@ -258,7 +235,7 @@ class Tilgjengelighet:
         self.dlg.tabWidget_friluft.currentChanged.connect(self.change_search_name)
         self.dlg.tabWidget_tettsted.currentChanged.connect(self.change_search_name)
 
-        self.dlg.pushButton_HentDataInngang.clicked.connect(self.hentDataInngang) #collecting datata for inngangbygg
+        self.dlg.pushButton_HentDataInngang.clicked.connect(self.hentData) #collecting datata for inngangbygg
 
         self.dlg.pushButton_reset.clicked.connect(self.reset) #resett all choses
 
@@ -273,18 +250,9 @@ class Tilgjengelighet:
 
         #info window
         self.infoWidget = infoWidgetDialog(self.iface.mainWindow())
-        #self.infoWidget.pushButton_Select_Object.setCheckable(True)
-        #self.infoWidget.pushButton_Select_Object.toggled.connect(self.toolButtonSelect)
-        #self.infoWidget.pushButton_polygon.clicked.connect(lambda x: self.iface.actionSelectPolygon().trigger())
-        #self.infoWidget.pushButton_punkt.clicked.connect(lambda x: self.iface.actionSelectFreehand().trigger())
-        #self.infoWidget.pushButton_exporter.clicked.connect(self.open_export_layer_dialog)
-        #self.infoWidget.pushButton_exporter.clicked.connect(self.excelSave)
-        #self.infoWidget.pushButton_exporterBilde.clicked.connect(self.imageSave)
         self.infoWidget.pushButton_filtrer.clicked.connect(lambda x: self.dlg.show()) #open main window
-        self.infoWidget.pushButton_filtrer.clicked.connect(self.get_previus_search_activeLayer)
-        #self.infoWidget.pushButton_filtrer.clicked.connect(self.addOLmenu) #readd OL menu
-        #self.infoWidget.pushButton_filtre_tidligere.clicked.connect(self.get_previus_search_activeLayer) #open main window with prev search options
-        self.infoWidget.pushButton_next.clicked.connect(self.infoWidget_next)
+        self.infoWidget.pushButton_filtrer.clicked.connect(self.get_previus_search_activeLayer) #setting main window to match search for active layer
+        self.infoWidget.pushButton_next.clicked.connect(self.infoWidget_next) #itterate the selected objekts
         self.infoWidget.pushButton_prev.clicked.connect(self.infoWidget_prev)
 
         self.selectPolygon = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Tilgjengelig.png"),
@@ -292,95 +260,29 @@ class Tilgjengelighet:
                                        self.iface.mainWindow())
         self.selectPoint = QAction(QIcon(":/plugins/Tilgjengelighet/icon"),
                                        QCoreApplication.translate("MyPlugin", "Punkt/Frihånd"),
-                                       self.iface.mainWindow())
-        self.selectPolygon.triggered.connect(lambda x: self.iface.actionSelectPolygon().trigger())
-        self.selectPoint.triggered.connect(lambda x: self.iface.actionSelectFreehand().trigger())
+                                       self.iface.mainWindow()) 
+        self.selectPolygon.triggered.connect(lambda x: self.iface.actionSelectPolygon().trigger()) #select objects by polygon
+        self.selectPoint.triggered.connect(lambda x: self.iface.actionSelectFreehand().trigger()) #select objects by freehand
 
         self.infoWidget.toolButton_velgikart.addAction(self.selectPolygon)
         self.infoWidget.toolButton_velgikart.addAction(self.selectPoint)
 
         self.exportExcel = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Tilgjengelig.png"),
                                        QCoreApplication.translate("MyPlugin", "Excel"),
-                                       self.iface.mainWindow())
+                                       self.iface.mainWindow()) 
         self.exportImage = QAction(QIcon(":/plugins/Tilgjengelighet/icon"),
                                        QCoreApplication.translate("MyPlugin", "Bilde"),
-                                       self.iface.mainWindow())
-        self.exportExcel.triggered.connect(self.excelSave)
-        self.exportImage.triggered.connect(self.imageSave)
+                                       self.iface.mainWindow()) 
+        self.exportExcel.triggered.connect(self.excelSave) #export tp excel
+        self.exportImage.triggered.connect(self.imageSave) #ecport image
 
         self.infoWidget.toolButton_eksporter.addAction(self.exportExcel)
         self.infoWidget.toolButton_eksporter.addAction(self.exportImage)
 
-        #self.infoWidget.toolButton_velgikart.addAction(self.iface.actionSelectFreehand().trigger())
-
-        #self.infoWidget.toolButton_eksporter.addAction().connect(self.excelSave)
-        #self.infoWidget.toolButton_eksporter.addAction().connect(self.imageSave)
-
-        # self.infoWidget.pushButton_rullestol.setGeometry(QRect(500, 30, 211, 131))
-        # self.icon = QIcon()
-        # self.icon.addFile(':/plugins/Tilgjengelighet/IkkeVurdert.png')
-        # self.infoWidget.pushButton_rullestol.setIcon(self.icon)
-        # self.infoWidget.pushButton_rullestol.setIconSize(QSize(100, 100))
-        # self.icon_rullestol_ikkeVurdert = QPixmap(':/plugins/Tilgjengelighet/IkkeVurdert.png')
-        # self.icon_rullestol = QIcon(self.icon_rullestol_ikkeVurdert)
-        # self.infoWidget.pushButton_rullestol.setIcon(self.icon_rullestol)
-        # self.infoWidget.pushButton_rullestol.setIconSize(self.icon_rullestol_ikkeVurdert.rect().size())
-        #self.infoWidget.pushButton_rullestol.setFixedSize(self.icon_rullestol_ikkeVurdert.rect().size())
-
-        # self.infoWidget.pushButton_rullestol.setIcon(QIcon('IkkeVurdert.png'))
-        # self.infoWidget.pushButton_rullestol.setIconSize(QSize(24,24))
-
-        # self.icon_rullestol = QIcon(self.dir + '/Iconer/IkkeVurdert')
-        # self.icon_rullestol_el = QIcon(self.dir + '/Iconer/IkkeVurdertEl')
-        # self.icon_syn = QIcon(self.dir + '/Iconer/IkkeVurdertSyn')
-
-        # self.image_ikkeVurdert = QPixmap(self.dir + '/Iconer/IkkeVurdert')
-        # self.image_ikkeVurdert_el = QPixmap(self.dir + '/Iconer/IkkeVurdertEl')
-        # self.image_ikkeVurdert_syn = QPixmap(self.dir + '/Iconer/IkkeVurdertSyn')
-
-        # self.image_tilgjengelig = QPixmap(self.dir + '/Iconer/Tilgjengelig')
-        # self.image_tilgjengelig_el = QPixmap(self.dir + '/Iconer/TilgjengeligEl')
-        # self.image_tilgjengelig_syn = QPixmap(self.dir + '/Iconer/TilgjengeligSyn')
-        
-        # self.image_vanskeligTilgjengelig = QPixmap(self.dir + '/Iconer/VanskeligTilgjengelig')
-        # self.image_vanskeligTilgjengelig_el = QPixmap(self.dir + '/Iconer/VanskeligTilgjengeligEl')
-        # self.image_vanskeligTilgjengelig_syn = QPixmap(self.dir + '/Iconer/VanskeligTilgjengeligSyn')
-        
-        # self.image_ikkeTilgjengelig = QPixmap(self.dir + '/Iconer/IkkeTilgjengelig')
-        # self.image_ikkeTilgjengelig_el = QPixmap(self.dir + '/Iconer/IkkeTilgjengeligEl')
-        # self.image_ikkeTilgjengelig_syn = QPixmap(self.dir + '/Iconer/IkkeTilgjengeligSyn')
-
-        
-
-        # if not self.icon_rullestol.isNull(): # self.image_ikkeVurdert.load(self.dir + '/Iconer/IkkeVurdert'): #('C:/Users/kaspa_000/.qgis2/python/plugins/Tilgjengelighet/IkkeVurdert.png'):
-        #     self.icon_rullestol.addPixmap(self.image_ikkeVurdert)
-        #     self.infoWidget.pushButton_rullestol.setIcon(self.icon_rullestol)
-        #     self.infoWidget.pushButton_rullestol.setIconSize(self.image_ikkeVurdert.rect().size())
-        #     self.infoWidget.pushButton_rullestol.setFixedSize(self.image_ikkeVurdert.rect().size())
-        # else:
-        #     self.infoWidget.pushButton_rullestol.setText('X')
-
-        # if not self.icon_rullestol_el.isNull(): #self.image_ikkeVurdert_el.load(self.dir + '/Iconer/IkkeVurdertEl'): #('C:/Users/kaspa_000/.qgis2/python/plugins/Tilgjengelighet/IkkeVurdert.png'):
-        #     self.icon_rullestol_el.addPixmap(self.image_ikkeVurdert_el)
-        #     self.infoWidget.pushButton_elrullestol.setIcon(self.icon_rullestol_el)
-        #     self.infoWidget.pushButton_elrullestol.setIconSize(self.image_ikkeVurdert_el.rect().size())
-        #     self.infoWidget.pushButton_elrullestol.setFixedSize(self.image_ikkeVurdert_el.rect().size())
-        # else:
-        #     self.infoWidget.pushButton_elrullestol.setText('X')
-
-        # if not self.icon_syn.isNull(): #self.image_ikkeVurdert_syn.load(self.dir + '/Iconer/IkkeVurdertSyn'): #('C:/Users/kaspa_000/.qgis2/python/plugins/Tilgjengelighet/IkkeVurdert.png'):
-        #     self.icon_syn.addPixmap(self.image_ikkeVurdert_syn)
-        #     self.infoWidget.pushButton_syn.setIcon(self.icon_syn)
-        #     self.infoWidget.pushButton_syn.setIconSize(self.image_ikkeVurdert_syn.rect().size())
-        #     self.infoWidget.pushButton_syn.setFixedSize(self.image_ikkeVurdert_syn.rect().size())
-        # else:
-        #     self.infoWidget.pushButton_syn.setText('X')
-
-
 
         #Export window
         self.export_layer = exportLayerDialog()
-        self.export_layer.pushButton_bla.clicked.connect(self.OpenBrowse)
+        self.export_layer.pushButton_bla.clicked.connect(self.OpenBrowser)
         self.export_layer.pushButton_lagre.clicked.connect(self.lagre_lag)
         self.export_layer.pushButton_lagre.clicked.connect(lambda x: self.export_layer.close()) #close winwo when you have saved layer
         self.export_layer.pushButton_avbryt.clicked.connect(lambda x: self.export_layer.close())
@@ -406,9 +308,6 @@ class Tilgjengelighet:
 
         self.dlg.pushButton_filtrer.clicked.connect(self.filtrer) #Filtering out the serach and show results
 
-        #self.sourceMapTool = IdentifyGeometry(self.canvas, self.infoWidget, self.attributes_inngang, pickMode='selection') #For selecting abject in map and showing data
-        
-        #Open layer plugin
         self.addOLmenu()
 
 
@@ -425,6 +324,7 @@ class Tilgjengelighet:
         
 
     def assign_combobox_inngang(self):
+        """Assigning a GuiAttribute object to each option in inngang"""
         
         self.avstandHC = GuiAttribute("avstandHC", self.dlg.comboBox_avstand_hc, self.dlg.lineEdit_avstand_hc)
         self.ank_stigning = GuiAttribute("stigningAdkomstvei", self.dlg.comboBox_ank_stigning, self.dlg.lineEdit_ank_stigning)
@@ -481,6 +381,8 @@ class Tilgjengelighet:
         self.dlg.comboBox_rampe.currentIndexChanged.connect(self.hide_show_rampe)
 
     def assign_combobox_vei(self):
+        """Assigning a GuiAttribute object to each option in vei"""
+
         self.gatetype = GuiAttribute("gatetype", self.dlg.comboBox_gatetype)
         self.nedsenkning1 = GuiAttribute("nedsenk1", self.dlg.comboBox_nedsenkning1, self.dlg.lineEdit_nedsenkning1)
         self.nedsenkning2 = GuiAttribute("nedsenk2", self.dlg.comboBox_nedsenkning2, self.dlg.lineEdit_nedsenkning2)
@@ -511,6 +413,8 @@ class Tilgjengelighet:
         self.dlg.comboBox_gatetype.currentIndexChanged.connect(self.hide_show_nedsenkning)
 
     def assign_combobox_hc_parkering(self):
+        """Assigning a GuiAttribute object to each option in hc parkering"""
+
         self.avstandServicebygg = GuiAttribute("avstandServicebygg", self.dlg.comboBox_avstandServicebygg, self.dlg.lineEdit_avstandServicebygg)
 
         self.overbygg = GuiAttribute("overbygg", self.dlg.comboBox_overbygg, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
@@ -538,6 +442,8 @@ class Tilgjengelighet:
         self.dlg.comboBox_merket.currentIndexChanged.connect(self.hide_show_merket)
 
     def assign_combobox_parkeringsomraade(self):
+        """Assigning a GuiAttribute object to each option in parkeringsområde"""
+
         self.overbygg_pomrade = GuiAttribute("overbygg", self.dlg.comboBox_overbygg_pomrade, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
         self.kapasitetPersonbiler = GuiAttribute("kapasitetPersonbiler", self.dlg.comboBox_kapasitetPersonbiler, self.dlg.lineEdit_kapasitetPersonbiler)
         self.kapasitetUU = GuiAttribute("kapasitetUU", self.dlg.comboBox_kapasitetUU, self.dlg.lineEdit_kapasitetUU)
@@ -596,17 +502,20 @@ class Tilgjengelighet:
 
 
     def updateDataReadProgress(self, bytesRead, totalBytes):
+        """Updates the dataprogess of downwloading data"""
+
         self.dlg.label_Progress.setVisible(True)
         self.dlg.label_Progress.setText("Laster inn data: ") # + self.featuretype.getFeatureType())
 
     def httpRequestStartet(self):
+        """Calls when reqest has started"""
+
         print("The Request has started!")
 
 
     def httpRequestFinished(self, requestId, error):
+        """Calls when reqest is finnished"""
 
-        #print("The Request is finished!")
-        #print(requestId, self.httpGetId)
         if requestId != self.httpGetId:
             print("requesrtd Id != httpGetId")
             return
@@ -632,7 +541,6 @@ class Tilgjengelighet:
             if ogrdatasource is None:
                 print("ogrdatasource is None")
             else: # Determine the LayerCount
-                #print("ogrdatasource is some")
                 ogrlayercount = ogrdatasource.GetLayerCount()
                 for i in range(0, ogrlayercount):
                     j = ogrlayercount -1 - i
@@ -653,35 +561,17 @@ class Tilgjengelighet:
                             uri += "|subset=" + self.getsubset(geomtypeid)
                         
                         self.layers.append(QgsVectorLayer(uri, qgislayername, "ogr"))
-                        #self.layername.append(qgislayername)
                         self.layers[-1].setProviderEncoding("UTF-8")
-                        #self.vlayer = QgsVectorLayer(uri, qgislayername, "ogr")
-                        #self.layers[qgislayername : self.vlayer]
-                        #self.layers[qgislayername].setProviderEncoding("UTF-8")
-                        #self.vlayer.setProviderEncoding("UTF-8")
                         
                         if not self.layers[-1].isValid():
                             print("self.vlayer not valid")
                         else:
                             featurecount = self.layers[-1].featureCount()
                             if featurecount > 0:
-                                #QgsMapLayerRegistry.instance().addMapLayers([self.vlayer])
-                                #QgsMapLayerRegistry.instance().addMapLayers([self.layers[-1]])
                                 pass
-                            #Remove this bit
-                            #prov = self.vlayer.dataProvider()
+
                             prov = self.layers[-1].dataProvider()
-                            #for f in self.vlayer.getFeatures():
-                            #for f in self.layers[qgislayername].getFeatures():
-                            #for f in self.layers[-1].getFeatures():
-                                #print("")
-                                #for i in range(0, len(prov.fields())):
-                                    #print(prov.fields().field(i).name(), ": ", f[i])
-                                    #pass
-                                #break
-                            #Flytt denne bolken til ege metode    
-                            #inngangbygg = self.layers[0]
-                            #print(self.layers[-1].name())
+          
                             
                             #fill comboboxes
                             if self.layers[-1].name() == "TettstedInngangBygg":
@@ -710,10 +600,6 @@ class Tilgjengelighet:
                                     self.fill_combobox_mer_mindre(att.getComboBox())
                                 self.toggle_enable(self.attributes_pomrade, True) #enable gui
 
-                            #self.featuretype.next()
-                            #if self.featuretype.getFeatureType():
-                            #    self.getFeatures()
-                            #else:
                             self.dlg.label_Progress.setVisible(False)
                             for baselayer in self.layers:
                                 QgsMapLayerRegistry.instance().addMapLayer(baselayer)
@@ -724,35 +610,28 @@ class Tilgjengelighet:
 
 
     def getFeatures(self, featuretype):
-        """Getting features for TilgjengelighetTettsted"""
+        """Getting features for TilgjengelighetTettsted, modifye to include friluft"""
+
         namespace = "http://skjema.geonorge.no/SOSI/produktspesifikasjon/TilgjengelighetTettsted/4.5"
         namespace_prefix = "app"
         online_resource = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted"
-
-        #typeNames= urllib.quote(feature_type[1].encode('utf8'))
-        #typeNames= urllib.quote(self.featuretype.getFeatureType().encode('utf8'))
         typeNames= urllib.quote(featuretype.encode('utf8'))
-        #print("typeNames", typeNames)
+       
         query_string = "?service=WFS&request=GetFeature&version=2.0.0&srsName={0}&typeNames={1}".format( "urn:ogc:def:crs:EPSG::{0}".format(str(self.iface.mapCanvas().mapRenderer().destinationCrs().postgisSrid())).strip(), typeNames)
         query_string += "&namespaces=xmlns({0},{1})".format(namespace_prefix, urllib.quote(namespace,""))
-        #query_string+= "&count={0}".format("1000")
         query_string+= "&"
-        #print("query_string: ", query_string)
 
         self.httpGetId = 0
-        #print("httpGatId", self.httpGetId)
         self.http = QHttp()
 
         self.http.requestStarted.connect(self.httpRequestStartet)
         self.http.requestFinished.connect(self.httpRequestFinished)
         self.http.dataReadProgress.connect(self.updateDataReadProgress)
 
-
         layername="wfs{0}".format(''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(6)))
         fileName = self.get_temppath("{0}.gml".format(layername))
 
         #downloadFile
-
         url = QUrl(online_resource)
 
         print("url: ", url)
@@ -774,33 +653,9 @@ class Tilgjengelighet:
         #print("httpGetId", self.httpGetId)
         
 
-
-    def hentDataInngang(self):
-        #self.getFeatures(self.feature_type_tettsted[1])
+    def hentData(self):
+        """Getting data based on current tab index"""
         self.getFeatures(self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]) #sending featuretype based on current tab index
-
-
-
-#This method has been made unnececary due to iface.actionSelectFreehand().trigger()
-    # def toolButtonSelect(self, checked):
-    #     """Enabels the tool to select objects in map
-
-    #     :param checked: bool checking if it is active or not
-    #     """
-    #     print("toolButtonSelect Activated")
-    #     # If the toolButton is checked
-    #     if checked:
-    #         print("checked")
-    #         self.oldMapTool = self.canvas.mapTool()
-    #         self.canvas.setMapTool(self.sourceMapTool)
-
-    #     else:
-    #         self.oldMapTool = self.canvas.mapTool()
-
-    #Not in use
-    # def toolButtonAction(self, layer, feature):
-    #     if isinstance(layer, QgsVectorLayer) and isinstance(feature, QgsFeature):
-    #         self.featIdentTool.doWhatEver(feature)
 
 
     def hideNode( self, node, bHide=True ):
@@ -920,30 +775,31 @@ class Tilgjengelighet:
                 att.getLineEdit().setEnabled(tr_or_fl)
 
 
-    def get_previus_search(self):
-        """resets GUI to a sate of previus selected search"""
-        layer_name = self.infoWidget.comboBox_search_history.currentText()
-        if layer_name != "":
-            try:
-                pre_search = self.search_history[layer_name]
-                for key, value in pre_search.attributes.iteritems():
-                    key.getComboBox().setCurrentIndex(int(value[0]))
-                    if value[1]:
-                        key.getLineEdit().setText(value[1])
-                self.dlg.tabWidget_main.setCurrentIndex(pre_search.tabIndex_main)
-                self.dlg.tabWidget_friluft.setCurrentIndex(pre_search.tabIndex_friluft)
-                self.dlg.tabWidget_tettsted.setCurrentIndex(pre_search.tabIndex_tettsted)
-                pre_search.lineEdit_seach.setText(pre_search.search_name)
-                self.dlg.show()
+    # def get_previus_search(self): #THis might not be in use anymore
+    #     """resets GUI to a sate of previus selected search"""
+    #     layer_name = self.infoWidget.comboBox_search_history.currentText()
+    #     if layer_name != "":
+    #         try:
+    #             pre_search = self.search_history[layer_name]
+    #             for key, value in pre_search.attributes.iteritems():
+    #                 key.getComboBox().setCurrentIndex(int(value[0]))
+    #                 if value[1]:
+    #                     key.getLineEdit().setText(value[1])
+    #             self.dlg.tabWidget_main.setCurrentIndex(pre_search.tabIndex_main)
+    #             self.dlg.tabWidget_friluft.setCurrentIndex(pre_search.tabIndex_friluft)
+    #             self.dlg.tabWidget_tettsted.setCurrentIndex(pre_search.tabIndex_tettsted)
+    #             pre_search.lineEdit_seach.setText(pre_search.search_name)
+    #             self.dlg.show()
 
-            except KeyError:
-                raise
-        else:
-            self.dlg.show()
+    #         except KeyError:
+    #             raise
+    #     else:
+    #         self.dlg.show()
 
     def get_previus_search_activeLayer(self):
+        """Open filtering window set to preweus choises"""
+
         activeLayer = self.iface.activeLayer()
-        #if self.infoWidget.comboBox_search_history.findText(activeLayer.name()) != -1:
         if self.search_history[activeLayer.name()]:
             try:
                 pre_search = self.search_history[activeLayer.name()]
@@ -966,33 +822,14 @@ class Tilgjengelighet:
         """Action for item click in table. Selects corrisponding object in map, and fills info widget with its data"""
         self.current_search_layer.setSelectedFeatures([]) #Disabels all selections in current search layer
         indexes = self.dock.tableWidget.selectionModel().selectedRows()
-        print(indexes)
-        print(indexes[0])
         if self.current_search_layer is not None: 
             for index in sorted(indexes):
                 self.current_search_layer.setSelectedFeatures([self.feature_id[self.dock.tableWidget.item(index.row(), 0).text()]])
-                # selection = self.current_search_layer.selectedFeatures()
-                # for feature in selection:
-                #     #self.set_availebility_icon(feature)
-                #     #self.set_availebility_icon(feature, "tilgjengvurderingRullestol", self.icon_rullestol, [self.image_tilgjengelig, self.image_vanskeligTilgjengelig, self.image_ikkeTilgjengelig, self.image_ikkeVurdert], self.infoWidget.pushButton_rullestol)
-                #     #self.set_availebility_icon(feature, "tilgjengvurderingElRull", self.icon_rullestol_el, [self.image_tilgjengelig_el, self.image_vanskeligTilgjengelig_el, self.image_ikkeTilgjengelig_el, self.image_ikkeVurdert_el], self.infoWidget.pushButton_elrullestol)
-                #     #self.set_availebility_icon(feature, "tilgjengvurderingSyn", self.icon_syn, [self.image_tilgjengelig_syn, self.image_vanskeligTilgjengelig_syn, self.image_ikkeTilgjengelig_syn, self.image_ikkeVurdert_syn], self.infoWidget.pushButton_syn)
-                #     for i in range(0, len(self.current_attributes)): #self.infoWidget.gridLayout.rowCount()):
-                #         try:
-                #             if isinstance(feature[self.to_unicode(self.current_attributes[i].getAttribute())], (int, float, long)):
-                #                 self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(feature[self.to_unicode(self.current_attributes[i].getAttribute())]))
-                #             elif isinstance(feature[self.to_unicode(self.current_attributes[i].getAttribute())], (QPyNullVariant)):
-                #                 self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
-                #             else:
-                #                 self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(feature[self.to_unicode(self.current_attributes[i].getAttribute())])
-                #         except Exception as e:
-                #             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
-                #             print(self.current_attributes[i].getAttribute())
-                #             print(feature[self.to_unicode(self.current_attributes[i].getAttribute())])
-                #             print(str(e))
+  
 
 
     def set_availebility_icon(self, feature, tilgjenglighetsvurdering, icon, images, button):
+        """Method to set wheter object is availeble or not, not currently in use"""
 
         image_tilgjengelig = images[0]
         image_vanskeligTilgjengelig = images[1]
@@ -1021,52 +858,6 @@ class Tilgjengelighet:
             button.setIcon(icon)
             button.setIconSize(image_ikkeVurdert.rect().size())
             button.setFixedSize(image_ikkeVurdert.rect().size())
-
-
-        # if feature[self.to_unicode("tilgjengvurderingRullestol")] == "tilgjengelig":
-        #     self.icon_rullestol.addPixmap(self.image_tilgjengelig)
-        #     self.infoWidget.pushButton_rullestol.setIcon(self.icon_rullestol)
-        #     self.infoWidget.pushButton_rullestol.setIconSize(self.image_tilgjengelig.rect().size())
-        #     self.infoWidget.pushButton_rullestol.setFixedSize(self.image_tilgjengelig.rect().size())
-        # elif feature[self.to_unicode("tilgjengvurderingRullestol")] == "vanskeligTilgjengelig":
-        #     self.icon_rullestol.addPixmap(self.image_vanskeligTilgjengelig)
-        #     self.infoWidget.pushButton_rullestol.setIcon(self.icon_rullestol)
-        #     self.infoWidget.pushButton_rullestol.setIconSize(self.image_vanskeligTilgjengelig.rect().size())
-        #     self.infoWidget.pushButton_rullestol.setFixedSize(self.image_vanskeligTilgjengelig.rect().size())
-        # elif feature[self.to_unicode("tilgjengvurderingRullestol")] == "ikkeTilgjengelig":
-        #     self.icon_rullestol.addPixmap(self.image_ikkeTilgjengelig)
-        #     self.infoWidget.pushButton_rullestol.setIcon(self.icon_rullestol)
-        #     self.infoWidget.pushButton_rullestol.setIconSize(self.image_ikkeTilgjengelig.rect().size())
-        #     self.infoWidget.pushButton_rullestol.setFixedSize(self.image_ikkeTilgjengelig.rect().size())
-        # else:
-        #     self.icon_rullestol.addPixmap(self.image_ikkeVurdert)
-        #     self.infoWidget.pushButton_rullestol.setIcon(self.icon_rullestol)
-        #     self.infoWidget.pushButton_rullestol.setIconSize(self.image_ikkeVurdert.rect().size())
-        #     self.infoWidget.pushButton_rullestol.setFixedSize(self.image_ikkeVurdert.rect().size())
-
-
-        # if feature[self.to_unicode("tilgjengvurderingElRull")] == "tilgjengelig":
-        #     self.icon_rullestol_el.addPixmap(self.image_tilgjengelig)
-        #     self.infoWidget.pushButton_elrullestol.setIcon(self.icon_rullestol_el)
-        #     self.infoWidget.pushButton_elrullestol.setIconSize(self.image_tilgjengelig_el.rect().size())
-        #     self.infoWidget.pushButton_elrullestol.setFixedSize(self.image_tilgjengelig_el.rect().size())
-        # elif feature[self.to_unicode("tilgjengvurderingElRull")] == "vanskeligTilgjengelig":
-        #     self.icon_rullestol_el.addPixmap(self.image_vanskeligTilgjengelig)
-        #     self.infoWidget.pushButton_elrullestol.setIcon(self.icon_rullestol_el)
-        #     self.infoWidget.pushButton_elrullestol.setIconSize(self.image_vanskeligTilgjengelig_el.rect().size())
-        #     self.infoWidget.pushButton_elrullestol.setFixedSize(self.image_vanskeligTilgjengelig_el.rect().size())
-        # elif feature[self.to_unicode("tilgjengvurderingElRull")] == "ikkeTilgjengelig":
-        #     self.icon_rullestol_el.addPixmap(self.image_ikkeTilgjengelig)
-        #     self.infoWidget.pushButton_elrullestol.setIcon(self.icon_rullestol_el)
-        #     self.infoWidget.pushButton_elrullestol.setIconSize(self.image_ikkeTilgjengelig_el.rect().size())
-        #     self.infoWidget.pushButton_elrullestol.setFixedSize(self.image_ikkeTilgjengelig_el.rect().size())
-        # else:
-        #     self.icon_rullestol_el.addPixmap(self.image_ikkeVurdert_el)
-        #     self.infoWidget.pushButton_elrullestol.setIcon(self.icon_rullestol_el)
-        #     self.infoWidget.pushButton_elrullestol.setIconSize(self.image_ikkeVurdert_el.rect().size())
-        #     self.infoWidget.pushButton_elrullestol.setFixedSize(self.image_ikkeVurdert_el.rect().size())
-
-        pass
 
 
 
@@ -1162,6 +953,7 @@ class Tilgjengelighet:
         self.dock.tableWidget.setSortingEnabled(True) #enabeling sorting
         self.iface.addDockWidget( Qt.BottomDockWidgetArea , self.dock ) #adding seartch result Widget
 
+
     def fill_infoWidget(self, attributes):
         """Filling infowidget with attributes name and no value. Also ajustes size of infowidget
 
@@ -1188,10 +980,6 @@ class Tilgjengelighet:
         for i in range(len(attributes), self.infoWidget.gridLayout.rowCount()): #Hides rows that are not used
             self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setVisible(False)
             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setVisible(False)
-
-
-
-
 
 
     def fill_fylker(self):
@@ -1254,20 +1042,20 @@ class Tilgjengelighet:
                 self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + ": " + self.dlg.comboBox_fylker.currentText())
 
 
-    def create_expr_statement(self, attribute, expr_string):
-        if attribute.getLineEdit() is None:
-            if attribute.getComboBoxCurrentText() != self.uspesifisert:
-                if len(expr_string) == 0:
-                    expr_string = "\"%s\"=\'%s\' " % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
-                else:
-                    expr_string =  expr_string + " AND " + "\"%s\"=\'%s\' " % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
-        else:
-            if attribute.getLineEditText() != self.uspesifisert:
-                if len(expr_string) == 0:
-                    expr_string = "\"%s\"%s\'%s\' " % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
-                else:
-                    expr_string = expr_string + " AND " + "\"%s\"%s\'%s\' " % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
-        return expr_string
+    # def create_expr_statement(self, attribute, expr_string): #Not currently beeing used
+    #     if attribute.getLineEdit() is None:
+    #         if attribute.getComboBoxCurrentText() != self.uspesifisert:
+    #             if len(expr_string) == 0:
+    #                 expr_string = "\"%s\"=\'%s\' " % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
+    #             else:
+    #                 expr_string =  expr_string + " AND " + "\"%s\"=\'%s\' " % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
+    #     else:
+    #         if attribute.getLineEditText() != self.uspesifisert:
+    #             if len(expr_string) == 0:
+    #                 expr_string = "\"%s\"%s\'%s\' " % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
+    #             else:
+    #                 expr_string = expr_string + " AND " + "\"%s\"%s\'%s\' " % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
+    #     return expr_string
 
     def create_where_statement(self,attribute, where):
         """Create a where statement for search
@@ -1444,73 +1232,37 @@ class Tilgjengelighet:
                 temp_data.addAttributes(attr)
                 tempLayer.updateFields()
                 temp_data.addFeatures(feats)
-
-                #QgsMapLayerRegistry.instance().addMapLayer(mem_layer)
-                #self.iface.legendInterface().setLayerVisible(baselayer, True)
-                #tempLayer = baselayer
-                #self.iface.legendInterface().setLayerVisible(baselayer, False)
             else:
-                print(datetime.datetime.now().time())
                 expr = QgsExpression(expr_string)
-                print(datetime.datetime.now().time())
                 it = baselayer.getFeatures( QgsFeatureRequest( expr ) )
                 ids = [i.id() for i in it]
                 baselayer.setSelectedFeatures( ids )
-                print(datetime.datetime.now().time())
                 selectedFeatures = baselayer.selectedFeatures()
-                print(datetime.datetime.now().time())
-                #selectedFeatures = []
-                #WFSlayer = QgsVectorLayer(uri, "layerName", "WFS")
-                #features1 = self.layers[-1].selectedFeatures() # this layer is the layer the user or code selects in the map
-                print(datetime.datetime.now().time())
-                #for WFSfeature in WFSlayer.getFeatures():
-                #  for f in features1:
-                #    if WFSfeature.geometry().intersects(f.geometry()):
-                #      selectedFeatures.append(WFSfeature)
-                # create temp layer, eg use LineString geometry
-               
-                print(datetime.datetime.now().time())
-                #QgsMapLayerRegistry.instance().addMapLayer(tempLayer)
-                print(datetime.datetime.now().time())
                 temp_data = tempLayer.dataProvider()
-                print(datetime.datetime.now().time())
                 attr = baselayer.dataProvider().fields().toList()
-                print(datetime.datetime.now().time())
                 temp_data.addAttributes(attr)
-                print(datetime.datetime.now().time())
                 tempLayer.updateFields()
-                print(datetime.datetime.now().time())
                 temp_data.addFeatures(selectedFeatures)
-                print(datetime.datetime.now().time())
+
             if tempLayer.featureCount() > 0:
                 existing_layers = self.iface.legendInterface().layers()
                 try:
-                    for layer in existing_layers:
+                    for layer in existing_layers: #Removing layers with same name
                         if layer.name() == tempLayer.name():
                             QgsMapLayerRegistry.instance().removeMapLayers( [layer.id()] )
                 except Exception as e:
                     print(str(e))
-                    #raise e
-                
 
-                # try:
-                #     QgsMapLayerRegistry.instance().removeMapLayer( self.layer_inngang )
-                # except (RuntimeError, AttributeError):
-                #     pass
                 self.filtering_layer = tempLayer
                 QgsMapLayerRegistry.instance().addMapLayer(self.filtering_layer)
-                #self.showResults(self.layer_inngang)
+
                 self.canvas.setExtent(self.filtering_layer.extent())
                 self.canvas.refresh()
                 tempLayer.triggerRepaint()
                 self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget )
                 self.sourceMapTool.setLayer(self.filtering_layer)
-                self.showResults(self.filtering_layer) #rampeverdi ikke med i tabell
-                #self.dock.tabWidget_main.setCurrentIndex(1) #for tettsted
-                #self.dock.tabWidget_tettsted.setCurrentIndex(1) #for inngangbygg
-                #self.infoWidget.tabWidget.setCurrentIndex(1)
+                self.showResults(self.filtering_layer)
                 self.current_search_layer = self.filtering_layer
-
                 self.fill_infoWidget(attributes)
 
                 self.search_history[layer_name_text] = SavedSearch(layer_name_text, self.current_search_layer, layer_name, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
@@ -1519,19 +1271,17 @@ class Tilgjengelighet:
 
                 self.search_history[layer_name_text].add_attribute(self.fylker, int(self.fylker.getComboBox().currentIndex()), None) #lagerer valg og fylter og komuner
                 self.search_history[layer_name_text].add_attribute(self.kommuner, int(self.kommuner.getComboBox().currentIndex()), None)
-                #if self.infoWidget.comboBox_search_history.findText(layer_name_text) == -1: #Legger til ikke existerende søk i søk historien
-                #    self.infoWidget.comboBox_search_history.addItem(layer_name_text)
-                self.dlg.close() #lukker hovedvindu for enklere se resultater
 
-            else:
+                self.dlg.close() #closing main window for easyer visualisation of results
+
+            else: #no objects found
                 self.show_message("Søket fullførte uten at noen objecter ble funnet", "ingen Objecter funnet", msg_info=None, msg_details=None, msg_type=QMessageBox.Information)
                 QgsMapLayerRegistry.instance().removeMapLayer( tempLayer.id() )
         
-        print(len(attributes))
         if self.current_search_layer is not None:
-            self.current_search_layer.selectionChanged.connect(self.selectedObjects)
+            self.current_search_layer.selectionChanged.connect(self.selectedObjects) #Filling infoWidget when objects are selected
 
-        if self.rubberHighlight is not None:
+        if self.rubberHighlight is not None: #removing previus single highlight
             self.canvas.scene().removeItem(self.rubberHighlight)
 
         self.infoWidget.label_typeSok.setText(self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()))
@@ -1540,6 +1290,9 @@ class Tilgjengelighet:
 
 
     def selectedObjects(self, selFeatures):
+        """changing number of selected objects in infowidget and settning current selected object
+        :param selFeatures: Selected features of layer
+         """
         self.selFeatures = selFeatures
         print(selFeatures)
         print(len(selFeatures))
@@ -1553,6 +1306,8 @@ class Tilgjengelighet:
 
 
     def highlightSelected(self):
+        """Highlights the object viewed in infowidget"""
+
         if self.rubberHighlight is not None:
             self.canvas.scene().removeItem(self.rubberHighlight)
 
@@ -1567,6 +1322,8 @@ class Tilgjengelighet:
             self.rubberHighlight.show()
 
     def infoWidget_next(self):
+        """shows next object in infoWidget"""
+
         self.cur_sel_obj+=1
         if self.cur_sel_obj >= self.number_of_objects:
             self.cur_sel_obj = 0
@@ -1574,6 +1331,7 @@ class Tilgjengelighet:
         self.highlightSelected()
 
     def infoWidget_prev(self):
+        """shows previus object in infoWidget"""
         self.cur_sel_obj-=1
         if self.cur_sel_obj < 0:
             self.cur_sel_obj = self.number_of_objects-1
@@ -1582,15 +1340,17 @@ class Tilgjengelighet:
 
 
     def obj_info(self):
+        """Fills infowidget with info of current object"""
+
         self.infoWidget.label_object_number.setText("{0}/{1}".format(self.cur_sel_obj+1, self.number_of_objects))
         selection = self.current_search_layer.selectedFeatures()
-        #for feature in selection:
+        #for feature in selection: #For availebility icon, not currently working
             #self.set_availebility_icon(feature)
             #self.set_availebility_icon(feature, "tilgjengvurderingRullestol", self.icon_rullestol, [self.image_tilgjengelig, self.image_vanskeligTilgjengelig, self.image_ikkeTilgjengelig, self.image_ikkeVurdert], self.infoWidget.pushButton_rullestol)
             #self.set_availebility_icon(feature, "tilgjengvurderingElRull", self.icon_rullestol_el, [self.image_tilgjengelig_el, self.image_vanskeligTilgjengelig_el, self.image_ikkeTilgjengelig_el, self.image_ikkeVurdert_el], self.infoWidget.pushButton_elrullestol)
             #self.set_availebility_icon(feature, "tilgjengvurderingSyn", self.icon_syn, [self.image_tilgjengelig_syn, self.image_vanskeligTilgjengelig_syn, self.image_ikkeTilgjengelig_syn, self.image_ikkeVurdert_syn], self.infoWidget.pushButton_syn)
         if len(selection) > 0:
-            for i in range(0, len(self.current_attributes)): #self.infoWidget.gridLayout.rowCount()):
+            for i in range(0, len(self.current_attributes)):
                 try:
                     if isinstance(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())], (int, float, long)):
                         self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())]))
@@ -1604,7 +1364,7 @@ class Tilgjengelighet:
                     print(self.current_attributes[i].getAttribute())
                     print(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())])
         else:
-            for i in range(0, len(self.current_attributes)): #self.infoWidget.gridLayout.rowCount()):
+            for i in range(0, len(self.current_attributes)):
                 self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
                     
     
@@ -1651,7 +1411,9 @@ class Tilgjengelighet:
 
 
     def excelSave(self):
-        """obtaind from xytools, author: Richard Duivenvoorde"""
+        """obtaind from xytools, author: Richard Duivenvoorde
+        Saves features to excel format
+        """
         if self.current_search_layer == None: 
             QMessageBox.warning(self.iface.mainWindow(), "Finner ingen lag å eksportere")
             if self.iface.activeLayer():
@@ -1788,21 +1550,21 @@ class Tilgjengelighet:
         image.save(filename) #filename1 + ".png")#'C:\\Users\\kaspa_000\\OneDrive\\Documents\\Skole-KaspArno\\Master\\tests\\newimageTest3.png')
 
 
-    def open_export_layer_dialog(self):
+    def open_export_layer_dialog(self): #Not currently in use
         """opens the excport gui"""
         self.export_layer.show()
 
-    def OpenBrowse(self):
+    def OpenBrowser(self): #Not currently in use
         """Opens broeser to save file"""
         filename1 = QFileDialog.getSaveFileName()
         self.export_layer.lineEdit.setText(filename1)
 
-    def lagre_lag(self):
-        """Saaves layer as exported"""
+    def lagre_lag(self): #Not currently in use
+        """Saves layer as exported"""
         QgsVectorFileWriter.writeAsVectorFormat(self.iface.activeLayer(), self.export_layer.lineEdit.text(), "utf-8", None, self.export_layer.comboBox.currentText())
 
 
-    def reset(self): #unfinished
+    def reset(self): 
         """Resets the gui back to default"""
         comboBoxes = [self.dlg.comboBox_fylker, self.dlg.comboBox_komuner, self.dlg.comboBox_avstand_hc, self.dlg.comboBox_ank_stigning, self.dlg.comboBox_byggningstype, self.dlg.comboBox_rampe, self.dlg.comboBox_dortype, self.dlg.comboBox_dorbredde, self.dlg.comboBox_terskel, self.dlg.comboBox_kontrast, self.dlg.comboBox_rmp_stigning, self.dlg.comboBox_rmp_bredde, self.dlg.comboBox_handliste, self.dlg.comboBox_hand1, self.dlg.comboBox_hand2, self.dlg.comboBox_manuell_rullestol, self.dlg.comboBox_el_rullestol, self.dlg.comboBox_syn]
         for cmb in comboBoxes:
