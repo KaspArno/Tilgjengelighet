@@ -744,7 +744,10 @@ class Tilgjengelighet:
         #downloadFile
 
         url = QtCore.QUrl(online_resource)
-        print("online_resource: ", online_resource)
+
+        print("url: ", url)
+        print("online resource: ", online_resource)
+        print("query string: ", query_string)
         if QtCore.QFile.exists(fileName):
                     print("File  Exists")
                     QtCore.QFile.remove(fileName)
@@ -930,7 +933,8 @@ class Tilgjengelighet:
 
     def get_previus_search_activeLayer(self):
         activeLayer = self.iface.activeLayer()
-        if self.infoWidget.comboBox_search_history.findText(activeLayer.name()) != -1:
+        #if self.infoWidget.comboBox_search_history.findText(activeLayer.name()) != -1:
+        if self.search_history[activeLayer.name()]:
             try:
                 pre_search = self.search_history[activeLayer.name()]
                 for key, value in pre_search.attributes.iteritems():
@@ -1321,18 +1325,24 @@ class Tilgjengelighet:
         search_type_pomrade = self.dlg.tabWidget_tettsted.tabText(3) #setter egen for pområde pga problemer med norske bokstaver
 
         #setter baselayre basert på søketypen
-        if search_type == "Vei":
-            baselayer = QgsMapLayerRegistry.instance().mapLayersByName('TettstedVei')[0]
-            attributes = self.attributes_vei
-        elif search_type == "Inngang":
-            baselayer = QgsMapLayerRegistry.instance().mapLayersByName('TettstedInngangBygg')[0]
-            attributes = self.attributes_inngang
-        elif search_type == "HC-Parkering":
-            baselayer = QgsMapLayerRegistry.instance().mapLayersByName('TettstedHCparkering')[0]
-            attributes = self.attributes_hcparkering
-        elif search_type == search_type_pomrade:
-            baselayer = QgsMapLayerRegistry.instance().mapLayersByName('TettstedParkeringsomr\xc3\xa5de')[0]
-            attributes = self.attributes_pomrade
+        try:
+            if search_type == "Vei":
+                baselayer = QgsMapLayerRegistry.instance().mapLayersByName('TettstedVei')[0]
+                attributes = self.attributes_vei
+            elif search_type == "Inngang":
+                baselayer = QgsMapLayerRegistry.instance().mapLayersByName('TettstedInngangBygg')[0]
+                attributes = self.attributes_inngang
+            elif search_type == "HC-Parkering":
+                baselayer = QgsMapLayerRegistry.instance().mapLayersByName('TettstedHCparkering')[0]
+                attributes = self.attributes_hcparkering
+            elif search_type == search_type_pomrade:
+                baselayer = QgsMapLayerRegistry.instance().mapLayersByName('TettstedParkeringsomr\xc3\xa5de')[0]
+                attributes = self.attributes_pomrade
+        except IndexError as e:
+            self.show_message("Kan ikke filtrere uten data, venligst hent data og prøv igjen", msg_title="Manger Data", msg_type=QMessageBox.Warning)
+            #QMessageBox.warning(self.iface.mainWindow(), "Mangler data, hent data før filtrering")
+            return
+        
 
         self.current_attributes = attributes
         self.sourceMapTool = IdentifyGeometry(self.canvas, self.infoWidget, self.current_attributes, pickMode='selection') #For selecting abject in map and showing data
@@ -1490,8 +1500,8 @@ class Tilgjengelighet:
 
                 self.search_history[layer_name_text].add_attribute(self.fylker, int(self.fylker.getComboBox().currentIndex()), None) #lagerer valg og fylter og komuner
                 self.search_history[layer_name_text].add_attribute(self.kommuner, int(self.kommuner.getComboBox().currentIndex()), None)
-                if self.infoWidget.comboBox_search_history.findText(layer_name_text) == -1: #Legger til ikke existerende søk i søk historien
-                    self.infoWidget.comboBox_search_history.addItem(layer_name_text)
+                #if self.infoWidget.comboBox_search_history.findText(layer_name_text) == -1: #Legger til ikke existerende søk i søk historien
+                #    self.infoWidget.comboBox_search_history.addItem(layer_name_text)
                 self.dlg.close() #lukker hovedvindu for enklere se resultater
 
             else:
