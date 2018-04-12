@@ -20,56 +20,63 @@
  *                                                                         *
  ***************************************************************************/
 """
-import sys
-import os.path
+#import sys
+import os
 import io
+
+import utils
+import urllib
+import random
+import tempfile
+import string
+import datetime
 
 from qgis.core import * #QgsDataSourceURI, QgsMapLayerRegistry, QgsVectorLayer, QgsExpression, QgsFeatureRequest, QgsVectorFileWriter, QgsLayerTreeLayer, QgsLayerTreeGroup, QgsMapLayer, QgsProject, QgsFeature, QGis
 from PyQt4.QtCore import * #QSettings, QTranslator, qVersion, QCoreApplication, QPyNullVariant, QDateTime, QThread, pyqtSignal, Qt, QRect, QSize, QFileInfo
 from PyQt4.QtGui import * #QAction, QIcon, QDockWidget, QGridLayout, QLineEdit, QTableWidget, QTableWidgetItem, QMessageBox, QApplication, QHBoxLayout, QVBoxLayout, QAbstractItemView, QListWidgetItem, QAbstractItemView, QFileDialog, QLabel, QPixmap, QIcon
+from PyQt4.QtNetwork import QHttp
 from qgis.gui import QgsRubberBand
+from osgeo import gdal
+from osgeo import ogr
+from field_chooser import FieldChooserDialog
+
 
 
 # Initialize Qt resources from file resources.py
-import resources
+import resources_rc
+
 # Import the code for the dialog
 from Tilgjengelighet_dialog import TilgjengelighetDialog
-
-#from ObjectWindow.ObjectWindow import ObjectWindow
-
 from tabledialog import TableDialog
 from infoWidgetDialog import infoWidgetDialog
-
-
 from exportlayerdialog import exportLayerDialog
-from GuiAttribute import GuiAttribute
 
-import urllib2
-import urllib
-from xml.etree import ElementTree
-from PyQt4.QtNetwork import QHttp
-import random
-import os
-import tempfile
-from PyQt4 import QtCore, QtGui
-from osgeo import gdal
-from osgeo import ogr
-import string
-from featuretype import FeatureType
-from SavedSearch import SavedSearch
-
-
+from GuiAttribute import GuiAttribute #Storing user made attribute information
 from identifyGeometry import IdentifyGeometry #For selection
-
-import datetime
-import time
-
-from functools import partial
-
-import utils
-from field_chooser import FieldChooserDialog
-
+from SavedSearch import SavedSearch #Save search choises for later use
 from openlayers_plugin.openlayers_plugin import OpenlayersPlugin
+
+#import urllib2
+
+#from xml.etree import ElementTree
+
+
+
+
+#from featuretype import FeatureType
+
+
+
+
+
+#import time
+
+#from functools import partial
+
+
+
+
+
 
 
 
@@ -244,6 +251,9 @@ class Tilgjengelighet:
 
 
         #main window
+        self.dlg.tabWidget_main.setTabIcon(0, QIcon(":/plugins/Tilgjengelighet/icons/friluft.png"))
+        self.dlg.tabWidget_main.setTabIcon(1, QIcon(":/plugins/Tilgjengelighet/icons/tettsted.png"))
+
         self.dlg.tabWidget_main.currentChanged.connect(self.change_search_name) #change search name based on tab
         self.dlg.tabWidget_friluft.currentChanged.connect(self.change_search_name)
         self.dlg.tabWidget_tettsted.currentChanged.connect(self.change_search_name)
@@ -743,16 +753,16 @@ class Tilgjengelighet:
 
         #downloadFile
 
-        url = QtCore.QUrl(online_resource)
+        url = QUrl(online_resource)
 
         print("url: ", url)
         print("online resource: ", online_resource)
         print("query string: ", query_string)
-        if QtCore.QFile.exists(fileName):
+        if QFile.exists(fileName):
                     print("File  Exists")
-                    QtCore.QFile.remove(fileName)
+                    QFile.remove(fileName)
 
-        self.outFile = QtCore.QFile(fileName)
+        self.outFile = QFile(fileName)
 
         port = url.port()
         if port == -1:
@@ -767,7 +777,7 @@ class Tilgjengelighet:
 
     def hentDataInngang(self):
         #self.getFeatures(self.feature_type_tettsted[1])
-        self.getFeatures(self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())])
+        self.getFeatures(self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]) #sending featuretype based on current tab index
 
 
 
@@ -1397,7 +1407,7 @@ class Tilgjengelighet:
                 self.canvas.setExtent(self.current_search_layer.extent()) #zoomer inn på nytt lag
                 self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget ) #legger inn infowidget
                 self.showResults(self.current_search_layer) #Legger inn tabell
-                self.sourceMapTool.setLayer(self.current_search_layer) #setter nytt lag til å være mål for verktøy
+                self.sourceMapTool.setLayer(self.current_search_layer) #new layer target for tools
 
                 self.search_history[layer_name_text] = SavedSearch(layer_name_text, self.current_search_layer, layer_name, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
                 for attribute in attributes: #lagrer valg av attributter
@@ -1420,8 +1430,22 @@ class Tilgjengelighet:
 
             layer_name_text = layer_name.text()# + "Memory"
 
-            if False:#len(expr_string) == 0: #tester en liten ting med gitKrakken
-                expr_string = " \"kommune\" > 0"
+            if search_type == "Vei":
+                tempLayer = QgsVectorLayer("LineString?crs=epsg:4326", layer_name_text, "memory")
+            elif search_type == search_type_pomrade:
+                tempLayer = QgsVectorLayer("Polygon?crs=epsg:4326", layer_name_text, "memory")
+            else:
+                tempLayer = QgsVectorLayer("Point?crs=epsg:4326", layer_name_text, "memory")
+
+            if len(expr_string) == 0: #tester en liten ting med gitKrakken
+                #expr_string = " \"kommune\" > 0"
+                temp_data = mem_layer.dataProvider()
+                attr = layer.dataProvider().fields().toList()
+                temp_data.addAttributes(attr)
+                tempLayer.updateFields()
+                temp_data.addFeatures(feats)
+
+                #QgsMapLayerRegistry.instance().addMapLayer(mem_layer)
                 #self.iface.legendInterface().setLayerVisible(baselayer, True)
                 #tempLayer = baselayer
                 #self.iface.legendInterface().setLayerVisible(baselayer, False)
@@ -1444,12 +1468,7 @@ class Tilgjengelighet:
                 #    if WFSfeature.geometry().intersects(f.geometry()):
                 #      selectedFeatures.append(WFSfeature)
                 # create temp layer, eg use LineString geometry
-                if search_type == "Vei":
-                    tempLayer = QgsVectorLayer("LineString?crs=epsg:4326", layer_name_text, "memory")
-                elif search_type == search_type_pomrade:
-                    tempLayer = QgsVectorLayer("Polygon?crs=epsg:4326", layer_name_text, "memory")
-                else:
-                    tempLayer = QgsVectorLayer("Point?crs=epsg:4326", layer_name_text, "memory")
+               
                 print(datetime.datetime.now().time())
                 #QgsMapLayerRegistry.instance().addMapLayer(tempLayer)
                 print(datetime.datetime.now().time())

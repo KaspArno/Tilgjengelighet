@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/plugins/Tilgjengelighet" >
         <file>icon.png</file>
+        <file>icons/friluft.png</file>
+        <file>icons/tettsted.png</file>
+        <file>icons/kart.png</file>
     </qresource>
 </RCC>

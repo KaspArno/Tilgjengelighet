@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1200</width>
-    <height>982</height>
+    <height>765</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -104,7 +104,17 @@
          <property name="currentIndex">
           <number>1</number>
          </property>
+         <property name="iconSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
+         </property>
          <widget class="QWidget" name="tab_5">
+          <attribute name="icon">
+           <iconset resource="resources.qrc">
+            <normaloff>:/plugins/Tilgjengelighet/icons/friluft.png</normaloff>:/plugins/Tilgjengelighet/icons/friluft.png</iconset>
+          </attribute>
           <attribute name="title">
            <string>Friluft</string>
           </attribute>
@@ -3701,6 +3711,10 @@
           </layout>
          </widget>
          <widget class="QWidget" name="tab_6">
+          <attribute name="icon">
+           <iconset resource="resources.qrc">
+            <normaloff>:/plugins/Tilgjengelighet/icons/tettsted.png</normaloff>:/plugins/Tilgjengelighet/icons/tettsted.png</iconset>
+          </attribute>
           <attribute name="title">
            <string>Tettsted</string>
           </attribute>
@@ -6488,7 +6502,7 @@
           </size>
          </property>
          <property name="text">
-          <string>...</string>
+          <string>Bakgrunns Kart</string>
          </property>
          <property name="popupMode">
           <enum>QToolButton::MenuButtonPopup</enum>
@@ -6578,8 +6592,6 @@
    </item>
   </layout>
   <zorder></zorder>
-  <zorder>tabWidget_main</zorder>
-  <zorder>verticalSpacer_46</zorder>
  </widget>
  <resources/>
  <connections/>
