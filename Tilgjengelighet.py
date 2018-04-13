@@ -56,6 +56,9 @@ from identifyGeometry import IdentifyGeometry #For selection
 from SavedSearch import SavedSearch #Save search choises for later use
 from openlayers_plugin.openlayers_plugin import OpenlayersPlugin
 
+#test
+from weblayers.weblayer_registry import WebLayerTypeRegistry
+from weblayers.osm_stamen import OlOSMStamenTonerLiteLayer
 
 
 class Tilgjengelighet:
@@ -119,6 +122,11 @@ class Tilgjengelighet:
         self.ltv = self.iface.layerTreeView()
         self.model = self.ltv.model()
         self.root = QgsProject.instance().layerTreeRoot()
+
+        ##############################TEST#######################
+
+        self._olLayerTypeRegistry = WebLayerTypeRegistry(self)
+        self._ol_layers = []
 
 
     # noinspection PyMethodMayBeStatic
@@ -205,10 +213,10 @@ class Tilgjengelighet:
             self.toolbar.addAction(action)
 
         if add_to_menu:
-            self.iface.addPluginToWebMenu(
+            self.iface.addPluginToMenu(
                 self.menu,
                 action)
-            self.iface.addPluginToMenu(
+            self.iface.addPluginToWebMenu(
                 self.menu,
                 action)
 
@@ -308,7 +316,107 @@ class Tilgjengelighet:
 
         self.dlg.pushButton_filtrer.clicked.connect(self.filtrer) #Filtering out the serach and show results
 
-        self.addOLmenu()
+        ############################################################################################################
+        self._olMenu = QMenu("OpenLayers plugin")
+        self._olLayerTypeRegistry.register(OlOSMStamenTonerLiteLayer())
+
+        for group in self._olLayerTypeRegistry.groups():
+            #print("group: ", group)
+            groupMenu = group.menu()
+            for layer in self._olLayerTypeRegistry.groupLayerTypes(group):
+                #print("layer: ", layer)
+                layer.addMenuEntry(groupMenu, self.iface.mainWindow())
+            self._olMenu.addMenu(groupMenu)
+
+        #self.addOLmenu()
+        self.infoWidget.toolButton_map.setMenu(self._olMenu)
+
+
+    #####################################################################
+    #TEST
+    def addLayer(self, layerType):
+        if layerType.hasGdalTMS():
+            # create GDAL TMS layer
+            layer = self.createGdalTmsLayer(layerType, layerType.displayName)
+        else:
+            # create OpenlayersLayer
+            layer = OpenlayersLayer(self.iface, self._olLayerTypeRegistry)
+            layer.setLayerName(layerType.displayName)
+            layer.setLayerType(layerType)
+
+        if layer.isValid():
+            if len(self._ol_layers) > 0:
+                QgsMapLayerRegistry.instance().removeMapLayers( [self._ol_layers[0].id()] )
+                self._ol_layers.remove(self._ol_layers[0])
+            coordRefSys = layerType.coordRefSys(self.canvasCrs())
+            self.setMapCrs(coordRefSys)
+            QgsMapLayerRegistry.instance().addMapLayer(layer, False)
+            self._ol_layers += [layer]
+
+            # last added layer is new reference
+            self.setReferenceLayer(layer)
+
+            if not layerType.hasGdalTMS():
+                msg = "Printing and rotating of Javascript API " \
+                      "based layers is currently not supported!"
+                self.iface.messageBar().pushMessage(
+                    "OpenLayers Plugin", msg, level=QgsMessageBar.WARNING,
+                    duration=5)
+
+            #Set background mat at bacground
+            root = QgsProject.instance().layerTreeRoot()
+            root.insertLayer(-1, layer)
+
+    def setReferenceLayer(self, layer):
+        self.layer = layer
+
+    def createGdalTmsLayer(self, layerType, name):
+        # create GDAL TMS layer with XML string as datasource
+        layer = QgsRasterLayer(layerType.gdalTMSConfig(), name)
+        layer.setCustomProperty('ol_layer_type', layerType.layerTypeName)
+        return layer
+
+    def canvasCrs(self):
+        mapCanvas = self.iface.mapCanvas()
+        if QGis.QGIS_VERSION_INT >= 20300:
+            #crs = mapCanvas.mapRenderer().destinationCrs()
+            crs = mapCanvas.mapSettings().destinationCrs()
+        elif QGis.QGIS_VERSION_INT >= 10900:
+            crs = mapCanvas.mapRenderer().destinationCrs()
+        else:
+            crs = mapCanvas.mapRenderer().destinationSrs()
+        return crs
+
+    def setMapCrs(self, coordRefSys):
+        mapCanvas = self.iface.mapCanvas()
+        # On the fly
+        if QGis.QGIS_VERSION_INT >= 20300:
+            #mapCanvas.setCrsTransformEnabled(True)
+            pass
+        else:
+            #mapCanvas.mapRenderer().setProjectionsEnabled(True)
+            pass
+        canvasCrs = self.canvasCrs()
+        if canvasCrs != coordRefSys:
+            coordTrans = QgsCoordinateTransform(canvasCrs, coordRefSys)
+            extMap = mapCanvas.extent()
+            extMap = coordTrans.transform(extMap, QgsCoordinateTransform.ForwardTransform)
+            if QGis.QGIS_VERSION_INT >= 20300:
+                #mapCanvas.setDestinationCrs(coordRefSys)
+                pass
+            elif QGis.QGIS_VERSION_INT >= 10900:
+                #mapCanvas.mapRenderer().setDestinationCrs(coordRefSys)
+                pass
+            else:
+                #mapCanvas.mapRenderer().setDestinationSrs(coordRefSys)
+                pass
+            #mapCanvas.freeze(False)
+            #mapCanvas.setMapUnits(coordRefSys.mapUnits())
+            #mapCanvas.setExtent(extMap)
+
+
+
+    ###########################################################################
 
 
 
@@ -317,7 +425,7 @@ class Tilgjengelighet:
         openLayers.initGui()
         
         #self.infoWidget.toolButton_map.connect(self.showOLmenu)
-        #self.infoWidget.toolButton_map.triggered(self.infoWidget.toolButton_map.showMenu())
+        self.infoWidget.toolButton_map.triggered(self.infoWidget.toolButton_map.showMenu())
 
     def showOLmenu(self):
         self.infoWidget.toolButton_map.showMenu()
@@ -776,7 +884,8 @@ class Tilgjengelighet:
         """Open filtering window set to preweus choises"""
 
         activeLayer = self.iface.activeLayer()
-        if self.search_history[activeLayer.name()]:
+        #if self.search_history[activeLayer.name()]:
+        if activeLayer.name() in self.search_history:
             try:
                 pre_search = self.search_history[activeLayer.name()]
                 for key, value in pre_search.attributes.iteritems():
@@ -1119,7 +1228,7 @@ class Tilgjengelighet:
         
 
         self.current_attributes = attributes
-        self.sourceMapTool = IdentifyGeometry(self.canvas, self.infoWidget, self.current_attributes, pickMode='selection') #For selecting abject in map and showing data
+        #self.sourceMapTool = IdentifyGeometry(self.canvas, self.infoWidget, self.current_attributes, pickMode='selection') #For selecting abject in map and showing data
         
         fylke = self.dlg.comboBox_fylker.currentText()
         komune = self.dlg.comboBox_komuner.currentText()
@@ -1171,7 +1280,7 @@ class Tilgjengelighet:
                 self.canvas.setExtent(self.current_search_layer.extent()) #zoomer inn på nytt lag
                 self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget ) #legger inn infowidget
                 self.showResults(self.current_search_layer) #Legger inn tabell
-                self.sourceMapTool.setLayer(self.current_search_layer) #new layer target for tools
+                #self.sourceMapTool.setLayer(self.current_search_layer) #new layer target for tools
 
                 self.search_history[layer_name_text] = SavedSearch(layer_name_text, self.current_search_layer, layer_name, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
                 for attribute in attributes: #lagrer valg av attributter
@@ -1232,11 +1341,11 @@ class Tilgjengelighet:
                 self.current_search_layer = tempLayer
                 QgsMapLayerRegistry.instance().addMapLayer(self.current_search_layer)
 
-                self.canvas.setExtent(self.current_search_layer.extent())
-                self.canvas.refresh()
+                #self.canvas.setExtent(self.current_search_layer.extent())
+                #self.canvas.refresh()
                 tempLayer.triggerRepaint()
                 self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget )
-                self.sourceMapTool.setLayer(self.current_search_layer)
+                #self.sourceMapTool.setLayer(self.current_search_layer)
                 self.showResults(self.current_search_layer)
                 self.fill_infoWidget(attributes)
 
@@ -1252,10 +1361,18 @@ class Tilgjengelighet:
             else: #no objects found
                 self.show_message("Søket fullførte uten at noen objecter ble funnet", "ingen Objecter funnet", msg_info=None, msg_details=None, msg_type=QMessageBox.Information)
                 QgsMapLayerRegistry.instance().removeMapLayer( tempLayer.id() )
+        try:
+            if self.current_search_layer is not None:
+                self.current_search_layer.selectionChanged.connect(self.selectedObjects) #Filling infoWidget when objects are selected
+                mapCanvas = self.iface.mapCanvas()
+                mapCanvas.setExtent(self.current_search_layer.extent())
+                mapCanvas.zoomOut()
+                #self.canvas.setExtent(self.current_search_layer.extent())
+                #self.canvas.refresh()
+        except Exception as e:
+            print(str(e))
+            #raise e
         
-        if self.current_search_layer is not None:
-            self.current_search_layer.selectionChanged.connect(self.selectedObjects) #Filling infoWidget when objects are selected
-
         if self.rubberHighlight is not None: #removing previus single highlight
             self.canvas.scene().removeItem(self.rubberHighlight)
 

@@ -3,6 +3,9 @@
         <file>icon.png</file>
         <file>icons/friluft.png</file>
         <file>icons/tettsted.png</file>
-        <file>icons/kart.png</file>
+        <file>icons/vei.png</file>
+        <file>icons/inngang.png</file>
+        <file>icons/hcpark.png</file>
+        <file>icons/pomrade.png</file>
     </qresource>
 </RCC>

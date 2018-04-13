@@ -3729,10 +3729,17 @@
                <pointsize>10</pointsize>
               </font>
              </property>
+             <property name="tabShape">
+              <enum>QTabWidget::Rounded</enum>
+             </property>
              <property name="currentIndex">
               <number>1</number>
              </property>
              <widget class="QWidget" name="tab">
+              <attribute name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/plugins/Tilgjengelighet/icons/vei.png</normaloff>:/plugins/Tilgjengelighet/icons/vei.png</iconset>
+              </attribute>
               <attribute name="title">
                <string>Vei</string>
               </attribute>
@@ -4449,6 +4456,10 @@
               <zorder></zorder>
              </widget>
              <widget class="QWidget" name="tab_2">
+              <attribute name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/plugins/Tilgjengelighet/icons/inngang.png</normaloff>:/plugins/Tilgjengelighet/icons/inngang.png</iconset>
+              </attribute>
               <attribute name="title">
                <string>Inngang</string>
               </attribute>
@@ -5527,6 +5538,10 @@
               <zorder></zorder>
              </widget>
              <widget class="QWidget" name="tab_3">
+              <attribute name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/plugins/Tilgjengelighet/icons/hcpark.png</normaloff>:/plugins/Tilgjengelighet/icons/hcpark.png</iconset>
+              </attribute>
               <attribute name="title">
                <string>HC-Parkering</string>
               </attribute>
@@ -6057,6 +6072,10 @@
               <zorder></zorder>
              </widget>
              <widget class="QWidget" name="tab_4">
+              <attribute name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/plugins/Tilgjengelighet/icons/pomrade.png</normaloff>:/plugins/Tilgjengelighet/icons/pomrade.png</iconset>
+              </attribute>
               <attribute name="title">
                <string>Parkeringsområde</string>
               </attribute>
