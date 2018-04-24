@@ -7,5 +7,17 @@
         <file>icons/inngang.png</file>
         <file>icons/hcpark.png</file>
         <file>icons/pomrade.png</file>
+        <file>icons/IkkeVurdert.png</file>
+        <file>icons/IkkeVurdertEl.png</file>
+        <file>icons/IkkeVurdertSyn.png</file>
+        <file>icons/Tilgjengelig.png</file>
+        <file>icons/TilgjengeligEl.png</file>
+        <file>icons/TilgjengeligSyn.png</file>
+        <file>icons/VanskeligTilgjengelig.png</file>
+        <file>icons/VanskeligTilgjengeligEl.png</file>
+        <file>icons/VanskeligTilgjengeligSyn.png</file>
+        <file>icons/IkkeTilgjengelig.png</file>
+        <file>icons/IkkeTilgjengeligEl.png</file>
+        <file>icons/IkkeTilgjengeligSyn.png</file>
     </qresource>
 </RCC>

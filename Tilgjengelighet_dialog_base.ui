@@ -112,7 +112,7 @@
          </property>
          <widget class="QWidget" name="tab_5">
           <attribute name="icon">
-           <iconset resource="resources.qrc">
+           <iconset>
             <normaloff>:/plugins/Tilgjengelighet/icons/friluft.png</normaloff>:/plugins/Tilgjengelighet/icons/friluft.png</iconset>
           </attribute>
           <attribute name="title">
@@ -3712,7 +3712,7 @@
          </widget>
          <widget class="QWidget" name="tab_6">
           <attribute name="icon">
-           <iconset resource="resources.qrc">
+           <iconset>
             <normaloff>:/plugins/Tilgjengelighet/icons/tettsted.png</normaloff>:/plugins/Tilgjengelighet/icons/tettsted.png</iconset>
           </attribute>
           <attribute name="title">
@@ -3737,7 +3737,7 @@
              </property>
              <widget class="QWidget" name="tab">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/icons/vei.png</normaloff>:/plugins/Tilgjengelighet/icons/vei.png</iconset>
               </attribute>
               <attribute name="title">
@@ -4457,7 +4457,7 @@
              </widget>
              <widget class="QWidget" name="tab_2">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/icons/inngang.png</normaloff>:/plugins/Tilgjengelighet/icons/inngang.png</iconset>
               </attribute>
               <attribute name="title">
@@ -5539,7 +5539,7 @@
              </widget>
              <widget class="QWidget" name="tab_3">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/icons/hcpark.png</normaloff>:/plugins/Tilgjengelighet/icons/hcpark.png</iconset>
               </attribute>
               <attribute name="title">
@@ -6073,7 +6073,7 @@
              </widget>
              <widget class="QWidget" name="tab_4">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/icons/pomrade.png</normaloff>:/plugins/Tilgjengelighet/icons/pomrade.png</iconset>
               </attribute>
               <attribute name="title">
@@ -6560,7 +6560,7 @@
          <item>
           <widget class="QPushButton" name="pushButton_filtrer">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="whatsThis">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Filltrerer og legger til objekter etter valgte attributter&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>

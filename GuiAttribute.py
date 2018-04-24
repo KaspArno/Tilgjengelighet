@@ -1,10 +1,18 @@
+import operator
+
 class GuiAttribute(object):
 
-	def __init__(self, attribute, comboBox=None, lineEdit=None, comboBoxText=None):
+	def __init__(self, attribute, comboBox=None, lineEdit=None, comboBoxText=None, notAcceceble=None, acceceble=None, relate_notAccec=None, relate_accec=None):
 		self.attribute = attribute
 		self.comboBox = comboBox
 		self.lineEdit = lineEdit
 		self.alt_comboboxText = comboBoxText
+
+		#Krav
+		self.notAcceceble = notAcceceble
+		self.acceceble = acceceble
+		self.relate_notAccec = relate_notAccec
+		self.relate_accec = relate_accec
 
 	def setComboBox(self, comboBox):
 		self.comboBox = comboBox

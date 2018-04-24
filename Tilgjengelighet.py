@@ -20,9 +20,13 @@
  *                                                                         *
  ***************************************************************************/
 """
-#import sys
+import sys
 import os
 import io
+sys.path.append(r"C:\Program Files\QGIS 2.18\apps\Python27\Lib")
+sys.path.append(r"C:\Users\kaspa_000\.qgis2\python\plugins")
+#C:\Program Files\QGIS 2.18\apps\Python27\Lib
+import  qgis.core
 
 import utils
 import urllib
@@ -30,12 +34,13 @@ import random
 import tempfile
 import string
 import datetime
+import operator
 
 from qgis.core import * #QgsDataSourceURI, QgsMapLayerRegistry, QgsVectorLayer, QgsExpression, QgsFeatureRequest, QgsVectorFileWriter, QgsLayerTreeLayer, QgsLayerTreeGroup, QgsMapLayer, QgsProject, QgsFeature, QGis
 from PyQt4.QtCore import * #QSettings, QTranslator, qVersion, QCoreApplication, QPyNullVariant, QDateTime, QThread, pyqtSignal, Qt, QRect, QSize, QFileInfo
 from PyQt4.QtGui import * #QAction, QIcon, QDockWidget, QGridLayout, QLineEdit, QTableWidget, QTableWidgetItem, QMessageBox, QApplication, QHBoxLayout, QVBoxLayout, QAbstractItemView, QListWidgetItem, QAbstractItemView, QFileDialog, QLabel, QPixmap, QIcon
 from PyQt4.QtNetwork import QHttp
-from qgis.gui import QgsRubberBand
+from qgis.gui import QgsRubberBand, QgsMessageBar
 from osgeo import gdal
 from osgeo import ogr
 from field_chooser import FieldChooserDialog
@@ -51,14 +56,22 @@ from tabledialog import TableDialog
 from infoWidgetDialog import infoWidgetDialog
 from exportlayerdialog import exportLayerDialog
 
-from GuiAttribute import GuiAttribute #Storing user made attribute information
+from AttributeForm import AttributeForm #Storing user made attribute information
 from identifyGeometry import IdentifyGeometry #For selection
 from SavedSearch import SavedSearch #Save search choises for later use
-from openlayers_plugin.openlayers_plugin import OpenlayersPlugin
+#from openlayers_plugin.openlayers_plugin import OpenlayersPlugin
 
 #test
-from weblayers.weblayer_registry import WebLayerTypeRegistry
-from weblayers.osm_stamen import OlOSMStamenTonerLiteLayer
+from openlayers_plugin.openlayers_layer import OpenlayersLayer
+from openlayers_plugin.weblayers.weblayer_registry import WebLayerTypeRegistry
+from openlayers_plugin.weblayers.weblayer_registry import WebLayerTypeRegistry
+from openlayers_plugin.weblayers.google_maps import OlGooglePhysicalLayer, OlGoogleStreetsLayer, OlGoogleHybridLayer, OlGoogleSatelliteLayer
+from openlayers_plugin.weblayers.osm import OlOpenStreetMapLayer, OlOSMHumanitarianDataModelLayer
+from openlayers_plugin.weblayers.osm_thunderforest import OlOpenCycleMapLayer, OlOCMLandscapeLayer, OlOCMPublicTransportLayer, OlOCMOutdoorstLayer, OlOCMTransportDarkLayer, OlOCMSpinalMapLayer, OlOCMPioneerLayer, OlOCMMobileAtlasLayer, OlOCMNeighbourhoodLayer
+from openlayers_plugin.weblayers.bing_maps import OlBingRoadLayer, OlBingAerialLayer, OlBingAerialLabelledLayer
+from openlayers_plugin.weblayers.apple_maps import OlAppleiPhotoMapLayer
+from openlayers_plugin.weblayers.osm_stamen import OlOSMStamenTonerLayer, OlOSMStamenTonerLiteLayer, OlOSMStamenWatercolorLayer, OlOSMStamenTerrainLayer
+from openlayers_plugin.weblayers.wikimedia_maps import WikimediaLabelledLayer, WikimediaUnLabelledLayer
 
 
 class Tilgjengelighet:
@@ -117,6 +130,27 @@ class Tilgjengelighet:
         self.rubberHighlight = None 
 
         self.feature_type_tettsted = { "HC-Parkering" :'app:TettstedHCparkering', "Inngang" :'app:TettstedInngangBygg', u'Parkeringsomr\xe5de' : u'app:TettstedParkeringsomr\xe5de', "Vei" : 'app:TettstedVei'}
+
+        #Icons
+        self.icon_rullestol_tilgjengelig = QPixmap('icons/Tilgjengelig.png')#QIcon(':/plugins/Tilgjengelighet/icons/Tilgjengelig.png')
+        self.icon_rullestol_ikkeTilgjengelig = QPixmap('icons/IkkeTilgjengelig.png')#QIcon(':/plugins/Tilgjengelighet/icons/IkkeTilgjengelig.png')
+        self.icon_rullestol_vansekligTilgjengelig = QPixmap('icons/VanskeligTilgjengelig.png')#QIcon(':/plugins/Tilgjengelighet/icons/VanskeligTilgjengelig.png')
+        self.icon_rullestol_ikkeVurdert = QPixmap('icons/IkkeVurdert.png')#QIcon(':/plugins/Tilgjengelighet/icons/IkkeVurdert.png')
+        self.icons_rullestol = {"tilgjengelig" : self.icon_rullestol_tilgjengelig, "ikkeTilgjengelig" : self.icon_rullestol_ikkeTilgjengelig, "vanskeligTilgjengelig" : self.icon_rullestol_vansekligTilgjengelig, "ikkeVurdert" : self.icon_rullestol_ikkeTilgjengelig}
+
+        self.icon_elrullestol_tilgjengelig = QPixmap('icons/TilgjengeligEl.png')#QIcon(':/plugins/Tilgjengelighet/icons/TilgjengeligEl.png')
+        self.icon_elrullestol_ikkeTilgjengelig = QPixmap('icons/IkkeTilgjengeligEl.png')#QIcon(':/plugins/Tilgjengelighet/icons/IkkeTilgjengeligEl.png')
+        self.icon_elrullestol_vansekligTilgjengelig = QPixmap('icons/VanskeligTilgjengeligEl.png')#QIcon(':/plugins/Tilgjengelighet/icons/VanskeligTilgjengeligEl.png')
+        self.icon_elrullestol_ikkeVurdert = QPixmap('icons/IkkeVurdertEl.png')#QIcon(':/plugins/Tilgjengelighet/icons/IkkeVurdertEl.png')
+        self.icons_elrullestol = {"tilgjengelig" : self.icon_elrullestol_tilgjengelig, "ikkeTilgjengelig" : self.icon_elrullestol_ikkeTilgjengelig, "vanskeligTilgjengelig" : self.icon_elrullestol_vansekligTilgjengelig, "ikkeVurdert" : self.icon_elrullestol_ikkeTilgjengelig}
+
+        self.icon_syn_tilgjengelig = QPixmap('icons/TilgjengeligSyn.png')#QIcon(':/plugins/Tilgjengelighet/icons/TilgjengeligSyn.png')
+        self.icon_syn_ikkeTilgjengelig = QPixmap('icons/IkkeTilgjengeligSyn.png')#QIcon(':/plugins/Tilgjengelighet/icons/IkkeTilgjengeligSyn.png')
+        self.icon_syn_vansekligTilgjengelig = QPixmap('icons/VanskeligTilgjengeligSyn.png')#QIcon(':/plugins/Tilgjengelighet/icons/VanskeligTilgjengeligSyn.png')
+        self.icon_syn_ikkeVurdert = QPixmap('icons/IkkeVurdertSyn.png')#QIcon(':/plugins/Tilgjengelighet/icons/IkkeVurdertSyn.png')
+        self.icons_syn = {"tilgjengelig" : self.icon_syn_tilgjengelig, "ikkeTilgjengelig" : self.icon_syn_ikkeTilgjengelig, "vanskeligTilgjengelig" : self.icon_syn_vansekligTilgjengelig, "ikkeVurdert" : self.icon_syn_ikkeTilgjengelig}
+
+        self.icons = [self.icons_rullestol, self.icons_elrullestol, self.icons_syn]
 
         #to hide layers
         self.ltv = self.iface.layerTreeView()
@@ -302,9 +336,9 @@ class Tilgjengelighet:
         self.dlg.comboBox_fylker.currentIndexChanged.connect(self.change_search_name) #setting search name based on fylke
         self.dlg.comboBox_komuner.currentIndexChanged.connect(self.change_search_name) #setting search name based on komune
 
-        self.fylker = GuiAttribute("fylker")
+        self.fylker = AttributeForm("fylker")
         self.fylker.setComboBox(self.dlg.comboBox_fylker)
-        self.kommuner = GuiAttribute("komune")
+        self.kommuner = AttributeForm("komune")
         self.kommuner.setComboBox(self.dlg.comboBox_komuner)
 
 
@@ -316,9 +350,38 @@ class Tilgjengelighet:
 
         self.dlg.pushButton_filtrer.clicked.connect(self.filtrer) #Filtering out the serach and show results
 
+        self.openLayer_background_init()
+
         ############################################################################################################
+
+    def openLayer_background_init(self):
+        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
         self._olMenu = QMenu("OpenLayers plugin")
+
+        self._olLayerTypeRegistry.register(OlOpenStreetMapLayer())
+        self._olLayerTypeRegistry.register(OlOpenCycleMapLayer())
+        self._olLayerTypeRegistry.register(OlOCMLandscapeLayer())
+        self._olLayerTypeRegistry.register(OlOCMPublicTransportLayer())
+
+        # ID 8-10 was Yahoo
+        self._olLayerTypeRegistry.register(OlOSMHumanitarianDataModelLayer())
+
+        self._olLayerTypeRegistry.register(OlBingRoadLayer())
+        self._olLayerTypeRegistry.register(OlBingAerialLayer())
+        self._olLayerTypeRegistry.register(OlBingAerialLabelledLayer())
+
+        # Order from here on is free. Layers 0-14 should keep order for
+        # compatibility with OL Plugin < 2.3
+
+        self._olLayerTypeRegistry.register(OlOSMStamenTonerLayer())
         self._olLayerTypeRegistry.register(OlOSMStamenTonerLiteLayer())
+        self._olLayerTypeRegistry.register(OlOSMStamenWatercolorLayer())
+        self._olLayerTypeRegistry.register(OlOSMStamenTerrainLayer())
+
+        self._olLayerTypeRegistry.register(OlAppleiPhotoMapLayer())
+
+        self._olLayerTypeRegistry.register(WikimediaLabelledLayer())
+        self._olLayerTypeRegistry.register(WikimediaUnLabelledLayer())
 
         for group in self._olLayerTypeRegistry.groups():
             #print("group: ", group)
@@ -335,6 +398,7 @@ class Tilgjengelighet:
     #####################################################################
     #TEST
     def addLayer(self, layerType):
+        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
         if layerType.hasGdalTMS():
             # create GDAL TMS layer
             layer = self.createGdalTmsLayer(layerType, layerType.displayName)
@@ -368,15 +432,19 @@ class Tilgjengelighet:
             root.insertLayer(-1, layer)
 
     def setReferenceLayer(self, layer):
+        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
         self.layer = layer
 
     def createGdalTmsLayer(self, layerType, name):
+        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
+
         # create GDAL TMS layer with XML string as datasource
         layer = QgsRasterLayer(layerType.gdalTMSConfig(), name)
         layer.setCustomProperty('ol_layer_type', layerType.layerTypeName)
         return layer
 
     def canvasCrs(self):
+        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
         mapCanvas = self.iface.mapCanvas()
         if QGis.QGIS_VERSION_INT >= 20300:
             #crs = mapCanvas.mapRenderer().destinationCrs()
@@ -388,6 +456,7 @@ class Tilgjengelighet:
         return crs
 
     def setMapCrs(self, coordRefSys):
+        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
         mapCanvas = self.iface.mapCanvas()
         # On the fly
         if QGis.QGIS_VERSION_INT >= 20300:
@@ -416,43 +485,44 @@ class Tilgjengelighet:
 
 
 
+
     ###########################################################################
 
 
 
-    def addOLmenu(self):
-        openLayers = OpenlayersPlugin(self.iface, self.infoWidget)
-        openLayers.initGui()
+    #def addOLmenu(self):
+    #    openLayers = OpenlayersPlugin(self.iface, self.infoWidget)
+    #    openLayers.initGui()
         
         #self.infoWidget.toolButton_map.connect(self.showOLmenu)
-        self.infoWidget.toolButton_map.triggered(self.infoWidget.toolButton_map.showMenu())
+    #    self.infoWidget.toolButton_map.triggered(self.infoWidget.toolButton_map.showMenu())
 
-    def showOLmenu(self):
-        self.infoWidget.toolButton_map.showMenu()
+    #def showOLmenu(self):
+    #    self.infoWidget.toolButton_map.showMenu()
         
 
     def assign_combobox_inngang(self):
-        """Assigning a GuiAttribute object to each option in inngang"""
+        """Assigning a AttributeForm object to each option in inngang"""
         
-        self.avstandHC = GuiAttribute("avstandHC", self.dlg.comboBox_avstand_hc, self.dlg.lineEdit_avstand_hc)
-        self.ank_stigning = GuiAttribute("stigningAdkomstvei", self.dlg.comboBox_ank_stigning, self.dlg.lineEdit_ank_stigning)
-        self.byggningstype = GuiAttribute("funksjon", self.dlg.comboBox_byggningstype)
-        self.rampe = GuiAttribute("rampe", self.dlg.comboBox_rampe, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
-        self.dortype = GuiAttribute(u'dørtype', self.dlg.comboBox_dortype)
-        self.dorapner = GuiAttribute(u'døråpner', self.dlg.comboBox_dorapner)
-        self.man_hoyde = GuiAttribute(u'manøverknappHøyde', self.dlg.comboBox_man_hoyde, self.dlg.lineEdit_man_hoyde)
-        self.dorbredde = GuiAttribute("InngangBredde", self.dlg.comboBox_dorbredde, self.dlg.lineEdit_dorbredde)
-        self.terskel = GuiAttribute(u'terskelH\xf8yde', self.dlg.comboBox_terskel, self.dlg.lineEdit_terskel)
-        self.kontrast = GuiAttribute("kontrast", self.dlg.comboBox_kontrast)
-        self.rampe_stigning = GuiAttribute("rampeStigning", self.dlg.comboBox_rmp_stigning, self.dlg.lineEdit_rmp_stigning)
-        self.rampe_bredde = GuiAttribute("rampeBredde", self.dlg.comboBox_rmp_bredde, self.dlg.lineEdit_rmp_bredde)
-        self.handlist = GuiAttribute(u'h\xe5ndlist', self.dlg.comboBox_handliste)
-        self.handlist1 = GuiAttribute(u'h\xe5ndlistH\xf8yde1', self.dlg.comboBox_hand1, self.dlg.lineEdit_hand1)
-        self.handlist2 = GuiAttribute(u'h\xe5ndlistH\xf8yde2', self.dlg.comboBox_hand2, self.dlg.lineEdit_hand2)
-        self.rmp_tilgjengelig = GuiAttribute("rampeTilgjengelig", self.dlg.comboBox_rmp_tilgjengelig)
-        self.manuellRullestol = GuiAttribute("tilgjengvurderingRullestol", self.dlg.comboBox_manuell_rullestol)
-        self.elektriskRullestol = GuiAttribute("tilgjengvurderingElRull", self.dlg.comboBox_el_rullestol)
-        self.synshemmet = GuiAttribute("tilgjengvurderingSyn", self.dlg.comboBox_syn)
+        self.avstandHC = AttributeForm("avstandHC", self.dlg.comboBox_avstand_hc, self.dlg.lineEdit_avstand_hc)
+        self.ank_stigning = AttributeForm("stigningAdkomstvei", self.dlg.comboBox_ank_stigning, self.dlg.lineEdit_ank_stigning)
+        self.byggningstype = AttributeForm("funksjon", self.dlg.comboBox_byggningstype)
+        self.rampe = AttributeForm("rampe", self.dlg.comboBox_rampe, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
+        self.dortype = AttributeForm(u'dørtype', self.dlg.comboBox_dortype)
+        self.dorapner = AttributeForm(u'døråpner', self.dlg.comboBox_dorapner)
+        self.man_hoyde = AttributeForm(u'manøverknappHøyde', self.dlg.comboBox_man_hoyde, self.dlg.lineEdit_man_hoyde)
+        self.dorbredde = AttributeForm("InngangBredde", self.dlg.comboBox_dorbredde, self.dlg.lineEdit_dorbredde)
+        self.terskel = AttributeForm(u'terskelH\xf8yde', self.dlg.comboBox_terskel, self.dlg.lineEdit_terskel)
+        self.kontrast = AttributeForm("kontrast", self.dlg.comboBox_kontrast)
+        self.rampe_stigning = AttributeForm("rampeStigning", self.dlg.comboBox_rmp_stigning, self.dlg.lineEdit_rmp_stigning)
+        self.rampe_bredde = AttributeForm("rampeBredde", self.dlg.comboBox_rmp_bredde, self.dlg.lineEdit_rmp_bredde)
+        self.handlist = AttributeForm(u'h\xe5ndlist', self.dlg.comboBox_handliste)
+        self.handlist1 = AttributeForm(u'h\xe5ndlistH\xf8yde1', self.dlg.comboBox_hand1, self.dlg.lineEdit_hand1)
+        self.handlist2 = AttributeForm(u'h\xe5ndlistH\xf8yde2', self.dlg.comboBox_hand2, self.dlg.lineEdit_hand2)
+        self.rmp_tilgjengelig = AttributeForm("rampeTilgjengelig", self.dlg.comboBox_rmp_tilgjengelig)
+        self.manuellRullestol = AttributeForm("tilgjengvurderingRullestol", self.dlg.comboBox_manuell_rullestol)
+        self.elektriskRullestol = AttributeForm("tilgjengvurderingElRull", self.dlg.comboBox_el_rullestol)
+        self.synshemmet = AttributeForm("tilgjengvurderingSyn", self.dlg.comboBox_syn)
 
         self.attributes_inngang = [self.avstandHC, self.ank_stigning, self.byggningstype, self.rampe, self.dortype, self.dorapner, self.man_hoyde, self.dorbredde, self.terskel, self.kontrast, self.rampe_stigning, self.rampe_bredde, self.handlist, self.handlist1, self.handlist2, self.rmp_tilgjengelig, self.manuellRullestol, self.elektriskRullestol, self.synshemmet]
         self.attributes_inngang_gui = [self.byggningstype, self.dortype, self.dorapner, self.kontrast, self.handlist, self.rmp_tilgjengelig, self.manuellRullestol, self.elektriskRullestol, self.synshemmet]
@@ -489,22 +559,22 @@ class Tilgjengelighet:
         self.dlg.comboBox_rampe.currentIndexChanged.connect(self.hide_show_rampe)
 
     def assign_combobox_vei(self):
-        """Assigning a GuiAttribute object to each option in vei"""
+        """Assigning a AttributeForm object to each option in vei"""
 
-        self.gatetype = GuiAttribute("gatetype", self.dlg.comboBox_gatetype)
-        self.nedsenkning1 = GuiAttribute("nedsenk1", self.dlg.comboBox_nedsenkning1, self.dlg.lineEdit_nedsenkning1)
-        self.nedsenkning2 = GuiAttribute("nedsenk2", self.dlg.comboBox_nedsenkning2, self.dlg.lineEdit_nedsenkning2)
-        self.dekke_vei_tettsted = GuiAttribute("dekke", self.dlg.comboBox_dekke_vei_tettsted)
-        self.dekkeTilstand_vei_tettsted = GuiAttribute("dekkeTilstand", self.dlg.comboBox_dekkeTilstand_vei_tettsted)
-        self.bredde = GuiAttribute("bredde", self.dlg.comboBox_bredde, self.dlg.lineEdit_bredde)
-        self.stigning = GuiAttribute("stigning", self.dlg.comboBox_stigning, self.dlg.lineEdit_stigning)
-        self.tverfall = GuiAttribute("tverrfall", self.dlg.comboBox_tverfall, self.dlg.lineEdit_tverfall)
-        self.ledelinje = GuiAttribute("ledelinje", self.dlg.comboBox_ledelinje)
-        self.ledelinjeKontrast = GuiAttribute("ledelinjeKontrast", self.dlg.comboBox_ledelinjeKontrast)
+        self.gatetype = AttributeForm("gatetype", self.dlg.comboBox_gatetype)
+        self.nedsenkning1 = AttributeForm("nedsenk1", self.dlg.comboBox_nedsenkning1, self.dlg.lineEdit_nedsenkning1)
+        self.nedsenkning2 = AttributeForm("nedsenk2", self.dlg.comboBox_nedsenkning2, self.dlg.lineEdit_nedsenkning2)
+        self.dekke_vei_tettsted = AttributeForm("dekke", self.dlg.comboBox_dekke_vei_tettsted)
+        self.dekkeTilstand_vei_tettsted = AttributeForm("dekkeTilstand", self.dlg.comboBox_dekkeTilstand_vei_tettsted)
+        self.bredde = AttributeForm("bredde", self.dlg.comboBox_bredde, self.dlg.lineEdit_bredde)
+        self.stigning = AttributeForm("stigning", self.dlg.comboBox_stigning, self.dlg.lineEdit_stigning)
+        self.tverfall = AttributeForm("tverrfall", self.dlg.comboBox_tverfall, self.dlg.lineEdit_tverfall)
+        self.ledelinje = AttributeForm("ledelinje", self.dlg.comboBox_ledelinje)
+        self.ledelinjeKontrast = AttributeForm("ledelinjeKontrast", self.dlg.comboBox_ledelinjeKontrast)
 
-        self.manuell_rullestol_vei = GuiAttribute("tilgjengvurderingRullestol", self.dlg.comboBox_manuell_rullestol_vei)
-        self.electrisk_rullestol_vei = GuiAttribute("tilgjengvurderingElRull", self.dlg.comboBox_electrisk_rullestol_vei)
-        self.syn_vei = GuiAttribute("tilgjengvurderingSyn", self.dlg.comboBox_syn_vei)
+        self.manuell_rullestol_vei = AttributeForm("tilgjengvurderingRullestol", self.dlg.comboBox_manuell_rullestol_vei)
+        self.electrisk_rullestol_vei = AttributeForm("tilgjengvurderingElRull", self.dlg.comboBox_electrisk_rullestol_vei)
+        self.syn_vei = AttributeForm("tilgjengvurderingSyn", self.dlg.comboBox_syn_vei)
 
         self.attributes_vei = [self.gatetype, self.nedsenkning1, self.nedsenkning2, self.dekke_vei_tettsted, self.dekkeTilstand_vei_tettsted, self.bredde, self.stigning, self.tverfall, self.ledelinje, self.ledelinjeKontrast, self.manuell_rullestol_vei, self.electrisk_rullestol_vei, self.syn_vei]
         self.attributes_vei_gui = [self.gatetype, self.dekke_vei_tettsted, self.dekkeTilstand_vei_tettsted, self.ledelinje, self.ledelinjeKontrast, self.manuell_rullestol_vei, self.electrisk_rullestol_vei, self.syn_vei]
@@ -521,19 +591,19 @@ class Tilgjengelighet:
         self.dlg.comboBox_gatetype.currentIndexChanged.connect(self.hide_show_nedsenkning)
 
     def assign_combobox_hc_parkering(self):
-        """Assigning a GuiAttribute object to each option in hc parkering"""
+        """Assigning a AttributeForm object to each option in hc parkering"""
 
-        self.avstandServicebygg = GuiAttribute("avstandServicebygg", self.dlg.comboBox_avstandServicebygg, self.dlg.lineEdit_avstandServicebygg)
+        self.avstandServicebygg = AttributeForm("avstandServicebygg", self.dlg.comboBox_avstandServicebygg, self.dlg.lineEdit_avstandServicebygg)
 
-        self.overbygg = GuiAttribute("overbygg", self.dlg.comboBox_overbygg, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
-        self.skiltet = GuiAttribute("skiltet", self.dlg.comboBox_skiltet, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
-        self.merket = GuiAttribute("merket", self.dlg.comboBox_merket, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
+        self.overbygg = AttributeForm("overbygg", self.dlg.comboBox_overbygg, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
+        self.skiltet = AttributeForm("skiltet", self.dlg.comboBox_skiltet, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
+        self.merket = AttributeForm("merket", self.dlg.comboBox_merket, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
 
-        self.bredde_vei = GuiAttribute("bredde", self.dlg.comboBox_bredde_vei, self.dlg.lineEdit_bredde_vei)
-        self.lengde_vei = GuiAttribute("lengde", self.dlg.comboBox_lengde_vei, self.dlg.lineEdit_lengde_vei)
+        self.bredde_vei = AttributeForm("bredde", self.dlg.comboBox_bredde_vei, self.dlg.lineEdit_bredde_vei)
+        self.lengde_vei = AttributeForm("lengde", self.dlg.comboBox_lengde_vei, self.dlg.lineEdit_lengde_vei)
 
-        self.manuell_rullestol_hcparkering = GuiAttribute("tilgjengvurderingRullestol", self.dlg.comboBox_manuell_rullestol_hcparkering)
-        self.elektrisk_rullestol_hcparkering = GuiAttribute("tilgjengvurderingElRull", self.dlg.comboBox_elektrisk_rullestol_hcparkering)
+        self.manuell_rullestol_hcparkering = AttributeForm("tilgjengvurderingRullestol", self.dlg.comboBox_manuell_rullestol_hcparkering)
+        self.elektrisk_rullestol_hcparkering = AttributeForm("tilgjengvurderingElRull", self.dlg.comboBox_elektrisk_rullestol_hcparkering)
 
         self.attributes_hcparkering = [self.avstandServicebygg, self.overbygg, self.skiltet, self.merket, self.bredde_vei, self.lengde_vei, self.manuell_rullestol_hcparkering, self.elektrisk_rullestol_hcparkering]
         self.attributes_hcparkering_gui = [self.manuell_rullestol_hcparkering, self.elektrisk_rullestol_hcparkering]
@@ -550,15 +620,15 @@ class Tilgjengelighet:
         self.dlg.comboBox_merket.currentIndexChanged.connect(self.hide_show_merket)
 
     def assign_combobox_parkeringsomraade(self):
-        """Assigning a GuiAttribute object to each option in parkeringsområde"""
+        """Assigning a AttributeForm object to each option in parkeringsområde"""
 
-        self.overbygg_pomrade = GuiAttribute("overbygg", self.dlg.comboBox_overbygg_pomrade, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
-        self.kapasitetPersonbiler = GuiAttribute("kapasitetPersonbiler", self.dlg.comboBox_kapasitetPersonbiler, self.dlg.lineEdit_kapasitetPersonbiler)
-        self.kapasitetUU = GuiAttribute("kapasitetUU", self.dlg.comboBox_kapasitetUU, self.dlg.lineEdit_kapasitetUU)
-        self.dekke_pomrade = GuiAttribute("dekke", self.dlg.comboBox_dekke_pomrade)
-        self.dekkeTilstand_pomrade = GuiAttribute("dekkeTilstand", self.dlg.comboBox_dekkeTilstand_pomrade)
+        self.overbygg_pomrade = AttributeForm("overbygg", self.dlg.comboBox_overbygg_pomrade, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
+        self.kapasitetPersonbiler = AttributeForm("kapasitetPersonbiler", self.dlg.comboBox_kapasitetPersonbiler, self.dlg.lineEdit_kapasitetPersonbiler)
+        self.kapasitetUU = AttributeForm("kapasitetUU", self.dlg.comboBox_kapasitetUU, self.dlg.lineEdit_kapasitetUU)
+        self.dekke_pomrade = AttributeForm("dekke", self.dlg.comboBox_dekke_pomrade)
+        self.dekkeTilstand_pomrade = AttributeForm("dekkeTilstand", self.dlg.comboBox_dekkeTilstand_pomrade)
 
-        self.manuell_rullestol_pomrade = GuiAttribute("tilgjengvurderingRullestol", self.dlg.comboBox_manuell_rullestol_pomrade)
+        self.manuell_rullestol_pomrade = AttributeForm("tilgjengvurderingRullestol", self.dlg.comboBox_manuell_rullestol_pomrade)
 
         self.attributes_pomrade = [self.overbygg_pomrade, self.kapasitetPersonbiler, self.kapasitetUU, self.dekke_pomrade, self.dekkeTilstand_pomrade, self.manuell_rullestol_pomrade]
         self.attributes_pomrade_gui = [self.dekke_pomrade, self.dekkeTilstand_pomrade, self.manuell_rullestol_pomrade]
@@ -715,7 +785,8 @@ class Tilgjengelighet:
 
 
     def getFeatures(self, featuretype):
-        """Getting features for TilgjengelighetTettsted, modifye to include friluft"""
+        """This code is taken and adjusted from WFS 2.0 Client writen by Juergen Weichand
+        Getting features for TilgjengelighetTettsted, modifye to include friluft"""
 
         namespace = "http://skjema.geonorge.no/SOSI/produktspesifikasjon/TilgjengelighetTettsted/4.5"
         namespace_prefix = "app"
@@ -871,7 +942,7 @@ class Tilgjengelighet:
         """Enabels or disabels gui_attributes
 
         :param attributes: list of attributes that are to be enabeld or disabeld
-        :type attributes: list<GuiAttributes>
+        :type attributes: list<AttributeForms>
         """
         for att in attributes:
             if att.getComboBox():
@@ -913,36 +984,48 @@ class Tilgjengelighet:
   
 
 
-    def set_availebility_icon(self, feature, tilgjenglighetsvurdering, icon, images, button):
+    #def set_availebility_icon(self, feature, tilgjenglighetsvurdering, icon, images, button):
+    def set_availebility_icon(self, tilgjenglighetsvurdering, icons, button):
         """Method to set wheter object is availeble or not, not currently in use"""
-
+        button.setIcon(icons[tilgjenglighetsvurdering])
         image_tilgjengelig = images[0]
         image_vanskeligTilgjengelig = images[1]
         image_ikkeTilgjengelig = images[2]
         image_ikkeVurdert = images[3]
 
-        if feature[self.to_unicode(tilgjenglighetsvurdering)] == "tilgjengelig":
-            icon.addPixmap(image_tilgjengelig)
-            button.setIcon(icon)
-            button.setIconSize(image_tilgjengelig.rect().size())
-            button.setFixedSize(image_tilgjengelig.rect().size())
-
-        elif feature[self.to_unicode(tilgjenglighetsvurdering)] == "vanskeligTilgjengelig":
-            icon.addPixmap(image_vanskeligTilgjengelig)
-            button.setIcon(icon)
-            button.setIconSize(image_vanskeligTilgjengelig.rect().size())
-            button.setFixedSize(image_vanskeligTilgjengelig.rect().size())
-
-        elif feature[self.to_unicode(tilgjenglighetsvurdering)] == "ikkeTilgjengelig":
-            icon.addPixmap(image_ikkeTilgjengelig)
-            button.setIcon(icon)
-            button.setIconSize(image_ikkeTilgjengelig.rect().size())
-            button.setFixedSize(image_ikkeTilgjengelig.rect().size())
+        if tilgjenglighetsvurdering == "tilgjengelig":
+            button.setIcon(image_tilgjengelig)
+        elif tilgjenglighetsvurdering == "ikkeTilgjengelig":
+            button.setIcon(image_ikkeTilgjengelig)
+        elif tilgjenglighetsvurdering == "vanskeligTilgjengelig":
+            button.setIcon(image_vanskeligTilgjengelig)
         else:
-            icon.addPixmap(image_ikkeVurdert)
-            button.setIcon(icon)
-            button.setIconSize(image_ikkeVurdert.rect().size())
-            button.setFixedSize(image_ikkeVurdert.rect().size())
+            button.setIcon(image_ikkeVurdert)
+
+
+
+        # if feature[self.to_unicode(tilgjenglighetsvurdering)] == "tilgjengelig":
+        #     icon.addPixmap(image_tilgjengelig)
+        #     button.setIcon(icon)
+        #     button.setIconSize(image_tilgjengelig.rect().size())
+        #     button.setFixedSize(image_tilgjengelig.rect().size())
+
+        # elif feature[self.to_unicode(tilgjenglighetsvurdering)] == "vanskeligTilgjengelig":
+        #     icon.addPixmap(image_vanskeligTilgjengelig)
+        #     button.setIcon(icon)
+        #     button.setIconSize(image_vanskeligTilgjengelig.rect().size())
+        #     button.setFixedSize(image_vanskeligTilgjengelig.rect().size())
+
+        # elif feature[self.to_unicode(tilgjenglighetsvurdering)] == "ikkeTilgjengelig":
+        #     icon.addPixmap(image_ikkeTilgjengelig)
+        #     button.setIcon(icon)
+        #     button.setIconSize(image_ikkeTilgjengelig.rect().size())
+        #     button.setFixedSize(image_ikkeTilgjengelig.rect().size())
+        # else:
+        #     icon.addPixmap(image_ikkeVurdert)
+        #     button.setIcon(icon)
+        #     button.setIconSize(image_ikkeVurdert.rect().size())
+        #     button.setFixedSize(image_ikkeVurdert.rect().size())
 
 
 
@@ -1043,28 +1126,44 @@ class Tilgjengelighet:
         """Filling infowidget with attributes name and no value. Also ajustes size of infowidget
 
         :param attributes: List of gui attriibutes
-        :type attributes; list<GuiAttributes>
+        :type attributes: list<AttributeForms>
         """
-        for i in range(0, self.infoWidget.gridLayout.rowCount()): #Clears infowidget
-            self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setText("")
-            self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("")
-            #self.infoWidget.gridLayout.itemAtPosition(i, 2).widget().setText("")
+        # for i in range(0, self.infoWidget.gridLayout.rowCount()): #Clears infowidget
+        #     self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setText("")
+        #     self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("")
+        #     #self.infoWidget.gridLayout.itemAtPosition(i, 2).widget().setText("")
 
-        for i in range(0,len(attributes)): #Fills infowidgets and add new rows if needed
+        # for i in range(0,len(attributes)): #Fills infowidgets and add new rows if needed
 
-            if i < self.infoWidget.gridLayout.rowCount():
-                self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setText(attributes[i].getAttribute())
-                self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
+        #     if i < self.infoWidget.gridLayout.rowCount():
+        #         self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setText(attributes[i].getAttribute())
+        #         self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
 
-                self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setVisible(True)
-                self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setVisible(True)
-            else:
-                self.infoWidget.gridLayout.addWidget(QLabel(attributes[i].getAttribute()), i, 0)
-                self.infoWidget.gridLayout.addWidget(QLabel("-"), i, 1)
+        #         self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setVisible(True)
+        #         self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setVisible(True)
+        #     else:
+        #         self.infoWidget.gridLayout.addWidget(QLabel(attributes[i].getAttribute()), i, 0)
+        #         self.infoWidget.gridLayout.addWidget(QLabel("-"), i, 1)
 
-        for i in range(len(attributes), self.infoWidget.gridLayout.rowCount()): #Hides rows that are not used
-            self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setVisible(False)
-            self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setVisible(False)
+        # for i in range(len(attributes), self.infoWidget.gridLayout.rowCount()): #Hides rows that are not used
+        #     self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setVisible(False)
+        #     self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setVisible(False)
+
+        #TEST
+        for i in range(0, len(attributes)):
+            #print(i)
+            #print("widget: ", self.infoWidget.gridLayout.itemAtPosition(i, 0).widget(), "type; ", type(self.infoWidget.gridLayout.itemAtPosition(i, 0).widget()))
+            self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setText(attributes[i].getAttribute())
+            self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
+
+            for j in range(0, self.infoWidget.gridLayout.columnCount()):
+                self.infoWidget.gridLayout.itemAtPosition(i, j).widget().setVisible(True)
+
+        if len(attributes) < self.infoWidget.gridLayout.rowCount():
+            for i in range(len(attributes), self.infoWidget.gridLayout.rowCount()):
+                for j in range(0,5):
+                    self.infoWidget.gridLayout.itemAtPosition(i, j).widget().setVisible(False)
+
 
 
     def fill_fylker(self):
@@ -1142,57 +1241,83 @@ class Tilgjengelighet:
     #                 expr_string = expr_string + " AND " + "\"%s\"%s\'%s\' " % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
     #     return expr_string
 
-    def create_where_statement(self,attribute, where):
+    def create_where_statement(self,attributes):
         """Create a where statement for search
-        :param attribute:
-        :type attribute:
-        :param where:
-        :type where:
+        :param attributes:
+        :type attributes: list<AttributeForms>
 
         :returns: a where statement string sorted after given attributes
         :rtype: str
         """
-        onde_atributter = ["dørtype", "terskelHøyde", "håndlist", "håndlistHøyde1", "håndlistHøyde2"]
-        one_att_dict = {"dørtype" : "d_rtype", "terskelHøyde" : "terskelH_yde", "håndlist" : "h_ndlist", "håndlistHøyde1" : "h_ndlistH_yde1", "håndlistHøyde2" : "h_ndlistH_yde2"}
-        if attribute.getLineEdit() is None:
-            if attribute.getComboBoxCurrentText() != self.uspesifisert:
-                if len(where) == 0:
-                    where = "WHERE %s = '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
-                else:
-                    where =  where + " AND " + "%s = '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
-        else:
-            if attribute.getLineEditText() != self.uspesifisert:
-                if len(where) == 0:
-                    where = "WHERE %s %s '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
-                else:
-                    where = where + " AND " +  "%s %s '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
+
+        fylke = self.dlg.comboBox_fylker.currentText()
+        komune = self.dlg.comboBox_komuner.currentText()
+        where =  "WHERE lokalId > 0"
+
+        if fylke != "Norge":
+            if komune == self.uspesifisert:
+                where = where + " AND " + "(kommune = '{0}'".format(self.fylke_dict[fylke][0])
+                for komune_nr in range(1, len(self.fylke_dict[fylke])-1):
+                    where = where + " OR kommune = '{0}'".format(self.fylke_dict[fylke][komune_nr])
+                where = where + ")"
+            else:
+                where = where + " AND " + "kommune = '{0}'".format(self.komm_dict_nm[komune])
+
+        #onde_atributter = ["dørtype", "terskelHøyde", "håndlist", "håndlistHøyde1", "håndlistHøyde2"]
+        #one_att_dict = {"dørtype" : "d_rtype", "terskelHøyde" : "terskelH_yde", "håndlist" : "h_ndlist", "håndlistHøyde1" : "h_ndlistH_yde1", "håndlistHøyde2" : "h_ndlistH_yde2"}
+        for attribute in attributes:
+            if attribute.getLineEdit() is None:
+                if attribute.getComboBoxCurrentText() != self.uspesifisert:
+                    if len(where) == 0:
+                        where = "WHERE %s = '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
+                    else:
+                        where =  where + " AND " + "%s = '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
+            else:
+                if attribute.getLineEditText() != self.uspesifisert:
+                    if len(where) == 0:
+                        where = "WHERE %s %s '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
+                    else:
+                        where = where + " AND " +  "%s %s '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
 
         return where
 
-    def create_where_statement2(self,attribute, where):
+    def create_where_statement2(self,attributes):
         """Create an optinal where statement for search
-        :param attribute:
-        :type attribute:
-        :param where:
-        :type where:
+        :param attributes:
+        :type attributes: list<AttributeForms>
 
         :returns: a where statement string sorted after given attributes
         :rtype: str
         """
-        onde_atributter = ["dørtype", "terskelHøyde", "håndlist", "håndlistHøyde1", "håndlistHøyde2"]
-        one_att_dict = {"dørtype" : "d_rtype", "terskelHøyde" : "terskelH_yde", "håndlist" : "h_ndlist", "håndlistHøyde1" : "h_ndlistH_yde1", "håndlistHøyde2" : "h_ndlistH_yde2"}
-        if attribute.getLineEdit() is None:
-            if attribute.getComboBoxCurrentText() != self.uspesifisert:
-                if len(where) == 0:
-                    where = "\"%s\" = '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
-                else:
-                    where =  where + " AND " + "\"%s\" = '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
+        fylke = self.dlg.comboBox_fylker.currentText()
+        komune = self.dlg.comboBox_komuner.currentText()
+        where = ""
+        if fylke != "Norge":
+            if komune == self.uspesifisert:
+                where = where + " (\"kommune\"={0}".format(self.fylke_dict[fylke][0])
+                for komune_nr in range(1, len(self.fylke_dict[fylke])-1):
+                    where = where + " OR \"kommune\"={0}".format(self.fylke_dict[fylke][komune_nr])
+                where = where + ")"
+            else:
+                where = where + " \"kommune\"={0}".format(self.komm_dict_nm[komune])
         else:
-            if attribute.getLineEditText() != self.uspesifisert:
-                if len(where) == 0:
-                    where = "\"%s\" %s '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
-                else:
-                    where = where + " AND " +  "\"%s\" %s '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
+            where = " \"kommune\" > 0"
+
+        #onde_atributter = ["dørtype", "terskelHøyde", "håndlist", "håndlistHøyde1", "håndlistHøyde2"]
+        #one_att_dict = {"dørtype" : "d_rtype", "terskelHøyde" : "terskelH_yde", "håndlist" : "h_ndlist", "håndlistHøyde1" : "h_ndlistH_yde1", "håndlistHøyde2" : "h_ndlistH_yde2"}
+        for attribute in attributes:
+            if attribute.getLineEdit() is None:
+                if attribute.getComboBoxCurrentText() != self.uspesifisert:
+                    if len(where) == 0:
+                        where = "\"%s\" = '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
+                    else:
+                        where =  where + " AND " + "\"%s\" = '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
+            else:
+                if attribute.getLineEditText() != self.uspesifisert:
+                    if len(where) == 0:
+                        where = "\"%s\" %s '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
+                    else:
+                        where = where + " AND " +  "\"%s\" %s '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
 
         return where
 
@@ -1201,6 +1326,10 @@ class Tilgjengelighet:
     def filtrer(self, attributes):
         """Goes throu all atributes in current tab, creates a where statement and create layer based on that"""
         print("Filtering Start")
+
+        # msg = QMessageBox()
+        # msg.setText("Filtrerer, venligst vent")
+        # msg.open()
     
         sok_metode = self.dlg.comboBox_sok_metode.currentText() #henter hvilke metode som benyttes(virtuelt eller memory)
         layer_name = self.dlg.lineEdit_navn_paa_sok #setter navn på laget
@@ -1230,35 +1359,21 @@ class Tilgjengelighet:
         self.current_attributes = attributes
         #self.sourceMapTool = IdentifyGeometry(self.canvas, self.infoWidget, self.current_attributes, pickMode='selection') #For selecting abject in map and showing data
         
-        fylke = self.dlg.comboBox_fylker.currentText()
-        komune = self.dlg.comboBox_komuner.currentText()
+        #fylke = self.dlg.comboBox_fylker.currentText()
+        #komune = self.dlg.comboBox_komuner.currentText()
 
         #genererer express string og where spørringer med komuner
-        expr_string = ""
-        if fylke != "Norge":
-            if komune == self.uspesifisert:
-                expr_string = expr_string + " (\"kommune\"={0}".format(self.fylke_dict[fylke][0])
-                for komune_nr in range(1, len(self.fylke_dict[fylke])-1):
-                    expr_string = expr_string + " OR \"kommune\"={0}".format(self.fylke_dict[fylke][komune_nr])
-                expr_string = expr_string + ")"
-            else:
-                expr_string = expr_string + " \"kommune\"={0}".format(self.komm_dict_nm[komune])
-        else:
-            expr_string = " \"kommune\" > 0"
-        where = "WHERE lokalId > 0"
-        if fylke != "Norge":
-            if komune == self.uspesifisert:
-                where = where + " AND " + "(kommune = '{0}'".format(self.fylke_dict[fylke][0])
-                for komune_nr in range(1, len(self.fylke_dict[fylke])-1):
-                    where = where + " OR kommune = '{0}'".format(self.fylke_dict[fylke][komune_nr])
-                where = where + ")"
-            else:
-                where = where + " AND " + "kommune = '{0}'".format(self.komm_dict_nm[komune])
+        expr_string  = self.create_where_statement2(attributes)
+        
+        where = self.create_where_statement(attributes)
+
+        print ("expr_string: ", expr_string, " where: ", where)
+        
 
         #genererer express string og where spørringer basert på tilstndte attributter
-        for attribute in attributes:
-            where = self.create_where_statement(attribute, where)
-            expr_string = self.create_where_statement2(attribute, expr_string)
+        #for attribute in attributes:
+        #    where = self.create_where_statement(attribute, where)
+        #    expr_string = self.create_where_statement2(attribute, expr_string)
 
         #Genererer lag basert på virtuell metode eller memory metode
         if sok_metode == "virtual":
@@ -1343,7 +1458,7 @@ class Tilgjengelighet:
 
                 #self.canvas.setExtent(self.current_search_layer.extent())
                 #self.canvas.refresh()
-                tempLayer.triggerRepaint()
+                #tempLayer.triggerRepaint()
                 self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget )
                 #self.sourceMapTool.setLayer(self.current_search_layer)
                 self.showResults(self.current_search_layer)
@@ -1359,6 +1474,7 @@ class Tilgjengelighet:
                 self.dlg.close() #closing main window for easyer visualisation of results
 
             else: #no objects found
+                #msg.done(1)
                 self.show_message("Søket fullførte uten at noen objecter ble funnet", "ingen Objecter funnet", msg_info=None, msg_details=None, msg_type=QMessageBox.Information)
                 QgsMapLayerRegistry.instance().removeMapLayer( tempLayer.id() )
         try:
@@ -1377,7 +1493,7 @@ class Tilgjengelighet:
             self.canvas.scene().removeItem(self.rubberHighlight)
 
         self.infoWidget.label_typeSok.setText(self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()))
-
+        #msg.done(1)
         print("Filtering End")
 
 
@@ -1443,23 +1559,100 @@ class Tilgjengelighet:
             #self.set_availebility_icon(feature, "tilgjengvurderingSyn", self.icon_syn, [self.image_tilgjengelig_syn, self.image_vanskeligTilgjengelig_syn, self.image_ikkeTilgjengelig_syn, self.image_ikkeVurdert_syn], self.infoWidget.pushButton_syn)
         if len(selection) > 0:
             for i in range(0, len(self.current_attributes)):
+                value = selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())]
+                print("value: ", value, "type: ", type(value))
                 try:
-                    if isinstance(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())], (int, float, long)):
-                        self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())]))
-                    elif isinstance(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())], (QPyNullVariant)):
+                    if isinstance(value, (int, float, long)):
+                        self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(value))
+                    elif isinstance(value, (QPyNullVariant)):
                         self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
                     else:
-                        self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())])
+                        self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(value)
                 except Exception as e:
                     print(str(e))
                     self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
                     print(self.current_attributes[i].getAttribute())
-                    print(selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())])
+                    print(value)
+
+                ####Iconer i Infowidget, ikke fått til å fungere#####
+                # for j in range(0, 9, 4):#len(self.icons)):
+                #     print("j: ", j)
+                #     gridLayout = self.infoWidget.gridLayout
+                #     #img_layout = self.infoWidget.gridLayout.itemAtPosition(i, j+2).widget()
+                #     tilgjenglighetsvurdering = self.tilgjengelighetsvurdering(value, self.current_attributes[i].notAcceceble, self.current_attributes[i].acceceble, self.current_attributes[i].relate_notAccec, self.current_attributes[i].relate_accec)
+                #     #icon_size = self.infoWidget.gridLayout.itemAtPosition(i, j+2).widget().iconSize()
+                #     print("tilgjenglighetsvurdering: ", tilgjenglighetsvurdering)
+
+                #     #print("icon: ", self.icons[j][tilgjenglighetsvurdering], " type: ", type(self.icons[j][tilgjenglighetsvurdering]))
+                #     if tilgjenglighetsvurdering == "tilgjengelig":
+                #         gridLayout.itemAtPosition(i,j+2).widget().setVisible(False)
+                #         gridLayout.itemAtPosition(i,j+4).widget().setVisible(False)
+                #         gridLayout.itemAtPosition(i,j+5).widget().setVisible(False)
+                #         gridLayout.itemAtPosition(i,j+3).widget().setVisible(True)
+                #     elif tilgjenglighetsvurdering == "vanskeligTilgjengelig":
+                #         gridLayout.itemAtPosition(i,j+2).widget().setVisible(False)
+                #         gridLayout.itemAtPosition(i,j+4).widget().setVisible(True)
+                #         gridLayout.itemAtPosition(i,j+5).widget().setVisible(False)
+                #         gridLayout.itemAtPosition(i,j+3).widget().setVisible(False)
+                #     elif tilgjenglighetsvurdering == "ikkeTilgjengelig":
+                #         gridLayout.itemAtPosition(i,j+2).widget().setVisible(False)
+                #         gridLayout.itemAtPosition(i,j+4).widget().setVisible(False)
+                #         gridLayout.itemAtPosition(i,j+5).widget().setVisible(True)
+                #         gridLayout.itemAtPosition(i,j+3).widget().setVisible(False)
+                #     elif tilgjenglighetsvurdering == "ikkeVurdert":
+                #         gridLayout.itemAtPosition(i,j+2).widget().setVisible(True)
+                #         gridLayout.itemAtPosition(i,j+4).widget().setVisible(False)
+                #         gridLayout.itemAtPosition(i,j+5).widget().setVisible(False)
+                #         gridLayout.itemAtPosition(i,j+3).widget().setVisible(False)
+
+                        #img_layout.setVisible(False)
+                    #img_layout.setPixmap(self.icons[j][tilgjenglighetsvurdering])
+                    #img_layout.setIconSize(icon_size)
+                    #img_layout.setFixedSize(icon_size)
         else:
             for i in range(0, len(self.current_attributes)):
                 self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
                     
     
+    def tilgjengelighetsvurdering(self, value, notAcceceble=None, acceceble=None, relate_notAccec=None, relate_acces=None):
+        #["tilgjengelig", "ikkeTilgjengelig", "vanskeligTilgjengelig", "ikkeVurdert"]
+        if self.is_float(value):
+            value = float(value)
+        elif self.is_int(value):
+            value = int(value)
+            
+        #print("Vurederer Tilgjenglighet")
+        if value is None or value == "-" or isinstance(value, QPyNullVariant):
+            print("ikkeVurdert")
+            return "ikkeVurdert"
+        elif notAcceceble:
+            if relate_notAccec(value, notAcceceble):
+                #print("ikkeTilgjengelig")
+                return "ikkeTilgjengelig"
+        elif acceceble:
+            if relate_acces(value, acceceble):
+                #print("Tilgjengelig")
+                return "tilgjengelig"
+        else:
+            #print("vanskeligTilgjengelig")
+            return "vanskeligTilgjengelig"
+        #print("I should not see this")
+        return "ikkeVurdert"
+
+    def is_float(slef, value):
+        try:
+            float(value)
+            return True
+        except (ValueError, TypeError) as e:
+            return False
+
+    def is_int(self, value):
+        try:
+            int(value)
+            return True
+        except (ValueError, TypeError) as e:
+            return False
+
 
     def show_message(self, msg_text, msg_title=None, msg_info=None, msg_details=None, msg_type=None):
         """Show the user a message
@@ -1503,8 +1696,8 @@ class Tilgjengelighet:
 
 
     def excelSave(self):
-        """obtaind from xytools, author: Richard Duivenvoorde
-        Saves features to excel format
+        """obtaind from xytools, Saves features to excel format
+        @author: Richard Duivenvoorde
         """
         if self.current_search_layer == None: 
             QMessageBox.warning(self.iface.mainWindow(), "Finner ingen lag å eksportere")
