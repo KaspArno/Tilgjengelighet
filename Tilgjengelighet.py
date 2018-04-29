@@ -23,12 +23,7 @@
 import sys
 import os
 import io
-sys.path.append(r"C:\Program Files\QGIS 2.18\apps\Python27\Lib")
-sys.path.append(r"C:\Users\kaspa_000\.qgis2\python\plugins")
-#C:\Program Files\QGIS 2.18\apps\Python27\Lib
-import  qgis.core
 
-import utils
 import urllib
 import random
 import tempfile
@@ -43,8 +38,6 @@ from PyQt4.QtNetwork import QHttp
 from qgis.gui import QgsRubberBand, QgsMessageBar
 from osgeo import gdal
 from osgeo import ogr
-from field_chooser import FieldChooserDialog
-
 
 
 # Initialize Qt resources from file resources.py
@@ -54,14 +47,16 @@ import resources_rc
 from Tilgjengelighet_dialog import TilgjengelighetDialog
 from tabledialog import TableDialog
 from infoWidgetDialog import infoWidgetDialog
-from exportlayerdialog import exportLayerDialog
 
 from AttributeForm import AttributeForm #Storing user made attribute information
-from identifyGeometry import IdentifyGeometry #For selection
 from SavedSearch import SavedSearch #Save search choises for later use
-#from openlayers_plugin.openlayers_plugin import OpenlayersPlugin
 
-#test
+#from xytools
+from xytools.field_chooser import FieldChooserDialog
+from xytools.exportlayerdialog import exportLayerDialog
+from xytools import utils
+
+#from OpenLayers plugin
 from openlayers_plugin.openlayers_layer import OpenlayersLayer
 from openlayers_plugin.weblayers.weblayer_registry import WebLayerTypeRegistry
 from openlayers_plugin.weblayers.weblayer_registry import WebLayerTypeRegistry
@@ -826,11 +821,13 @@ class Tilgjengelighet:
         self.http.setHost(url.host(), QHttp.ConnectionModeHttps, port) #starting request
         #print("url.path: ", url.path())
         self.httpGetId = self.http.get(url.path() + query_string, self.outFile)
+        print("url: ", url.path() + query_string)
         #print("httpGetId", self.httpGetId)
         
 
     def hentData(self):
         """Getting data based on current tab index"""
+        print("FeautureType: ", self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())])
         self.getFeatures(self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]) #sending featuretype based on current tab index
 
 
@@ -1004,31 +1001,6 @@ class Tilgjengelighet:
 
 
 
-        # if feature[self.to_unicode(tilgjenglighetsvurdering)] == "tilgjengelig":
-        #     icon.addPixmap(image_tilgjengelig)
-        #     button.setIcon(icon)
-        #     button.setIconSize(image_tilgjengelig.rect().size())
-        #     button.setFixedSize(image_tilgjengelig.rect().size())
-
-        # elif feature[self.to_unicode(tilgjenglighetsvurdering)] == "vanskeligTilgjengelig":
-        #     icon.addPixmap(image_vanskeligTilgjengelig)
-        #     button.setIcon(icon)
-        #     button.setIconSize(image_vanskeligTilgjengelig.rect().size())
-        #     button.setFixedSize(image_vanskeligTilgjengelig.rect().size())
-
-        # elif feature[self.to_unicode(tilgjenglighetsvurdering)] == "ikkeTilgjengelig":
-        #     icon.addPixmap(image_ikkeTilgjengelig)
-        #     button.setIcon(icon)
-        #     button.setIconSize(image_ikkeTilgjengelig.rect().size())
-        #     button.setFixedSize(image_ikkeTilgjengelig.rect().size())
-        # else:
-        #     icon.addPixmap(image_ikkeVurdert)
-        #     button.setIcon(icon)
-        #     button.setIconSize(image_ikkeVurdert.rect().size())
-        #     button.setFixedSize(image_ikkeVurdert.rect().size())
-
-
-
     def fill_combobox(self, layer, feat_name, combobox):
         """Filling out comboboxes based in features in layer
 
@@ -1047,14 +1019,14 @@ class Tilgjengelighet:
 
         for feature in layer.getFeatures(): #Sett inn error catchment her
             try:
-                name = feature[feat_name]
+                value = feature[feat_name]
             except KeyError:
                 print("Layer does not contain given key")
                 return
-            if isinstance(name, int):
-                name = str(name)
-            if not isinstance(name, QPyNullVariant) and combobox.findText(name) < 0:
-                combobox.addItem(name)
+            if isinstance(value, int):
+                value = str(value)
+            if not isinstance(value, QPyNullVariant) and combobox.findText(value) < 0:
+                combobox.addItem(value)
 
     def fill_combobox_mer_mindre(self, combobox):
         """Fill combobox with defult text
@@ -1226,20 +1198,6 @@ class Tilgjengelighet:
                 self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + ": " + self.dlg.comboBox_fylker.currentText())
 
 
-    # def create_expr_statement(self, attribute, expr_string): #Not currently beeing used
-    #     if attribute.getLineEdit() is None:
-    #         if attribute.getComboBoxCurrentText() != self.uspesifisert:
-    #             if len(expr_string) == 0:
-    #                 expr_string = "\"%s\"=\'%s\' " % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
-    #             else:
-    #                 expr_string =  expr_string + " AND " + "\"%s\"=\'%s\' " % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
-    #     else:
-    #         if attribute.getLineEditText() != self.uspesifisert:
-    #             if len(expr_string) == 0:
-    #                 expr_string = "\"%s\"%s\'%s\' " % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
-    #             else:
-    #                 expr_string = expr_string + " AND " + "\"%s\"%s\'%s\' " % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
-    #     return expr_string
 
     def create_where_statement(self,attributes):
         """Create a where statement for search
@@ -1669,7 +1627,7 @@ class Tilgjengelighet:
         :type msg_details: str
 
         :param msg_type: the type of message
-        ;type msg_type: QMessageBox.Icon
+        :type msg_type: QMessageBox.Icon
         """
         msg = QMessageBox()
         

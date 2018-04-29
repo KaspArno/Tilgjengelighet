@@ -10,6 +10,8 @@ Welcome to Master Oppgave, Tilgjengelighet's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   project
+   tutorial
    code
 
 
