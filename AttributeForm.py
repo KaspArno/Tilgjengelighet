@@ -22,6 +22,33 @@ class AttributeForm(object):
 		self.lineEdit = lineEdit
 		self.alt_comboboxText = comboBoxText
 
+		self.opperatorDict = {u'=' : 'PropertyIsEqualTo', u'<' : 'PropertyIsLessThan', u'>' : 'PropertyIsGreaterThan', u'<=' : 'PropertyIsLessThanOrEqualTo', u'>=' : 'PropertyIsGreaterThanOrEqualTo'}
+
+		#attribute.opperator(), attribute.valueReference(), attribute.value()
+
+	def opperator(self):
+		if self.comboBox is not None:
+			if self.comboBox.currentText() in self.opperatorDict:
+				return self.opperatorDict[self.comboBox.currentText()]
+			else:
+				return self.opperatorDict[u'=']
+		else:
+			return None
+
+	def valueReference(self):
+		return self.attribute
+
+	def value(self):
+		if self.alt_comboboxText is not None:
+			return self.alt_comboboxText[self.comboBox.currentText()]
+		elif self.lineEdit is not None:
+			return self.lineEdit.text()
+		elif self.comboBox is not None:
+			return self.comboBox.currentText()
+		else:
+			return None
+
+
 	def setComboBox(self, comboBox):
 		"""Assigning comboBox
 		:param comboNox:

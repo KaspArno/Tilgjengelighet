@@ -1,0 +1,4 @@
+﻿mangler
+beggeSider
+venstreSide
+høyreSide

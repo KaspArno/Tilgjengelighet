@@ -1,0 +1,4 @@
+﻿slagdørUt
+skyvedør
+slagdørInn
+karuselldør

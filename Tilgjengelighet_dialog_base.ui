@@ -4522,7 +4522,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_avstand_hc">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -4535,7 +4535,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_avstand_hc">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -4578,7 +4578,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_ank_stigning">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -4591,7 +4591,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_ank_stigning">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -4632,7 +4632,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_byggningstype">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="sizePolicy">
                           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -4677,7 +4677,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_rampe">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -4685,21 +4685,6 @@
                            <height>0</height>
                           </size>
                          </property>
-                         <item>
-                          <property name="text">
-                           <string/>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Ja</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Nei</string>
-                          </property>
-                         </item>
                         </widget>
                        </item>
                       </layout>
@@ -4731,7 +4716,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_dortype">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -4770,7 +4755,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_dorapner">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -4811,7 +4796,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_man_hoyde">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -4824,7 +4809,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_man_hoyde">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -4867,7 +4852,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_dorbredde">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -4880,7 +4865,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_dorbredde">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -4923,7 +4908,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_terskel">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -4936,7 +4921,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_terskel">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -4977,7 +4962,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_kontrast">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -5065,7 +5050,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_rmp_stigning">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -5078,7 +5063,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_rmp_stigning">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -5121,7 +5106,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_rmp_bredde">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -5134,7 +5119,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_rmp_bredde">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -5175,7 +5160,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_handliste">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -5216,7 +5201,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_hand1">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -5229,7 +5214,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_hand1">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -5272,7 +5257,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_hand2">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -5285,7 +5270,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_hand2">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -5326,7 +5311,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_rmp_tilgjengelig">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -5412,7 +5397,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_manuell_rullestol">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -5451,7 +5436,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_el_rullestol">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -5490,7 +5475,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_syn">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
