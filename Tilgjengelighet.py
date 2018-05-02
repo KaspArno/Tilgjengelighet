@@ -81,16 +81,15 @@ class Tilgjengelighet:
             application at run time.
         :type iface: QgsInterface
         """
+        
         # Save reference to the QGIS interface
         self.iface = iface
         self.canvas = self.iface.mapCanvas()
         self.settings = QSettings()
-        # initialize plugin directory
-        self.plugin_dir = os.path.dirname(__file__)
-        self.plugin_path = os.path.dirname(os.path.realpath(__file__))
+        
         # initialize locale
         locale = QSettings().value('locale/userLocale')[0:2]
-        self.dir = os.path.dirname(__file__)
+        self.plugin_dir = os.path.dirname(__file__)
         self.locale_path = os.path.join(
             self.plugin_dir,
             'i18n',
@@ -111,12 +110,14 @@ class Tilgjengelighet:
         self.toolbar.setObjectName(u'Tilgjengelighet')
 
         
+        #Global valiables
+
         #WFS URLS
         self.namespace = "http://skjema.geonorge.no/SOSI/produktspesifikasjon/TilgjengelighetTettsted/4.5"
         self.namespace_prefix = "app"
         self.online_resource = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted"
 
-        #Globale Variabler
+        #GUI dropdown (may not be in use)
         self.uspesifisert = u"" #For emty comboboxses and lineEdtis
         self.mer = u">" #for combobokser linked to more or less iterations
         self.mindre = u"<"
@@ -124,16 +125,16 @@ class Tilgjengelighet:
         self.mindre_eller_lik = u"<="
 
         #layers and search
-        self.layers = [] #gather all baselayers
+        self.layers = [] #gather all baselayers (may not be in use)
 
         self.current_search_layer = None #The last searched layer
-        self.current_attributes = None
+        self.current_attributes = None #The attributes for current search layer
         self.search_history = {} #history of all search
-        self.rubberHighlight = None 
+        self.rubberHighlight = None #Marking the object currently visulised in infoWidget
 
-        self.feature_type_tettsted = { u"HC-Parkering" : u'TettstedHCparkering', u"Inngang" : u'TettstedInngangBygg', u'Parkeringsomr\xe5de' : u'TettstedParkeringsomr\xe5de', u"Vei" : u'TettstedVei'}
+        self.feature_type_tettsted = { u"HC-Parkering" : u'TettstedHCparkering', u"Inngang" : u'TettstedInngangBygg', u'Parkeringsomr\xe5de' : u'TettstedParkeringsomr\xe5de', u"Vei" : u'TettstedVei'} #use this to get featuretype based on current tab
 
-        #Icons
+        #Icons (may not be in use)
         self.icon_rullestol_tilgjengelig = QPixmap('icons/Tilgjengelig.png')#QIcon(':/plugins/Tilgjengelighet/icons/Tilgjengelig.png')
         self.icon_rullestol_ikkeTilgjengelig = QPixmap('icons/IkkeTilgjengelig.png')#QIcon(':/plugins/Tilgjengelighet/icons/IkkeTilgjengelig.png')
         self.icon_rullestol_vansekligTilgjengelig = QPixmap('icons/VanskeligTilgjengelig.png')#QIcon(':/plugins/Tilgjengelighet/icons/VanskeligTilgjengelig.png')
@@ -154,12 +155,12 @@ class Tilgjengelighet:
 
         self.icons = [self.icons_rullestol, self.icons_elrullestol, self.icons_syn]
 
-        #to hide layers
+        #to hide layers (may not be in use)
         self.ltv = self.iface.layerTreeView()
         self.model = self.ltv.model()
         self.root = QgsProject.instance().layerTreeRoot()
 
-        ##############################TEST#######################
+        #Open Layers, background layers
 
         self._olLayerTypeRegistry = WebLayerTypeRegistry(self)
         self._ol_layers = []
@@ -271,43 +272,48 @@ class Tilgjengelighet:
             parent=self.iface.mainWindow())
 
 
-        #main window
+        ### main window ###
         self.dlg.tabWidget_main.setTabIcon(0, QIcon(":/plugins/Tilgjengelighet/icons/friluft.png"))
         self.dlg.tabWidget_main.setTabIcon(1, QIcon(":/plugins/Tilgjengelighet/icons/tettsted.png"))
 
+        #self.dlg.pushButton_filtrer.clicked.connect(self.filtrer) #Filtering out the serach and show results
+        self.dlg.pushButton_filtrer.clicked.connect(self.newFilter)
+
+        #change search name based on tab
         self.dlg.tabWidget_main.currentChanged.connect(self.change_search_name) #change search name based on tab
         self.dlg.tabWidget_friluft.currentChanged.connect(self.change_search_name)
         self.dlg.tabWidget_tettsted.currentChanged.connect(self.change_search_name)
 
-        self.dlg.pushButton_HentData.clicked.connect(self.hentData) #collecting datata for inngangbygg
+        self.dlg.pushButton_HentData.clicked.connect(self.hentData) #collecting datata for inngangbygg (currently not in use)
 
-        self.dlg.pushButton_reset.clicked.connect(self.reset) #resett all choses
+        self.dlg.pushButton_reset.clicked.connect(self.reset) #resett all choses made by user
 
-        self.dlg.label_Progress.setVisible(False)
+        self.dlg.label_Progress.setVisible(False) #label_prgress currently not in use
 
-        #table window
+        ### table window ###
         self.dock = TableDialog(self.iface.mainWindow())
         self.dock.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows) #select entire row in table
         self.dock.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers) #Making table unediteble
 
         self.dock.tableWidget.itemClicked.connect(self.table_item_clicked) #what happens when an item is clicked in table
+        
         self.iface.addDockWidget( Qt.BottomDockWidgetArea , self.dock ) #adding seartch result Widget
-        self.dock.close()
+        self.dock.close() #Start pløugin without this dialog
 
-        #info window
+        ### info window ###
         self.infoWidget = infoWidgetDialog(self.iface.mainWindow())
         self.infoWidget.pushButton_filtrer.clicked.connect(lambda x: self.dlg.show()) #open main window
         self.infoWidget.pushButton_filtrer.clicked.connect(self.get_previus_search_activeLayer) #setting main window to match search for active layer
         self.infoWidget.pushButton_next.clicked.connect(self.infoWidget_next) #itterate the selected objekts
         self.infoWidget.pushButton_prev.clicked.connect(self.infoWidget_prev)
-        #self.infoWidget.pushButton_tabell.clicked.connect(self.show_tabell)
+        #self.infoWidget.pushButton_tabell.clicked.connect(self.show_tabell) #open tableWiddget
 
         self.selectPolygon = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Tilgjengelig.png"),
                                        QCoreApplication.translate("MyPlugin", "Polygon"),
-                                       self.iface.mainWindow())
+                                       self.iface.mainWindow()) #Change therese icons
         self.selectPoint = QAction(QIcon(":/plugins/Tilgjengelighet/icon"),
                                        QCoreApplication.translate("MyPlugin", "Punkt/Frihånd"),
-                                       self.iface.mainWindow()) 
+                                       self.iface.mainWindow()) #Change therese icons
         self.selectPolygon.triggered.connect(lambda x: self.iface.actionSelectPolygon().trigger()) #select objects by polygon
         self.selectPoint.triggered.connect(lambda x: self.iface.actionSelectFreehand().trigger()) #select objects by freehand
 
@@ -316,10 +322,10 @@ class Tilgjengelighet:
 
         self.exportExcel = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Tilgjengelig.png"),
                                        QCoreApplication.translate("MyPlugin", "Excel"),
-                                       self.iface.mainWindow()) 
+                                       self.iface.mainWindow()) #Change therese icons
         self.exportImage = QAction(QIcon(":/plugins/Tilgjengelighet/icon"),
                                        QCoreApplication.translate("MyPlugin", "Bilde"),
-                                       self.iface.mainWindow()) 
+                                       self.iface.mainWindow()) #Change therese icons
         self.exportExcel.triggered.connect(self.excelSave) #export tp excel
         self.exportImage.triggered.connect(self.imageSave) #ecport image
 
@@ -327,16 +333,18 @@ class Tilgjengelighet:
         self.infoWidget.toolButton_eksporter.addAction(self.exportImage)
 
         self.iface.addDockWidget( Qt.BottomDockWidgetArea , self.infoWidget ) #adding seartch result Widget
-        self.infoWidget.close()
+        self.infoWidget.close() #Start plugin with infoWidget dialog closed
 
 
-        #Export window
+        ### Export window ###
         self.export_layer = exportLayerDialog()
         self.export_layer.pushButton_bla.clicked.connect(self.OpenBrowser)
         self.export_layer.pushButton_lagre.clicked.connect(self.lagre_lag)
         self.export_layer.pushButton_lagre.clicked.connect(lambda x: self.export_layer.close()) #close winwo when you have saved layer
         self.export_layer.pushButton_avbryt.clicked.connect(lambda x: self.export_layer.close())
         
+        
+        ### Fill gui ###
         self.fill_fylker() #fill fylker combobox
 
         #set combobox functions
@@ -358,158 +366,8 @@ class Tilgjengelighet:
 
         self.attributes_tettsted = { u"HC-Parkering" : self.attributes_hcparkering, u"Inngang" : self.attributes_inngang, u'Parkeringsområde' : self.attributes_pomrade, u"Vei" : self.attributes_vei}
 
-        #self.dlg.pushButton_filtrer.clicked.connect(self.filtrer) #Filtering out the serach and show results
-        self.dlg.pushButton_filtrer.clicked.connect(self.newFilter)
-
-        self.openLayer_background_init()
-
-        ############################################################################################################
-
-    def openLayer_background_init(self):
-        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
-        self._olMenu = QMenu("OpenLayers plugin")
-
-        self._olLayerTypeRegistry.register(OlOpenStreetMapLayer())
-        self._olLayerTypeRegistry.register(OlOpenCycleMapLayer())
-        self._olLayerTypeRegistry.register(OlOCMLandscapeLayer())
-        self._olLayerTypeRegistry.register(OlOCMPublicTransportLayer())
-
-        # ID 8-10 was Yahoo
-        self._olLayerTypeRegistry.register(OlOSMHumanitarianDataModelLayer())
-
-        self._olLayerTypeRegistry.register(OlBingRoadLayer())
-        self._olLayerTypeRegistry.register(OlBingAerialLayer())
-        self._olLayerTypeRegistry.register(OlBingAerialLabelledLayer())
-
-        # Order from here on is free. Layers 0-14 should keep order for
-        # compatibility with OL Plugin < 2.3
-
-        self._olLayerTypeRegistry.register(OlOSMStamenTonerLayer())
-        self._olLayerTypeRegistry.register(OlOSMStamenTonerLiteLayer())
-        self._olLayerTypeRegistry.register(OlOSMStamenWatercolorLayer())
-        self._olLayerTypeRegistry.register(OlOSMStamenTerrainLayer())
-
-        self._olLayerTypeRegistry.register(OlAppleiPhotoMapLayer())
-
-        self._olLayerTypeRegistry.register(WikimediaLabelledLayer())
-        self._olLayerTypeRegistry.register(WikimediaUnLabelledLayer())
-
-        for group in self._olLayerTypeRegistry.groups():
-            #print("group: ", group)
-            groupMenu = group.menu()
-            for layer in self._olLayerTypeRegistry.groupLayerTypes(group):
-                #print("layer: ", layer)
-                layer.addMenuEntry(groupMenu, self.iface.mainWindow())
-            self._olMenu.addMenu(groupMenu)
-
-        #self.addOLmenu()
-        self.infoWidget.toolButton_map.setMenu(self._olMenu)
-
-
-    #####################################################################
-    #TEST
-    def addLayer(self, layerType):
-        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
-        if layerType.hasGdalTMS():
-            # create GDAL TMS layer
-            layer = self.createGdalTmsLayer(layerType, layerType.displayName)
-        else:
-            # create OpenlayersLayer
-            layer = OpenlayersLayer(self.iface, self._olLayerTypeRegistry)
-            layer.setLayerName(layerType.displayName)
-            layer.setLayerType(layerType)
-
-        if layer.isValid():
-            if len(self._ol_layers) > 0:
-                QgsMapLayerRegistry.instance().removeMapLayers( [self._ol_layers[0].id()] )
-                self._ol_layers.remove(self._ol_layers[0])
-            coordRefSys = layerType.coordRefSys(self.canvasCrs())
-            self.setMapCrs(coordRefSys)
-            QgsMapLayerRegistry.instance().addMapLayer(layer, False)
-            self._ol_layers += [layer]
-
-            # last added layer is new reference
-            self.setReferenceLayer(layer)
-
-            if not layerType.hasGdalTMS():
-                msg = "Printing and rotating of Javascript API " \
-                      "based layers is currently not supported!"
-                self.iface.messageBar().pushMessage(
-                    "OpenLayers Plugin", msg, level=QgsMessageBar.WARNING,
-                    duration=5)
-
-            #Set background mat at bacground
-            root = QgsProject.instance().layerTreeRoot()
-            root.insertLayer(-1, layer)
-
-    def setReferenceLayer(self, layer):
-        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
-        self.layer = layer
-
-    def createGdalTmsLayer(self, layerType, name):
-        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
-
-        # create GDAL TMS layer with XML string as datasource
-        layer = QgsRasterLayer(layerType.gdalTMSConfig(), name)
-        layer.setCustomProperty('ol_layer_type', layerType.layerTypeName)
-        return layer
-
-    def canvasCrs(self):
-        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
-        mapCanvas = self.iface.mapCanvas()
-        if QGis.QGIS_VERSION_INT >= 20300:
-            #crs = mapCanvas.mapRenderer().destinationCrs()
-            crs = mapCanvas.mapSettings().destinationCrs()
-        elif QGis.QGIS_VERSION_INT >= 10900:
-            crs = mapCanvas.mapRenderer().destinationCrs()
-        else:
-            crs = mapCanvas.mapRenderer().destinationSrs()
-        return crs
-
-    def setMapCrs(self, coordRefSys):
-        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
-        mapCanvas = self.iface.mapCanvas()
-        # On the fly
-        if QGis.QGIS_VERSION_INT >= 20300:
-            #mapCanvas.setCrsTransformEnabled(True)
-            pass
-        else:
-            #mapCanvas.mapRenderer().setProjectionsEnabled(True)
-            pass
-        canvasCrs = self.canvasCrs()
-        if canvasCrs != coordRefSys:
-            coordTrans = QgsCoordinateTransform(canvasCrs, coordRefSys)
-            extMap = mapCanvas.extent()
-            extMap = coordTrans.transform(extMap, QgsCoordinateTransform.ForwardTransform)
-            if QGis.QGIS_VERSION_INT >= 20300:
-                #mapCanvas.setDestinationCrs(coordRefSys)
-                pass
-            elif QGis.QGIS_VERSION_INT >= 10900:
-                #mapCanvas.mapRenderer().setDestinationCrs(coordRefSys)
-                pass
-            else:
-                #mapCanvas.mapRenderer().setDestinationSrs(coordRefSys)
-                pass
-            #mapCanvas.freeze(False)
-            #mapCanvas.setMapUnits(coordRefSys.mapUnits())
-            #mapCanvas.setExtent(extMap)
-
-
-
-
-    ###########################################################################
-
-
-
-    #def addOLmenu(self):
-    #    openLayers = OpenlayersPlugin(self.iface, self.infoWidget)
-    #    openLayers.initGui()
         
-        #self.infoWidget.toolButton_map.connect(self.showOLmenu)
-    #    self.infoWidget.toolButton_map.triggered(self.infoWidget.toolButton_map.showMenu())
-
-    #def showOLmenu(self):
-    #    self.infoWidget.toolButton_map.showMenu()
+        self.openLayer_background_init() #Activate open layers
         
 
     def resolve(name, basepath=None):
@@ -545,8 +403,8 @@ class Tilgjengelighet:
         self.attributes_inngang_gui = [self.byggningstype, self.dortype, self.dorapner, self.kontrast, self.handlist, self.rmp_tilgjengelig, self.manuellRullestol, self.elektriskRullestol, self.synshemmet]
         self.attributes_inngang_mer_mindre = [self.avstandHC, self.ank_stigning, self.man_hoyde, self.dorbredde, self.terskel, self.rampe_stigning, self.rampe_bredde, self.handlist1, self.handlist2]
 
-        #fyll combobox
-        path = ":/plugins/Tilgjengelighet/"
+        #fill combobox
+        path = ":/plugins/Tilgjengelighet/" #Mey not need this
         for attributt in self.attributes_inngang_mer_mindre:
             attributt.getComboBox().clear()
             self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\mer_mindre.txt')
@@ -561,33 +419,6 @@ class Tilgjengelighet:
         self.fill_combobox(self.manuellRullestol.getComboBox(), self.plugin_dir + r"\tettstedInngangTilgjengvurdering.txt")
         self.fill_combobox(self.elektriskRullestol.getComboBox(), self.plugin_dir + r"\tettstedInngangTilgjengvurdering.txt")
         self.fill_combobox(self.synshemmet.getComboBox(), self.plugin_dir + r"\tettstedInngangTilgjengvurdering.txt")
-
-        # def fill_fylker(self):
-        #     """Fill up the combobox fylker with fylker from komm.txt"""
-        #     self.dlg.comboBox_fylker.clear()
-        #     self.dlg.comboBox_fylker.addItem("Norge")
-
-        #     filename = self.plugin_dir + "\komm.txt"
-        #     self.komm_dict_nr = {}
-        #     self.komm_dict_nm = {}
-        #     self.fylke_dict = {}
-
-        #     with io.open(filename, 'r', encoding='utf-8') as f:
-        #         for line in f:
-        #             komm_nr, komune, fylke = line.rstrip('\n').split(("\t"))
-        #             komm_nr = self.to_unicode(komm_nr)
-        #             komune = self.to_unicode(komune)
-        #             fylke = self.to_unicode(fylke)
-
-        #             self.komm_dict_nr[komm_nr] = komune
-        #             self.komm_dict_nm[komune] = komm_nr
-        #             if not fylke in self.fylke_dict:
-        #                 self.fylke_dict[fylke] = []
-        #                 self.dlg.comboBox_fylker.addItem(fylke)
-
-        #             self.fylke_dict[fylke].append(komm_nr)
-
-
 
         #hide gui options
         self.dlg.label_rampe_boxs.setVisible(False)
@@ -619,6 +450,7 @@ class Tilgjengelighet:
 
         self.dlg.comboBox_rampe.currentIndexChanged.connect(self.hide_show_rampe)
 
+
     def assign_combobox_vei(self):
         """Assigning a AttributeForm object to each option in vei"""
 
@@ -641,6 +473,8 @@ class Tilgjengelighet:
         self.attributes_vei_gui = [self.gatetype, self.dekke_vei_tettsted, self.dekkeTilstand_vei_tettsted, self.ledelinje, self.ledelinjeKontrast, self.manuell_rullestol_vei, self.electrisk_rullestol_vei, self.syn_vei]
         self.attributes_vei_mer_mindre = [self.nedsenkning1,self.nedsenkning2,self.bredde,self.stigning,self.tverfall]
 
+        #Insert Fill combobox
+
         #Hide GUI
         self.dlg.comboBox_nedsenkning1.setVisible(False)
         self.dlg.lineEdit_nedsenkning1.setVisible(False)
@@ -650,6 +484,7 @@ class Tilgjengelighet:
         self.dlg.label_nedsenkning2.setVisible(False)
 
         self.dlg.comboBox_gatetype.currentIndexChanged.connect(self.hide_show_nedsenkning)
+
 
     def assign_combobox_hc_parkering(self):
         """Assigning a AttributeForm object to each option in hc parkering"""
@@ -670,6 +505,8 @@ class Tilgjengelighet:
         self.attributes_hcparkering_gui = [self.manuell_rullestol_hcparkering, self.elektrisk_rullestol_hcparkering]
         self.attributes_hcparkering_mer_mindre = [self.avstandServicebygg, self.bredde_vei, self.lengde_vei]
 
+        #insert fill combobox
+
         #Hide GUI
         self.dlg.label_bredde_vei.setVisible(False)
         self.dlg.comboBox_bredde_vei.setVisible(False)
@@ -679,6 +516,7 @@ class Tilgjengelighet:
         self.dlg.lineEdit_lengde_vei.setVisible(False)
 
         self.dlg.comboBox_merket.currentIndexChanged.connect(self.hide_show_merket)
+
 
     def assign_combobox_parkeringsomraade(self):
         """Assigning a AttributeForm object to each option in parkeringsområde"""
@@ -694,6 +532,8 @@ class Tilgjengelighet:
         self.attributes_pomrade = [self.overbygg_pomrade, self.kapasitetPersonbiler, self.kapasitetUU, self.dekke_pomrade, self.dekkeTilstand_pomrade, self.manuell_rullestol_pomrade]
         self.attributes_pomrade_gui = [self.dekke_pomrade, self.dekkeTilstand_pomrade, self.manuell_rullestol_pomrade]
         self.attributes_pomrade_mer_mindre = [self.kapasitetPersonbiler, self.kapasitetUU]
+
+        #Insert fill combobox
 
 
     def unload(self):
@@ -740,19 +580,19 @@ class Tilgjengelighet:
         return out_string
 
 
-    def updateDataReadProgress(self, bytesRead, totalBytes):
+    def updateDataReadProgress(self, bytesRead, totalBytes): #mey no longer be in use
         """Updates the dataprogess of downwloading data"""
 
         self.dlg.label_Progress.setVisible(True)
         self.dlg.label_Progress.setText("Laster inn data: ") # + self.featuretype.getFeatureType())
 
-    def httpRequestStartet(self):
+    def httpRequestStartet(self): #may no longer be in use
         """Calls when reqest has started"""
 
         print("The Request has started!")
 
 
-    def httpRequestFinished(self, requestId, error):
+    def httpRequestFinished(self, requestId, error): #May no longer be in use
         """Calls when reqest is finnished"""
 
         if requestId != self.httpGetId:
@@ -827,9 +667,9 @@ class Tilgjengelighet:
 
                                 #self.dlg.pushButton_filtrer.setEnabled(True)
                                 self.current_search_layer = vlayer
-                                self.showResults(self.current_search_layer)
+                                self.fill_tableWidget(self.current_search_layer)
                                 self.fill_infoWidget(self.current_attributes)
-                                self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget )
+                                #self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget )
 
                                 self.search_history[self.layer_name] = SavedSearch(self.layer_name, self.current_search_layer, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
                                 for attribute in self.current_attributes: #lagrer valg av attributter
@@ -866,47 +706,9 @@ class Tilgjengelighet:
                     print("featurecount not > 0")
                     self.show_message("Søket fullførte uten at noen objecter ble funnet", "ingen Objecter funnet", msg_info=None, msg_details=None, msg_type=QMessageBox.Information)
                     return
-
-                            
-                            #fill comboboxes
-                            # if self.layers[-1].name() == "TettstedInngangBygg":
-                            #     #self.fill_fylker()
-                            #     for att in self.attributes_inngang_gui:
-                            #         pass
-                            #         #self.fill_combobox(self.layers[-1], att.getAttribute(), att.getComboBox())
-                            #     for att in self.attributes_inngang_mer_mindre:
-                            #         pass
-                            #         #self.fill_combobox_mer_mindre(att.getComboBox())
-                            #     #self.toggle_enable(self.attributes_inngang, True) #enable gui
-                            # elif self.layers[-1].name() == "TettstedVei":
-                            #     for att in self.attributes_vei_gui:
-                            #         pass
-                            #         #self.fill_combobox(self.layers[-1], att.getAttribute(), att.getComboBox())
-                            #     for att in self.attributes_vei_mer_mindre:
-                            #         pass
-                            #         #self.fill_combobox_mer_mindre(att.getComboBox())
-                            #     #self.toggle_enable(self.attributes_vei, True) #enable gui
-                            # elif self.layers[-1].name() == "TettstedHCparkering":
-                            #     for att in self.attributes_hcparkering_gui:
-                            #         pass
-                            #         #self.fill_combobox(self.layers[-1], att.getAttribute(), att.getComboBox())
-                            #     for att in self.attributes_hcparkering_mer_mindre:
-                            #         pass
-                            #         #self.fill_combobox_mer_mindre(att.getComboBox())
-                            #     #self.toggle_enable(self.attributes_hcparkering, True) #enable gui
-                            # elif self.to_unicode(self.layers[-1].name()) == self.to_unicode("TettstedParkeringsomrÃ¥de"):
-                            #     for att in self.attributes_pomrade_gui:
-                            #         pass
-                            #         #self.fill_combobox(self.layers[-1], att.getAttribute(), att.getComboBox())
-                            #     for att in self.attributes_pomrade_mer_mindre:
-                            #         pass
-                                    #self.fill_combobox_mer_mindre(att.getComboBox())
-                                #self.toggle_enable(self.attributes_pomrade, True) #enable gui
-
                             
 
-
-    def getFeatures(self, featuretype):
+    def getFeatures(self, featuretype): #May no longer be in use
         """This code is taken and adjusted from WFS 2.0 Client writen by Juergen Weichand
         Getting features for TilgjengelighetTettsted, modifye to include friluft"""
 
@@ -952,25 +754,27 @@ class Tilgjengelighet:
         #print("httpGetId", self.httpGetId)
         
 
-    def hentData(self):
+    def hentData(self): #May no longer be in use
         """Getting data based on current tab index"""
         print("FeautureType: ", self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())])
         self.getFeatures(self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]) #sending featuretype based on current tab index
 
 
-    def hideNode( self, node, bHide=True ):
+    def hideNode( self, node, bHide=True ): #May no longer be in use
         if type( node ) in ( QgsLayerTreeLayer, QgsLayerTreeGroup ):
             index = self.model.node2index( node )
             self.ltv.setRowHidden( index.row(), index.parent(), bHide )
             node.setCustomProperty( 'nodeHidden', 'true' if bHide else 'false' )
             self.ltv.setCurrentIndex( self.model.node2index( self.root ) )
 
-    def hideLayer( self, mapLayer ):
+
+    def hideLayer( self, mapLayer ): #May no longer be in use
         """Hides a layer that is in layerpanel"""
         if isinstance( mapLayer, QgsMapLayer ):
             self.hideNode( self.root.findLayer( mapLayer.id() ) )
 
-    #NOTE: make generic hide/show modules
+
+    #TODO: make generic hide/show modules
     def hide_show_rampe(self):
         """Hides or shows rampe"""
         if self.dlg.comboBox_rampe.currentText() == u"Ja":
@@ -1029,6 +833,7 @@ class Tilgjengelighet:
             self.dlg.line_4.setVisible(False)
             self.dlg.line.setVisible(False)
 
+
     def hide_show_nedsenkning(self):
         if self.dlg.comboBox_gatetype.currentText() != self.uspesifisert:
             self.dlg.comboBox_nedsenkning1.setVisible(True)
@@ -1044,6 +849,7 @@ class Tilgjengelighet:
             self.dlg.comboBox_nedsenkning2.setVisible(False)
             self.dlg.lineEdit_nedsenkning2.setVisible(False)
             self.dlg.label_nedsenkning2.setVisible(False)
+
 
     def hide_show_merket(self):
         if self.dlg.comboBox_merket.currentText() == "Ja":
@@ -1062,7 +868,7 @@ class Tilgjengelighet:
             self.dlg.lineEdit_lengde_vei.setVisible(False)
 
 
-    def toggle_enable(self, attributes, tr_or_fl):
+    def toggle_enable(self, attributes, tr_or_fl): #May no longer be in use
         """Enabels or disabels gui_attributes
 
         :param attributes: list of attributes that are to be enabeld or disabeld
@@ -1097,7 +903,6 @@ class Tilgjengelighet:
                 raise
 
 
-
     def table_item_clicked(self):
         """Action for item click in table. Selects corrisponding object in map, and fills info widget with its data"""
         self.current_search_layer.setSelectedFeatures([]) #Disabels all selections in current search layer
@@ -1107,8 +912,6 @@ class Tilgjengelighet:
                 self.current_search_layer.setSelectedFeatures([self.feature_id[self.dock.tableWidget.item(index.row(), 0).text()]])
   
 
-
-    #def set_availebility_icon(self, feature, tilgjenglighetsvurdering, icon, images, button):
     def set_availebility_icon(self, tilgjenglighetsvurdering, icons, button):
         """Method to set wheter object is availeble or not, not currently in use"""
         button.setIcon(icons[tilgjenglighetsvurdering])
@@ -1127,8 +930,7 @@ class Tilgjengelighet:
             button.setIcon(image_ikkeVurdert)
 
 
-
-    def fill_combobox_old(self, layer, feat_name, combobox):
+    def fill_combobox_old(self, layer, feat_name, combobox): #Not currently in use
         """Filling out comboboxes based in features in layer
 
         :param layer: the layer that holds the attributes
@@ -1182,14 +984,15 @@ class Tilgjengelighet:
 
 
     def fill_combobox(self, combobox, filename):
+        combobox.clear()
+        combobox.addItem(self.uspesifisert)
         with open(filename, 'r') as file:
             for line in file:
-                combobox.addItem(self.uspesifisert)
                 combobox.addItem(self.to_unicode(line).rstrip('\n'))
 
 
 
-    def fill_combobox_mer_mindre(self, combobox):
+    def fill_combobox_mer_mindre(self, combobox): #Not currently in use
         """Fill combobox with defult text
 
         :param combobx: QComboBox
@@ -1200,11 +1003,10 @@ class Tilgjengelighet:
         combobox.addItem(self.mindre)
         combobox.addItem(self.mer_eller_lik)
         combobox.addItem(self.mindre_eller_lik)
-        
-        
+             
 
-    def showResults(self, layer):
-        """Presenting the result of a seach in a table
+    def fill_tableWidget(self, layer):
+        """filling tableWidget with the result of a seach in a table
 
         :param layer: search result
         :type layer: qgis._core.QgsVectorLayer
@@ -1253,8 +1055,6 @@ class Tilgjengelighet:
 
             current_object = current_object + 1
         self.dock.tableWidget.setSortingEnabled(True) #enabeling sorting
-        #self.iface.addDockWidget( Qt.BottomDockWidgetArea , self.dock ) #adding seartch result Widget
-        #self.dock.close()
 
 
     def fill_infoWidget(self, attributes):
@@ -1263,26 +1063,6 @@ class Tilgjengelighet:
         :param attributes: List of gui attriibutes
         :type attributes: list<AttributeForms>
         """
-        # for i in range(0, self.infoWidget.gridLayout.rowCount()): #Clears infowidget
-        #     self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setText("")
-        #     self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("")
-        #     #self.infoWidget.gridLayout.itemAtPosition(i, 2).widget().setText("")
-
-        # for i in range(0,len(attributes)): #Fills infowidgets and add new rows if needed
-
-        #     if i < self.infoWidget.gridLayout.rowCount():
-        #         self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setText(attributes[i].getAttribute())
-        #         self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
-
-        #         self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setVisible(True)
-        #         self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setVisible(True)
-        #     else:
-        #         self.infoWidget.gridLayout.addWidget(QLabel(attributes[i].getAttribute()), i, 0)
-        #         self.infoWidget.gridLayout.addWidget(QLabel("-"), i, 1)
-
-        # for i in range(len(attributes), self.infoWidget.gridLayout.rowCount()): #Hides rows that are not used
-        #     self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setVisible(False)
-        #     self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setVisible(False)
 
         for i in range(0, len(attributes)):
             self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setText(attributes[i].getAttribute())
@@ -1295,28 +1075,10 @@ class Tilgjengelighet:
             self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setVisible(False)
             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setVisible(False)
 
-        #TEST
-        # for i in range(0, len(attributes)):
-        #     #print(i)
-        #     #print("widget: ", self.infoWidget.gridLayout.itemAtPosition(i, 0).widget(), "type; ", type(self.infoWidget.gridLayout.itemAtPosition(i, 0).widget()))
-        #     self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setText(attributes[i].getAttribute())
-        #     self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
-
-        #     for j in range(0, self.infoWidget.gridLayout.columnCount()):
-        #         self.infoWidget.gridLayout.itemAtPosition(i, j).widget().setVisible(True)
-
-        # if len(attributes) < self.infoWidget.gridLayout.rowCount():
-        #     for i in range(len(attributes), self.infoWidget.gridLayout.rowCount()):
-        #         for j in range(0,2):
-        #             print("i: {0}, j: {1}".format(i,j))
-        #             self.infoWidget.gridLayout.itemAtPosition(i, j).widget().setVisible(False)
-        # if not self.infoWidget.isVisible():
-        #     self.infoWidget.show()
-
-
 
     def fill_fylker(self):
         """Fill up the combobox fylker with fylker from komm.txt"""
+
         self.dlg.comboBox_fylker.clear()
         self.dlg.comboBox_fylker.addItem("Norge")
 
@@ -1342,7 +1104,8 @@ class Tilgjengelighet:
 
 
     def fylke_valgt(self):
-        """Fill uo komune combobox with kommune in chosen fylke"""
+        """Fill up komune combobox with kommune in chosen fylke"""
+
         fylke = self.dlg.comboBox_fylker.currentText()
         self.dlg.comboBox_komuner.clear()
         self.dlg.comboBox_komuner.addItem(self.uspesifisert)
@@ -1353,8 +1116,10 @@ class Tilgjengelighet:
             except Exception as e:
                 print(str(e))
 
+
     def komune_valgt(self):
         """Alter the name on seach after kommune is chosen"""
+
         if self.dlg.comboBox_komuner.currentText() != "":
             self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + ": " + self.dlg.comboBox_komuner.currentText())
         else:
@@ -1363,6 +1128,7 @@ class Tilgjengelighet:
 
     def change_search_name(self):
         """Changes the name of search baes on current tab and fyle and kommune"""
+
         self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.tabWidget_main.tabText(self.dlg.tabWidget_main.currentIndex()))
         if self.dlg.tabWidget_main.currentIndex() == 0:
             self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + " " + self.dlg.tabWidget_friluft.tabText(self.dlg.tabWidget_friluft.currentIndex()))
@@ -1376,6 +1142,8 @@ class Tilgjengelighet:
 
 
     def save_search(self):
+        """"Saves the search to search history so it can set choises in GUI bac to preveus desisions"""
+
         self.search_history[self.layer_name] = SavedSearch(self.layer_name, self.current_search_layer, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
         for attribute in self.current_attributes: #lagrer valg av attributter
             self.search_history[self.layer_name].add_attribute(attribute, int(attribute.getComboBox().currentIndex()), attribute.getLineEditText())
@@ -1385,7 +1153,7 @@ class Tilgjengelighet:
 
 
 
-    def create_where_statement(self,attributes):
+    def create_where_statement(self,attributes): #currently not in use
         """Create a where statement for search
         :param attributes:
         :type attributes: list<AttributeForms>
@@ -1425,7 +1193,7 @@ class Tilgjengelighet:
 
         return where
 
-    def create_where_statement2(self,attributes):
+    def create_where_statement2(self,attributes): #currently not in use
         """Create an optinal where statement for search
         :param attributes:
         :type attributes: list<AttributeForms>
@@ -1467,11 +1235,21 @@ class Tilgjengelighet:
 
 
     def create_filter(self, opperator, valueReference, value):
+        """creates FE based on input, made to take less space in other method"""
+
         constraint = u"<fes:{0}><fes:ValueReference>app:{1}</fes:ValueReference><fes:Literal>{2}</fes:Literal></fes:{0}>".format(opperator,valueReference,value)
         return constraint
 
 
     def create_where_statement3(self, attributeList):
+        """creates FE based on user choices
+        :param attributeList:
+        :type attributeList:list<AttributeForms>
+
+        :returns: Filter Encoding
+        :rtype: str
+        """
+
         fylke = self.dlg.comboBox_fylker.currentText()
         komune = self.dlg.comboBox_komuner.currentText()
         #query = "<fes:PropertyIsNotEqualTo><fes:ValueReference>app:lokalId</fes:ValueReference><fes:Literal>0</fes:Literal></fes:PropertyIsNotEqualTo>"
@@ -1487,7 +1265,6 @@ class Tilgjengelighet:
                         value = self.fylke_dict[fylke][komune_nr]
                     query += "<fes:PropertyIsEqualTo><fes:ValueReference>app:{0}</fes:ValueReference><fes:Literal>{1}</fes:Literal></fes:PropertyIsEqualTo>".format(valueReference,value)
                     
-                    #query += "<fes:{0}><fes:ValueReference>app:{1}</fes:ValueReference><fes:Literal>{2}</fes:Literal></fes:{0}>".format("PropertyIsEqualTo", "kommune", self.fylke_dict[fylke][komune_nr])
                 if len(self.fylke_dict[fylke]) > 1: #Oslo har kun en kommune
                     query = "<Or>{0}</Or>".format(query)
             else:
@@ -1496,57 +1273,40 @@ class Tilgjengelighet:
                         value = "0" + self.komm_dict_nm[komune]
                 else:
                     value = self.komm_dict_nm[komune]
-                #value = self.komm_dict_nm[komune]
                 query += "<fes:PropertyIsEqualTo><fes:ValueReference>app:{0}</fes:ValueReference><fes:Literal>{1}</fes:Literal></fes:PropertyIsEqualTo>".format(valueReference,value)
-                #query += "<fes:{0}><fes:ValueReference>app:{1}</fes:ValueReference><fes:Literal>{2}</fes:Literal></fes:{0}>".format("PropertyIsEqualTo", "kommune", self.komm_dict_nm[komune])
-                print("query: ", query)
-
+                
         if len(query) > 0:
             constraint.append(query)
         
-        print("query: ", query)
-
-
         for attribute in attributeList:
             if attribute.getComboBoxCurrentText() != self.uspesifisert:
-                print("cmb_curent text: ", attribute.getComboBox().currentText())
-                for key, value in attribute.opperatorDict.iteritems() :
-                    print key, value
                 valueReference = attribute.valueReference()
                 value = attribute.value()
                 opperator = attribute.opperator()
                 constraint.append(self.create_filter(opperator, valueReference, value))
-                #constraint = "<fes:{0}><fes:ValueReference>app:{1}</fes:ValueReference><fes:Literal>{2}</fes:Literal></fes:{0}>".format(opperator,valueReference,value)
-                #query += constraint
-                #query +=  "<fes:{0}><fes:ValueReference>app:{1}</fes:ValueReference><fes:Literal>{2}</fes:Literal></fes:{0}>".format(attribute.opperator(), attribute.valueReference(), attribute.value())
-        # if len(query) > 0:
-        #     filterURL = "<fes:Filter><And>{0}</And></fes:Filter>".format(query)
-        #     print("query: ", query)
-        #     print("filterURL: ", filterURL)
-        #     return("FILTER=" + urllib.quote(filterURL.encode('utf8')))
+
         query = ""
         filterString = ""
         if len(constraint) > 1:
             for q in constraint:
                 query += q
             filterString = u"<fes:Filter><And>{0}</And></fes:Filter>".format(query)
-            print("filterString: ", filterString)
             return ("FILTER=" + self.to_unicode(filterString))
-            #return ("FILTER=" + filterString.encode('utf8'))
-            #return ("FILTER=" + urllib.quote(filterString.encode('utf8')))
         elif len(constraint) == 1:
             filterString = "<fes:Filter>{0}</fes:Filter>".format(constraint[0])
             print("filterString: ", filterString)
             return ("FILTER=" + self.to_unicode(filterString))
-            #return ("FILTER=" + filterString.encode('utf8'))
-            #return ("FILTER=" + urllib.quote(filterString.encode('utf8')))
-        print("filterString: ", filterString)
 
         return filterString
         
         
     def newFilter(self):
+        """Makes FE and layer based on choises from user an current tab"""
+
         print (u"NewFilterStart")
+
+        if not self.current_search_layer is None:
+            self.current_search_layer.removeSelection()
 
         self.layer_name = self.dlg.lineEdit_navn_paa_sok.text() #setter navn på laget
         search_type = self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()) #henter hvilke søk som blir gjort (må spesifisere esenere for tettsted eller friluft)
@@ -1561,28 +1321,27 @@ class Tilgjengelighet:
         url = u"http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet{0}?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::4258&typeNames=app:{1}&".format(tilgjDB, featuretype)
 
         filter_encoding = self.create_where_statement3(self.current_attributes)#= "FILTER=<fes:Filter><fes:PropertyIsEqualTo><fes:ValueReference>app:kommune</fes:ValueReference><fes:Literal>0301</fes:Literal></fes:PropertyIsEqualTo></fes:Filter>"
-        #print("url: {}".format(url + filter_encoding))
-        layer = QgsVectorLayer(url + filter_encoding, self.layer_name, "ogr")
 
+        new_layer = QgsVectorLayer(url + filter_encoding, self.layer_name, "ogr")
 
-        if layer.isValid():
+        if new_layer.isValid():
             existing_layers = self.iface.legendInterface().layers()
             try:
-                for layer in existing_layers: #Removing layers with same name
-                    if layer.name() == tempLayer.name():
-                        QgsMapLayerRegistry.instance().removeMapLayers( [layer.id()] )
+                for lyr in existing_layers: #Removing layers with same name
+                    if lyr.name() == new_layer.name():
+                        QgsMapLayerRegistry.instance().removeMapLayers( [lyr.id()] )
             except Exception as e:
                 print(str(e))
             
-            QgsMapLayerRegistry.instance().addMapLayer(layer)
-            self.current_search_layer = layer
+            QgsMapLayerRegistry.instance().addMapLayer(new_layer)
+            self.current_search_layer = new_layer
             self.current_search_layer.selectionChanged.connect(self.selectedObjects) #Filling infoWidget when objects are selected
             
             self.canvas.setExtent(self.current_search_layer.extent())
             self.canvas.zoomOut()
 
             self.fill_infoWidget(self.current_attributes)
-            self.showResults(self.current_search_layer)
+            self.fill_tableWidget(self.current_search_layer)
             self.infoWidget.show()
             
             self.infoWidget.label_typeSok.setText(self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()))
@@ -1595,7 +1354,7 @@ class Tilgjengelighet:
             self.show_message("Ingen objekter funnet", msg_title="layer not valid", msg_type=QMessageBox.Warning)
         print(u"NewFilterEnd")
 
-    def filtrer(self, attributes):
+    def filtrer(self, attributes): #Currently not in use
         """Goes throu all atributes in current tab, creates a where statement and create layer based on that"""
         print("Filtering Start")
 
@@ -1724,7 +1483,7 @@ class Tilgjengelighet:
         #         self.fill_infoWidget(attributes)
         #         self.canvas.setExtent(self.current_search_layer.extent()) #zoomer inn på nytt lag
         #         self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget ) #legger inn infowidget
-        #         self.showResults(self.current_search_layer) #Legger inn tabell
+        #         self.fill_tableWidget(self.current_search_layer) #Legger inn tabell
         #         #self.sourceMapTool.setLayer(self.current_search_layer) #new layer target for tools
 
         #         self.search_history[layer_name_text] = SavedSearch(layer_name_text, self.current_search_layer, layer_name, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
@@ -1791,7 +1550,7 @@ class Tilgjengelighet:
         #         #tempLayer.triggerRepaint()
         #         self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget )
         #         #self.sourceMapTool.setLayer(self.current_search_layer)
-        #         self.showResults(self.current_search_layer)
+        #         self.fill_tableWidget(self.current_search_layer)
         #         self.fill_infoWidget(attributes)
 
         #         self.search_history[layer_name_text] = SavedSearch(layer_name_text, self.current_search_layer, layer_name, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
@@ -1832,8 +1591,6 @@ class Tilgjengelighet:
         :param selFeatures: Selected features of layer
          """
         self.selFeatures = selFeatures
-        print(selFeatures)
-        print(len(selFeatures))
         self.number_of_objects = len(selFeatures)
         self.cur_sel_obj = 0
 
@@ -1861,6 +1618,7 @@ class Tilgjengelighet:
 
     def infoWidget_next(self):
         """shows next object in infoWidget"""
+
         try:
             self.cur_sel_obj+=1
             if self.cur_sel_obj >= self.number_of_objects:
@@ -1875,6 +1633,7 @@ class Tilgjengelighet:
 
     def infoWidget_prev(self):
         """shows previus object in infoWidget"""
+
         try:
             self.cur_sel_obj-=1
             if self.cur_sel_obj < 0:
@@ -1887,6 +1646,8 @@ class Tilgjengelighet:
             raise e
 
     def show_tabell(self):
+        """Shows or hide tableWidget"""
+
         if self.infoWidget.pushButton_tabell.isChecked():
             self.dock.show()
         else:
@@ -1899,16 +1660,11 @@ class Tilgjengelighet:
 
         self.infoWidget.label_object_number.setText("{0}/{1}".format(self.cur_sel_obj+1, self.number_of_objects))
         selection = self.current_search_layer.selectedFeatures()
-        #for feature in selection: #For availebility icon, not currently working
-            #self.set_availebility_icon(feature)
-            #self.set_availebility_icon(feature, "tilgjengvurderingRullestol", self.icon_rullestol, [self.image_tilgjengelig, self.image_vanskeligTilgjengelig, self.image_ikkeTilgjengelig, self.image_ikkeVurdert], self.infoWidget.pushButton_rullestol)
-            #self.set_availebility_icon(feature, "tilgjengvurderingElRull", self.icon_rullestol_el, [self.image_tilgjengelig_el, self.image_vanskeligTilgjengelig_el, self.image_ikkeTilgjengelig_el, self.image_ikkeVurdert_el], self.infoWidget.pushButton_elrullestol)
-            #self.set_availebility_icon(feature, "tilgjengvurderingSyn", self.icon_syn, [self.image_tilgjengelig_syn, self.image_vanskeligTilgjengelig_syn, self.image_ikkeTilgjengelig_syn, self.image_ikkeVurdert_syn], self.infoWidget.pushButton_syn)
+        
         if len(selection) > 0:
             for i in range(0, len(self.current_attributes)):
                 try:
                     value = selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())]
-                    print("value: ", value, "type: ", type(value))
                     try:
                         if isinstance(value, (int, float, long)):
                             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(value))
@@ -1920,52 +1676,15 @@ class Tilgjengelighet:
                         print(str(e))
                         self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
                         print(self.current_attributes[i].getAttribute())
-                    print(value)
                 except KeyError as e: #Rampe Stigning forsvinner...
                     print("missing attribute due to no value")
                     pass
-
-                ####Iconer i Infowidget, ikke fått til å fungere#####
-                # for j in range(0, 9, 4):#len(self.icons)):
-                #     print("j: ", j)
-                #     gridLayout = self.infoWidget.gridLayout
-                #     #img_layout = self.infoWidget.gridLayout.itemAtPosition(i, j+2).widget()
-                #     tilgjenglighetsvurdering = self.tilgjengelighetsvurdering(value, self.current_attributes[i].notAcceceble, self.current_attributes[i].acceceble, self.current_attributes[i].relate_notAccec, self.current_attributes[i].relate_accec)
-                #     #icon_size = self.infoWidget.gridLayout.itemAtPosition(i, j+2).widget().iconSize()
-                #     print("tilgjenglighetsvurdering: ", tilgjenglighetsvurdering)
-
-                #     #print("icon: ", self.icons[j][tilgjenglighetsvurdering], " type: ", type(self.icons[j][tilgjenglighetsvurdering]))
-                #     if tilgjenglighetsvurdering == "tilgjengelig":
-                #         gridLayout.itemAtPosition(i,j+2).widget().setVisible(False)
-                #         gridLayout.itemAtPosition(i,j+4).widget().setVisible(False)
-                #         gridLayout.itemAtPosition(i,j+5).widget().setVisible(False)
-                #         gridLayout.itemAtPosition(i,j+3).widget().setVisible(True)
-                #     elif tilgjenglighetsvurdering == "vanskeligTilgjengelig":
-                #         gridLayout.itemAtPosition(i,j+2).widget().setVisible(False)
-                #         gridLayout.itemAtPosition(i,j+4).widget().setVisible(True)
-                #         gridLayout.itemAtPosition(i,j+5).widget().setVisible(False)
-                #         gridLayout.itemAtPosition(i,j+3).widget().setVisible(False)
-                #     elif tilgjenglighetsvurdering == "ikkeTilgjengelig":
-                #         gridLayout.itemAtPosition(i,j+2).widget().setVisible(False)
-                #         gridLayout.itemAtPosition(i,j+4).widget().setVisible(False)
-                #         gridLayout.itemAtPosition(i,j+5).widget().setVisible(True)
-                #         gridLayout.itemAtPosition(i,j+3).widget().setVisible(False)
-                #     elif tilgjenglighetsvurdering == "ikkeVurdert":
-                #         gridLayout.itemAtPosition(i,j+2).widget().setVisible(True)
-                #         gridLayout.itemAtPosition(i,j+4).widget().setVisible(False)
-                #         gridLayout.itemAtPosition(i,j+5).widget().setVisible(False)
-                #         gridLayout.itemAtPosition(i,j+3).widget().setVisible(False)
-
-                        #img_layout.setVisible(False)
-                    #img_layout.setPixmap(self.icons[j][tilgjenglighetsvurdering])
-                    #img_layout.setIconSize(icon_size)
-                    #img_layout.setFixedSize(icon_size)
         else:
             for i in range(0, len(self.current_attributes)):
                 self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
                     
     
-    def tilgjengelighetsvurdering(self, value, notAcceceble=None, acceceble=None, relate_notAccec=None, relate_acces=None):
+    def tilgjengelighetsvurdering(self, value, notAcceceble=None, acceceble=None, relate_notAccec=None, relate_acces=None): #Not currently in use
         #["tilgjengelig", "ikkeTilgjengelig", "vanskeligTilgjengelig", "ikkeVurdert"]
         if self.is_float(value):
             value = float(value)
@@ -1990,7 +1709,9 @@ class Tilgjengelighet:
         #print("I should not see this")
         return "ikkeVurdert"
 
-    def is_float(slef, value):
+    def is_float(self, value):
+        """Checks if an object is float"""
+
         try:
             float(value)
             return True
@@ -1998,6 +1719,8 @@ class Tilgjengelighet:
             return False
 
     def is_int(self, value):
+        """checks if an object is int"""
+
         try:
             int(value)
             return True
@@ -2046,6 +1769,69 @@ class Tilgjengelighet:
         print(("value of pressed message box button:", retval))
 
 
+    
+
+
+    def savePath(self, saveType, saveExtension): #sett inn denne for exel også
+        dirPath = self.settings.value("/Tilgjengelighet/savePath", ".", type=str)    
+        (filename, filter) = QFileDialog.getSaveFileNameAndFilter(self.iface.mainWindow(),
+                    "Please save {0} file as...".format(saveType),
+                    dirPath,
+                    "Image files (*{0})".format(saveExtension),
+                    "Filter list for selecting files from a dialog box")
+        fn, fileExtension = os.path.splitext(unicode(filename))
+        if len(fn) == 0: # user choose cancel
+            return
+        self.settings.setValue("/Tilgjengelighet/savePath", QFileInfo(filename).absolutePath())
+        if fileExtension != saveExtension:
+            filename = filename + saveExtension
+
+        return dirPath, filename
+
+
+    def imageSave(self):
+        """saves a screenshot of canvas"""
+
+        dirPath, filename = self.savePath("Image", ".png")
+
+        size = self.canvas.size()
+        image = QImage(size, QImage.Format_RGB32)
+
+        painter = QPainter(image)
+        settings = self.canvas.mapSettings()
+
+        job = QgsMapRendererCustomPainterJob(settings, painter)
+        job.renderSynchronously()
+        painter.end()
+        image.save(filename) #filename1 + ".png")#'C:\\Users\\kaspa_000\\OneDrive\\Documents\\Skole-KaspArno\\Master\\tests\\newimageTest3.png')
+
+
+    def open_export_layer_dialog(self): #Not currently in use
+        """opens the excport gui"""
+        self.export_layer.show()
+
+    def OpenBrowser(self): #Not currently in use
+        """Opens broeser to save file"""
+        filename1 = QFileDialog.getSaveFileName()
+        self.export_layer.lineEdit.setText(filename1)
+
+    def lagre_lag(self): #Not currently in use
+        """Saves layer as exported"""
+        QgsVectorFileWriter.writeAsVectorFormat(self.iface.activeLayer(), self.export_layer.lineEdit.text(), "utf-8", None, self.export_layer.comboBox.currentText())
+
+
+    def reset(self): 
+        """Resets the gui back to default"""
+        comboBoxes = [self.dlg.comboBox_fylker, self.dlg.comboBox_komuner, self.dlg.comboBox_avstand_hc, self.dlg.comboBox_ank_stigning, self.dlg.comboBox_byggningstype, self.dlg.comboBox_rampe, self.dlg.comboBox_dortype, self.dlg.comboBox_dorbredde, self.dlg.comboBox_terskel, self.dlg.comboBox_kontrast, self.dlg.comboBox_rmp_stigning, self.dlg.comboBox_rmp_bredde, self.dlg.comboBox_handliste, self.dlg.comboBox_hand1, self.dlg.comboBox_hand2, self.dlg.comboBox_manuell_rullestol, self.dlg.comboBox_el_rullestol, self.dlg.comboBox_syn]
+        for cmb in comboBoxes:
+            cmb.setCurrentIndex(0)
+
+        lineEdits = [self.dlg.lineEdit_avstand_hc, self.dlg.lineEdit_ank_stigning, self.dlg.lineEdit_dorbredde, self.dlg.lineEdit_terskel, self.dlg.lineEdit_rmp_stigning, self.dlg.lineEdit_rmp_bredde, self.dlg.lineEdit_hand1, self.dlg.lineEdit_hand2, self.dlg.lineEdit_navn_paa_sok]
+        for le in lineEdits:
+            le.setText("")
+
+
+    ###############################################Xy-tools#####################################################
     def excelSave(self):
         """obtaind from xytools, Saves features to excel format
         @author: Richard Duivenvoorde
@@ -2126,107 +1912,147 @@ class Tilgjengelighet:
         xlw.saveFile()
         QMessageBox.information(self.iface.mainWindow(), "Success", "Successfully saved as xls file")
 
+  ########################### Open Lyaers Plugin ##########################################
+    def openLayer_background_init(self):
+        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
+        self._olMenu = QMenu("OpenLayers plugin")
 
-    def savePath(self, saveType, saveExtension): #sett inn denne for exel også
-        dirPath = self.settings.value("/Tilgjengelighet/savePath", ".", type=str)    
-        (filename, filter) = QFileDialog.getSaveFileNameAndFilter(self.iface.mainWindow(),
-                    "Please save {0} file as...".format(saveType),
-                    dirPath,
-                    "Image files (*{0})".format(saveExtension),
-                    "Filter list for selecting files from a dialog box")
-        fn, fileExtension = os.path.splitext(unicode(filename))
-        if len(fn) == 0: # user choose cancel
-            return
-        self.settings.setValue("/Tilgjengelighet/savePath", QFileInfo(filename).absolutePath())
-        if fileExtension != saveExtension:
-            filename = filename + saveExtension
+        self._olLayerTypeRegistry.register(OlOpenStreetMapLayer())
+        self._olLayerTypeRegistry.register(OlOpenCycleMapLayer())
+        self._olLayerTypeRegistry.register(OlOCMLandscapeLayer())
+        self._olLayerTypeRegistry.register(OlOCMPublicTransportLayer())
 
-        return dirPath, filename
+        # ID 8-10 was Yahoo
+        self._olLayerTypeRegistry.register(OlOSMHumanitarianDataModelLayer())
 
+        self._olLayerTypeRegistry.register(OlBingRoadLayer())
+        self._olLayerTypeRegistry.register(OlBingAerialLayer())
+        self._olLayerTypeRegistry.register(OlBingAerialLabelledLayer())
 
-    def imageSave(self):
-        #filename1 = QFileDialog.getSaveFileName()
-        #print(filename1)
+        # Order from here on is free. Layers 0-14 should keep order for
+        # compatibility with OL Plugin < 2.3
 
-        # dirPath = self.settings.value("/Tilgjengelighet/savePath", ".", type=str)    
-        # (filename, filter) = QFileDialog.getSaveFileNameAndFilter(self.iface.mainWindow(),
-        #             "Please save image file as...",
-        #             dirPath,
-        #             "Image files (*.png)",
-        #             "Filter list for selecting files from a dialog box")
-        # fn, fileExtension = os.path.splitext(unicode(filename))
-        # if len(fn) == 0: # user choose cancel
-        #     return
-        # self.settings.setValue("/Tilgjengelighet/savePath", QFileInfo(filename).absolutePath())
-        # if fileExtension != '.png':
-        #     filename = filename + '.png'
+        self._olLayerTypeRegistry.register(OlOSMStamenTonerLayer())
+        self._olLayerTypeRegistry.register(OlOSMStamenTonerLiteLayer())
+        self._olLayerTypeRegistry.register(OlOSMStamenWatercolorLayer())
+        self._olLayerTypeRegistry.register(OlOSMStamenTerrainLayer())
 
-        dirPath, filename = self.savePath("Image", ".png")
+        self._olLayerTypeRegistry.register(OlAppleiPhotoMapLayer())
 
-        print("path: " + dirPath + " name: " + filename)
-        size = self.canvas.size()
-        image = QImage(size, QImage.Format_RGB32)
+        self._olLayerTypeRegistry.register(WikimediaLabelledLayer())
+        self._olLayerTypeRegistry.register(WikimediaUnLabelledLayer())
 
-        painter = QPainter(image)
-        settings = self.canvas.mapSettings()
+        for group in self._olLayerTypeRegistry.groups():
+            #print("group: ", group)
+            groupMenu = group.menu()
+            for layer in self._olLayerTypeRegistry.groupLayerTypes(group):
+                #print("layer: ", layer)
+                layer.addMenuEntry(groupMenu, self.iface.mainWindow())
+            self._olMenu.addMenu(groupMenu)
 
-        # You can fine tune the settings here for different
-        # dpi, extent, antialiasing...
-        # Just make sure the size of the target image matches
-
-        # You can also add additional layers. In the case here,
-        # this helps to add layers that haven't been added to the
-        # canvas yet
-        #layers = settings.layers()
-        #settings.setLayers([layerP.id(), layerL.id()] + layers)
-
-        job = QgsMapRendererCustomPainterJob(settings, painter)
-        job.renderSynchronously()
-        painter.end()
-        image.save(filename) #filename1 + ".png")#'C:\\Users\\kaspa_000\\OneDrive\\Documents\\Skole-KaspArno\\Master\\tests\\newimageTest3.png')
+        #self.addOLmenu()
+        self.infoWidget.toolButton_map.setMenu(self._olMenu)
 
 
-    def open_export_layer_dialog(self): #Not currently in use
-        """opens the excport gui"""
-        self.export_layer.show()
+    
+    def addLayer(self, layerType):
+        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
+        if layerType.hasGdalTMS():
+            # create GDAL TMS layer
+            layer = self.createGdalTmsLayer(layerType, layerType.displayName)
+        else:
+            # create OpenlayersLayer
+            layer = OpenlayersLayer(self.iface, self._olLayerTypeRegistry)
+            layer.setLayerName(layerType.displayName)
+            layer.setLayerType(layerType)
 
-    def OpenBrowser(self): #Not currently in use
-        """Opens broeser to save file"""
-        filename1 = QFileDialog.getSaveFileName()
-        self.export_layer.lineEdit.setText(filename1)
+        if layer.isValid():
+            if len(self._ol_layers) > 0:
+                QgsMapLayerRegistry.instance().removeMapLayers( [self._ol_layers[0].id()] )
+                self._ol_layers.remove(self._ol_layers[0])
+            coordRefSys = layerType.coordRefSys(self.canvasCrs())
+            self.setMapCrs(coordRefSys)
+            QgsMapLayerRegistry.instance().addMapLayer(layer, False)
+            self._ol_layers += [layer]
 
-    def lagre_lag(self): #Not currently in use
-        """Saves layer as exported"""
-        QgsVectorFileWriter.writeAsVectorFormat(self.iface.activeLayer(), self.export_layer.lineEdit.text(), "utf-8", None, self.export_layer.comboBox.currentText())
+            # last added layer is new reference
+            self.setReferenceLayer(layer)
+
+            if not layerType.hasGdalTMS():
+                msg = "Printing and rotating of Javascript API " \
+                      "based layers is currently not supported!"
+                self.iface.messageBar().pushMessage(
+                    "OpenLayers Plugin", msg, level=QgsMessageBar.WARNING,
+                    duration=5)
+
+            #Set background mat at bacground
+            root = QgsProject.instance().layerTreeRoot()
+            root.insertLayer(-1, layer)
+
+    def setReferenceLayer(self, layer):
+        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
+        self.layer = layer
+
+    def createGdalTmsLayer(self, layerType, name):
+        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
+
+        # create GDAL TMS layer with XML string as datasource
+        layer = QgsRasterLayer(layerType.gdalTMSConfig(), name)
+        layer.setCustomProperty('ol_layer_type', layerType.layerTypeName)
+        return layer
+
+    def canvasCrs(self):
+        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
+        mapCanvas = self.iface.mapCanvas()
+        if QGis.QGIS_VERSION_INT >= 20300:
+            #crs = mapCanvas.mapRenderer().destinationCrs()
+            crs = mapCanvas.mapSettings().destinationCrs()
+        elif QGis.QGIS_VERSION_INT >= 10900:
+            crs = mapCanvas.mapRenderer().destinationCrs()
+        else:
+            crs = mapCanvas.mapRenderer().destinationSrs()
+        return crs
+
+    def setMapCrs(self, coordRefSys):
+        """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
+        mapCanvas = self.iface.mapCanvas()
+        # On the fly
+        if QGis.QGIS_VERSION_INT >= 20300:
+            #mapCanvas.setCrsTransformEnabled(True)
+            pass
+        else:
+            #mapCanvas.mapRenderer().setProjectionsEnabled(True)
+            pass
+        canvasCrs = self.canvasCrs()
+        if canvasCrs != coordRefSys:
+            coordTrans = QgsCoordinateTransform(canvasCrs, coordRefSys)
+            extMap = mapCanvas.extent()
+            extMap = coordTrans.transform(extMap, QgsCoordinateTransform.ForwardTransform)
+            if QGis.QGIS_VERSION_INT >= 20300:
+                #mapCanvas.setDestinationCrs(coordRefSys)
+                pass
+            elif QGis.QGIS_VERSION_INT >= 10900:
+                #mapCanvas.mapRenderer().setDestinationCrs(coordRefSys)
+                pass
+            else:
+                #mapCanvas.mapRenderer().setDestinationSrs(coordRefSys)
+                pass
+            #mapCanvas.freeze(False)
+            #mapCanvas.setMapUnits(coordRefSys.mapUnits())
+            #mapCanvas.setExtent(extMap)
 
 
-    def reset(self): 
-        """Resets the gui back to default"""
-        comboBoxes = [self.dlg.comboBox_fylker, self.dlg.comboBox_komuner, self.dlg.comboBox_avstand_hc, self.dlg.comboBox_ank_stigning, self.dlg.comboBox_byggningstype, self.dlg.comboBox_rampe, self.dlg.comboBox_dortype, self.dlg.comboBox_dorbredde, self.dlg.comboBox_terskel, self.dlg.comboBox_kontrast, self.dlg.comboBox_rmp_stigning, self.dlg.comboBox_rmp_bredde, self.dlg.comboBox_handliste, self.dlg.comboBox_hand1, self.dlg.comboBox_hand2, self.dlg.comboBox_manuell_rullestol, self.dlg.comboBox_el_rullestol, self.dlg.comboBox_syn]
-        for cmb in comboBoxes:
-            cmb.setCurrentIndex(0)
 
-        lineEdits = [self.dlg.lineEdit_avstand_hc, self.dlg.lineEdit_ank_stigning, self.dlg.lineEdit_dorbredde, self.dlg.lineEdit_terskel, self.dlg.lineEdit_rmp_stigning, self.dlg.lineEdit_rmp_bredde, self.dlg.lineEdit_hand1, self.dlg.lineEdit_hand2, self.dlg.lineEdit_navn_paa_sok]
-        for le in lineEdits:
-            le.setText("")
 
-  
-
+    ###########################################################################
 
 
     def run(self):
         #reloadPlugin('Tilgjengelighet')
         """Run method that performs all the real work"""
 
-
-        # show the dialog
         self.dlg.show()
-        #self.featuretype = FeatureType()
-        #if self.featuretype:
-        #    self.getFeatures()
-        
 
-        # Run the dialog event loop
         result = self.dlg.exec_()
         # See if OK was pressed
         if result:
