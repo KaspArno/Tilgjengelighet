@@ -131,7 +131,7 @@ class Tilgjengelighet:
         self.search_history = {} #history of all search
         self.rubberHighlight = None 
 
-        self.feature_type_tettsted = { u"HC-Parkering" : u'app:TettstedHCparkering', u"Inngang" : u'app:TettstedInngangBygg', u'Parkeringsomr\xe5de' : u'app:TettstedParkeringsomr\xe5de', u"Vei" : u'app:TettstedVei'}
+        self.feature_type_tettsted = { u"HC-Parkering" : u'TettstedHCparkering', u"Inngang" : u'TettstedInngangBygg', u'Parkeringsomr\xe5de' : u'TettstedParkeringsomr\xe5de', u"Vei" : u'TettstedVei'}
 
         #Icons
         self.icon_rullestol_tilgjengelig = QPixmap('icons/Tilgjengelig.png')#QIcon(':/plugins/Tilgjengelighet/icons/Tilgjengelig.png')
@@ -291,6 +291,8 @@ class Tilgjengelighet:
         self.dock.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers) #Making table unediteble
 
         self.dock.tableWidget.itemClicked.connect(self.table_item_clicked) #what happens when an item is clicked in table
+        self.iface.addDockWidget( Qt.BottomDockWidgetArea , self.dock ) #adding seartch result Widget
+        self.dock.close()
 
         #info window
         self.infoWidget = infoWidgetDialog(self.iface.mainWindow())
@@ -298,6 +300,7 @@ class Tilgjengelighet:
         self.infoWidget.pushButton_filtrer.clicked.connect(self.get_previus_search_activeLayer) #setting main window to match search for active layer
         self.infoWidget.pushButton_next.clicked.connect(self.infoWidget_next) #itterate the selected objekts
         self.infoWidget.pushButton_prev.clicked.connect(self.infoWidget_prev)
+        #self.infoWidget.pushButton_tabell.clicked.connect(self.show_tabell)
 
         self.selectPolygon = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Tilgjengelig.png"),
                                        QCoreApplication.translate("MyPlugin", "Polygon"),
@@ -323,6 +326,9 @@ class Tilgjengelighet:
         self.infoWidget.toolButton_eksporter.addAction(self.exportExcel)
         self.infoWidget.toolButton_eksporter.addAction(self.exportImage)
 
+        self.iface.addDockWidget( Qt.BottomDockWidgetArea , self.infoWidget ) #adding seartch result Widget
+        self.infoWidget.close()
+
 
         #Export window
         self.export_layer = exportLayerDialog()
@@ -344,13 +350,16 @@ class Tilgjengelighet:
         self.kommuner.setComboBox(self.dlg.comboBox_komuner)
 
 
-        #Create attributes object
+        #Create attributes object tettsted
         self.assign_combobox_inngang()
         self.assign_combobox_vei()
         self.assign_combobox_hc_parkering()
         self.assign_combobox_parkeringsomraade()
 
-        self.dlg.pushButton_filtrer.clicked.connect(self.filtrer) #Filtering out the serach and show results
+        self.attributes_tettsted = { u"HC-Parkering" : self.attributes_hcparkering, u"Inngang" : self.attributes_inngang, u'Parkeringsområde' : self.attributes_pomrade, u"Vei" : self.attributes_vei}
+
+        #self.dlg.pushButton_filtrer.clicked.connect(self.filtrer) #Filtering out the serach and show results
+        self.dlg.pushButton_filtrer.clicked.connect(self.newFilter)
 
         self.openLayer_background_init()
 
@@ -1244,7 +1253,8 @@ class Tilgjengelighet:
 
             current_object = current_object + 1
         self.dock.tableWidget.setSortingEnabled(True) #enabeling sorting
-        self.iface.addDockWidget( Qt.BottomDockWidgetArea , self.dock ) #adding seartch result Widget
+        #self.iface.addDockWidget( Qt.BottomDockWidgetArea , self.dock ) #adding seartch result Widget
+        #self.dock.close()
 
 
     def fill_infoWidget(self, attributes):
@@ -1274,20 +1284,34 @@ class Tilgjengelighet:
         #     self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setVisible(False)
         #     self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setVisible(False)
 
-        #TEST
         for i in range(0, len(attributes)):
-            #print(i)
-            #print("widget: ", self.infoWidget.gridLayout.itemAtPosition(i, 0).widget(), "type; ", type(self.infoWidget.gridLayout.itemAtPosition(i, 0).widget()))
             self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setText(attributes[i].getAttribute())
             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
 
-            for j in range(0, self.infoWidget.gridLayout.columnCount()):
-                self.infoWidget.gridLayout.itemAtPosition(i, j).widget().setVisible(True)
+            self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setVisible(True)
+            self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setVisible(True)
 
-        if len(attributes) < self.infoWidget.gridLayout.rowCount():
-            for i in range(len(attributes), self.infoWidget.gridLayout.rowCount()):
-                for j in range(0,5):
-                    self.infoWidget.gridLayout.itemAtPosition(i, j).widget().setVisible(False)
+        for i in range(len(attributes), self.infoWidget.gridLayout.rowCount()): #Hides rows that are not used
+            self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setVisible(False)
+            self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setVisible(False)
+
+        #TEST
+        # for i in range(0, len(attributes)):
+        #     #print(i)
+        #     #print("widget: ", self.infoWidget.gridLayout.itemAtPosition(i, 0).widget(), "type; ", type(self.infoWidget.gridLayout.itemAtPosition(i, 0).widget()))
+        #     self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setText(attributes[i].getAttribute())
+        #     self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
+
+        #     for j in range(0, self.infoWidget.gridLayout.columnCount()):
+        #         self.infoWidget.gridLayout.itemAtPosition(i, j).widget().setVisible(True)
+
+        # if len(attributes) < self.infoWidget.gridLayout.rowCount():
+        #     for i in range(len(attributes), self.infoWidget.gridLayout.rowCount()):
+        #         for j in range(0,2):
+        #             print("i: {0}, j: {1}".format(i,j))
+        #             self.infoWidget.gridLayout.itemAtPosition(i, j).widget().setVisible(False)
+        # if not self.infoWidget.isVisible():
+        #     self.infoWidget.show()
 
 
 
@@ -1349,6 +1373,15 @@ class Tilgjengelighet:
                 self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + ": " + self.dlg.comboBox_komuner.currentText())
             else:
                 self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + ": " + self.dlg.comboBox_fylker.currentText())
+
+
+    def save_search(self):
+        self.search_history[self.layer_name] = SavedSearch(self.layer_name, self.current_search_layer, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
+        for attribute in self.current_attributes: #lagrer valg av attributter
+            self.search_history[self.layer_name].add_attribute(attribute, int(attribute.getComboBox().currentIndex()), attribute.getLineEditText())
+
+        self.search_history[self.layer_name].add_attribute(self.fylker, int(self.fylker.getComboBox().currentIndex()), None) #lagerer valg og fylter og komuner
+        self.search_history[self.layer_name].add_attribute(self.kommuner, int(self.kommuner.getComboBox().currentIndex()), None)
 
 
 
@@ -1498,17 +1531,69 @@ class Tilgjengelighet:
                 query += q
             filterString = u"<fes:Filter><And>{0}</And></fes:Filter>".format(query)
             print("filterString: ", filterString)
-            return ("FILTER=" + urllib.quote(filterString.encode('utf8')))
+            return ("FILTER=" + self.to_unicode(filterString))
+            #return ("FILTER=" + filterString.encode('utf8'))
+            #return ("FILTER=" + urllib.quote(filterString.encode('utf8')))
         elif len(constraint) == 1:
             filterString = "<fes:Filter>{0}</fes:Filter>".format(constraint[0])
             print("filterString: ", filterString)
-            return ("FILTER=" + urllib.quote(filterString.encode('utf8')))
+            return ("FILTER=" + self.to_unicode(filterString))
+            #return ("FILTER=" + filterString.encode('utf8'))
+            #return ("FILTER=" + urllib.quote(filterString.encode('utf8')))
         print("filterString: ", filterString)
 
         return filterString
         
         
+    def newFilter(self):
+        print (u"NewFilterStart")
 
+        self.layer_name = self.dlg.lineEdit_navn_paa_sok.text() #setter navn på laget
+        search_type = self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()) #henter hvilke søk som blir gjort (må spesifisere esenere for tettsted eller friluft)
+        search_type_pomrade = self.dlg.tabWidget_tettsted.tabText(3) #setter egen for pområde pga problemer med norske bokstaver
+        if self.dlg.tabWidget_main.currentIndex() < 1:
+            tilgjDB = "friluft"
+        else:
+            tilgjDB = "tettsted"
+            featuretype = self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]
+            self.current_attributes = self.attributes_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]
+
+        url = u"http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet{0}?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::4258&typeNames=app:{1}&".format(tilgjDB, featuretype)
+
+        filter_encoding = self.create_where_statement3(self.current_attributes)#= "FILTER=<fes:Filter><fes:PropertyIsEqualTo><fes:ValueReference>app:kommune</fes:ValueReference><fes:Literal>0301</fes:Literal></fes:PropertyIsEqualTo></fes:Filter>"
+        #print("url: {}".format(url + filter_encoding))
+        layer = QgsVectorLayer(url + filter_encoding, self.layer_name, "ogr")
+
+
+        if layer.isValid():
+            existing_layers = self.iface.legendInterface().layers()
+            try:
+                for layer in existing_layers: #Removing layers with same name
+                    if layer.name() == tempLayer.name():
+                        QgsMapLayerRegistry.instance().removeMapLayers( [layer.id()] )
+            except Exception as e:
+                print(str(e))
+            
+            QgsMapLayerRegistry.instance().addMapLayer(layer)
+            self.current_search_layer = layer
+            self.current_search_layer.selectionChanged.connect(self.selectedObjects) #Filling infoWidget when objects are selected
+            
+            self.canvas.setExtent(self.current_search_layer.extent())
+            self.canvas.zoomOut()
+
+            self.fill_infoWidget(self.current_attributes)
+            self.showResults(self.current_search_layer)
+            self.infoWidget.show()
+            
+            self.infoWidget.label_typeSok.setText(self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()))
+            
+            if self.rubberHighlight is not None: #removing previus single highlight
+                self.canvas.scene().removeItem(self.rubberHighlight)
+            self.save_search()
+            self.dlg.close() #closing main window for easyer visualisation of results
+        else:
+            self.show_message("Ingen objekter funnet", msg_title="layer not valid", msg_type=QMessageBox.Warning)
+        print(u"NewFilterEnd")
 
     def filtrer(self, attributes):
         """Goes throu all atributes in current tab, creates a where statement and create layer based on that"""
@@ -1800,6 +1885,12 @@ class Tilgjengelighet:
             pass
         except Exception as e:
             raise e
+
+    def show_tabell(self):
+        if self.infoWidget.pushButton_tabell.isChecked():
+            self.dock.show()
+        else:
+            self.dock.close()
         
 
 
@@ -1831,7 +1922,7 @@ class Tilgjengelighet:
                         print(self.current_attributes[i].getAttribute())
                     print(value)
                 except KeyError as e: #Rampe Stigning forsvinner...
-                    print(MISSING ATTRIBUTE!!)
+                    print("missing attribute due to no value")
                     pass
 
                 ####Iconer i Infowidget, ikke fått til å fungere#####
