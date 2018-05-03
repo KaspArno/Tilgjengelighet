@@ -3801,7 +3801,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_gatetype">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -3830,7 +3830,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Nedsenkning 1</string>
+                          <string>Nedsenkning 1 (cm)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -3845,7 +3845,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_nedsenkning1">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -3858,7 +3858,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_nedsenkning1">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -3889,7 +3889,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Nedsenkning 2</string>
+                          <string>Nedsenkning 2 (cm)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -3904,7 +3904,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_nedsenkning2">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -3917,7 +3917,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_nedsenkning2">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -3958,7 +3958,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_dekke_vei_tettsted">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -3997,7 +3997,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_dekkeTilstand_vei_tettsted">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -4026,7 +4026,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Bredde</string>
+                          <string>Bredde (cm)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -4038,7 +4038,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_bredde">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -4051,7 +4051,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_bredde">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -4082,7 +4082,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Stigning</string>
+                          <string>Stigning (grader°)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -4094,7 +4094,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_stigning">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -4107,7 +4107,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_stigning">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -4138,7 +4138,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Tverfall</string>
+                          <string>Tverfall (grader°)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -4150,7 +4150,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_tverfall">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -4163,7 +4163,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_tverfall">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -4204,7 +4204,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_ledelinje">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -4243,7 +4243,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_ledelinjeKontrast">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -4330,7 +4330,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_manuell_rullestol_vei">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -4369,7 +4369,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_electrisk_rullestol_vei">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -4408,7 +4408,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_syn_vei">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -4510,7 +4510,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Avstand HC Parkering</string>
+                          <string>Avstand HC Parkering (m)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -4566,7 +4566,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Ankomst stigning</string>
+                          <string>Ankomst stigning (grader°)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -4609,6 +4609,9 @@
                       <layout class="QHBoxLayout" name="horizontalLayout_127">
                        <item>
                         <widget class="QLabel" name="label_2">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
                          <property name="minimumSize">
                           <size>
                            <width>200</width>
@@ -4632,7 +4635,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_byggningstype">
                          <property name="enabled">
-                          <bool>true</bool>
+                          <bool>false</bool>
                          </property>
                          <property name="sizePolicy">
                           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -4784,7 +4787,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Manøverkanpp høyde</string>
+                          <string>Manøverkanpp høyde (cm)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -4840,7 +4843,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Dørbredde</string>
+                          <string>Dørbredde (cm)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -4896,7 +4899,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Terskel</string>
+                          <string>Terskel (mm)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -5038,7 +5041,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Rampe Stigning</string>
+                          <string>Rampe Stigning (grader°)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -5094,7 +5097,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Rampe Bredde</string>
+                          <string>Rampe Bredde (m)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -5189,7 +5192,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Håndliste Høyde 1</string>
+                          <string>Håndliste Høyde 1 (cm)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -5245,7 +5248,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Håndliste Høyde 2</string>
+                          <string>Håndliste Høyde 2 (cm)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -5577,7 +5580,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Avstand Servicebygg</string>
+                          <string>Avstand Servicebygg (m)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -5589,7 +5592,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_avstandServicebygg">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -5602,7 +5605,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_avstandServicebygg">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -5643,7 +5646,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_overbygg">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -5697,7 +5700,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_skiltet">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -5751,7 +5754,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_merket">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -5795,7 +5798,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Bredde</string>
+                          <string>Bredde (cm)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -5810,7 +5813,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_bredde_vei">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -5823,7 +5826,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_bredde_vei">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -5854,7 +5857,7 @@
                           </size>
                          </property>
                          <property name="text">
-                          <string>Lengde</string>
+                          <string>Lengde (cm)</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -5869,7 +5872,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_lengde_vei">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -5882,7 +5885,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_lengde_vei">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -5970,7 +5973,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_manuell_rullestol_hcparkering">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -6009,7 +6012,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_elektrisk_rullestol_hcparkering">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -6121,7 +6124,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_overbygg_pomrade">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -6177,7 +6180,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_kapasitetPersonbiler">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -6190,7 +6193,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_kapasitetPersonbiler">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -6233,7 +6236,7 @@
                          <item>
                           <widget class="QComboBox" name="comboBox_kapasitetUU">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -6246,7 +6249,7 @@
                          <item>
                           <widget class="QLineEdit" name="lineEdit_kapasitetUU">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <property name="minimumSize">
                             <size>
@@ -6287,7 +6290,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_dekke_pomrade">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -6326,7 +6329,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_dekkeTilstand_pomrade">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -6412,7 +6415,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_manuell_rullestol_pomrade">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>234</width>
-    <height>547</height>
+    <height>550</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -414,6 +414,16 @@
            </size>
           </property>
          </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_tabell">
+          <property name="text">
+           <string>Tabell</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QToolButton" name="toolButton_eksporter">

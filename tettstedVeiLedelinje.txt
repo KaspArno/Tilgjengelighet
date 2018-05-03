@@ -1,0 +1,4 @@
+ingen
+taktil
+taktilOgVisuell
+visuell

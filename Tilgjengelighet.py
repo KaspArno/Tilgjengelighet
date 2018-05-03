@@ -31,6 +31,7 @@ import string
 import datetime
 import operator
 import codecs
+import time
 
 from qgis.core import * #QgsDataSourceURI, QgsMapLayerRegistry, QgsVectorLayer, QgsExpression, QgsFeatureRequest, QgsVectorFileWriter, QgsLayerTreeLayer, QgsLayerTreeGroup, QgsMapLayer, QgsProject, QgsFeature, QGis
 from PyQt4.QtCore import * #QSettings, QTranslator, qVersion, QCoreApplication, QPyNullVariant, QDateTime, QThread, pyqtSignal, Qt, QRect, QSize, QFileInfo
@@ -86,6 +87,7 @@ class Tilgjengelighet:
         self.iface = iface
         self.canvas = self.iface.mapCanvas()
         self.settings = QSettings()
+        self.settings.setValue("/Qgis/dockAttributeTable", True)
         
         # initialize locale
         locale = QSettings().value('locale/userLocale')[0:2]
@@ -110,7 +112,7 @@ class Tilgjengelighet:
         self.toolbar.setObjectName(u'Tilgjengelighet')
 
         
-        #Global valiables
+        
 
         #WFS URLS
         self.namespace = "http://skjema.geonorge.no/SOSI/produktspesifikasjon/TilgjengelighetTettsted/4.5"
@@ -306,7 +308,7 @@ class Tilgjengelighet:
         self.infoWidget.pushButton_filtrer.clicked.connect(self.get_previus_search_activeLayer) #setting main window to match search for active layer
         self.infoWidget.pushButton_next.clicked.connect(self.infoWidget_next) #itterate the selected objekts
         self.infoWidget.pushButton_prev.clicked.connect(self.infoWidget_prev)
-        #self.infoWidget.pushButton_tabell.clicked.connect(self.show_tabell) #open tableWiddget
+        self.infoWidget.pushButton_tabell.clicked.connect(self.show_tabell) #open tableWiddget
 
         self.selectPolygon = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Tilgjengelig.png"),
                                        QCoreApplication.translate("MyPlugin", "Polygon"),
@@ -406,19 +408,19 @@ class Tilgjengelighet:
         #fill combobox
         path = ":/plugins/Tilgjengelighet/" #Mey not need this
         for attributt in self.attributes_inngang_mer_mindre:
-            attributt.getComboBox().clear()
             self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\mer_mindre.txt')
 
         self.fill_combobox(self.rampe.getComboBox(), self.plugin_dir + r'\boolean.txt')
         self.fill_combobox(self.byggningstype.getComboBox(), self.plugin_dir + r"\tettstedInngangByggningstype.txt")
         self.fill_combobox(self.dortype.getComboBox(), self.plugin_dir + r"\tettstedInngangdortype.txt")
         self.fill_combobox(self.dorapner.getComboBox(), self.plugin_dir + r"\tettstedInngangDorapner.txt")
-        self.fill_combobox(self.kontrast.getComboBox(), self.plugin_dir + r"\tettstedInngangKontrast.txt")
+        self.fill_combobox(self.kontrast.getComboBox(), self.plugin_dir + r"\tettstedKontrast.txt")
         self.fill_combobox(self.handlist.getComboBox(), self.plugin_dir + r"\tettstedInngangHandlist.txt")
-        self.fill_combobox(self.rmp_tilgjengelig.getComboBox(), self.plugin_dir + r"\tettstedInngangTilgjengvurdering.txt")
-        self.fill_combobox(self.manuellRullestol.getComboBox(), self.plugin_dir + r"\tettstedInngangTilgjengvurdering.txt")
-        self.fill_combobox(self.elektriskRullestol.getComboBox(), self.plugin_dir + r"\tettstedInngangTilgjengvurdering.txt")
-        self.fill_combobox(self.synshemmet.getComboBox(), self.plugin_dir + r"\tettstedInngangTilgjengvurdering.txt")
+
+        self.fill_combobox(self.rmp_tilgjengelig.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(self.manuellRullestol.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(self.elektriskRullestol.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(self.synshemmet.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
 
         #hide gui options
         self.dlg.label_rampe_boxs.setVisible(False)
@@ -473,7 +475,19 @@ class Tilgjengelighet:
         self.attributes_vei_gui = [self.gatetype, self.dekke_vei_tettsted, self.dekkeTilstand_vei_tettsted, self.ledelinje, self.ledelinjeKontrast, self.manuell_rullestol_vei, self.electrisk_rullestol_vei, self.syn_vei]
         self.attributes_vei_mer_mindre = [self.nedsenkning1,self.nedsenkning2,self.bredde,self.stigning,self.tverfall]
 
-        #Insert Fill combobox
+        #fill combobox
+        for attributt in self.attributes_vei_mer_mindre:
+            self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\mer_mindre.txt')
+
+        self.fill_combobox(self.gatetype.getComboBox(), self.plugin_dir + r'\tettstedVeiGatetype.txt')
+        self.fill_combobox(self.dekke_vei_tettsted.getComboBox(), self.plugin_dir + r"\tettstedDekke.txt")
+        self.fill_combobox(self.dekkeTilstand_vei_tettsted.getComboBox(), self.plugin_dir + r"\tettstedDekkeTilstand.txt")
+        self.fill_combobox(self.ledelinje.getComboBox(), self.plugin_dir + r"\tettstedVeiLedelinje.txt")
+        self.fill_combobox(self.ledelinjeKontrast.getComboBox(), self.plugin_dir + r"\tettstedKontrast.txt")
+        
+        self.fill_combobox(self.manuell_rullestol_vei.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(self.electrisk_rullestol_vei.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(self.syn_vei.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
 
         #Hide GUI
         self.dlg.comboBox_nedsenkning1.setVisible(False)
@@ -505,7 +519,16 @@ class Tilgjengelighet:
         self.attributes_hcparkering_gui = [self.manuell_rullestol_hcparkering, self.elektrisk_rullestol_hcparkering]
         self.attributes_hcparkering_mer_mindre = [self.avstandServicebygg, self.bredde_vei, self.lengde_vei]
 
-        #insert fill combobox
+        #fill combobox
+        for attributt in self.attributes_hcparkering:
+            self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\mer_mindre.txt')
+
+        self.fill_combobox(self.overbygg.getComboBox(), self.plugin_dir + r'\boolean.txt')
+        self.fill_combobox(self.skiltet.getComboBox(), self.plugin_dir + r"\boolean.txt")
+        self.fill_combobox(self.merket.getComboBox(), self.plugin_dir + r"\boolean.txt")
+        
+        self.fill_combobox(self.manuell_rullestol_hcparkering.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(self.elektrisk_rullestol_hcparkering.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
 
         #Hide GUI
         self.dlg.label_bredde_vei.setVisible(False)
@@ -533,7 +556,15 @@ class Tilgjengelighet:
         self.attributes_pomrade_gui = [self.dekke_pomrade, self.dekkeTilstand_pomrade, self.manuell_rullestol_pomrade]
         self.attributes_pomrade_mer_mindre = [self.kapasitetPersonbiler, self.kapasitetUU]
 
-        #Insert fill combobox
+        #fill combobox
+        for attributt in self.attributes_pomrade_mer_mindre:
+            self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\mer_mindre.txt')
+
+        self.fill_combobox(self.overbygg_pomrade.getComboBox(), self.plugin_dir + r'\boolean.txt')
+        self.fill_combobox(self.dekke_pomrade.getComboBox(), self.plugin_dir + r"\tettstedDekke.txt")
+        self.fill_combobox(self.dekkeTilstand_pomrade.getComboBox(), self.plugin_dir + r"\tettstedDekkeTilstand.txt")
+        
+        self.fill_combobox(self.manuell_rullestol_pomrade.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
 
 
     def unload(self):
@@ -1012,30 +1043,40 @@ class Tilgjengelighet:
         :type layer: qgis._core.QgsVectorLayer
         """
         #reset table
+        timer_reset = time.clock()
         self.dock.tableWidget.setRowCount(0)
         self.dock.tableWidget.setColumnCount(0)
+        print("reset_tabell: {}".format(time.clock() - timer_reset))
 
         #Create data providers
+        timer_prov = time.clock()
         prov = layer.dataProvider()
+        print("prov: {}".format(time.clock() - timer_prov))
+        timer_feat = time.clock()
         feat = layer.getFeatures()
+        print("feat: {}".format(time.clock() - timer_feat))
         
         #Create colums
+        timer_createColoms = time.clock()
         self.nrColumn = len(prov.fields())
         self.dock.tableWidget.setColumnCount(len(prov.fields())) #creating colums
 
         for i in range(0, len(prov.fields())): #creating header in table         
             self.dock.tableWidget.setHorizontalHeaderItem(i,QTableWidgetItem(prov.fields().field(i).name()))
-
+        print("create coloms: {}".format(time.clock() - timer_createColoms))
         # creating rows
-        nr_objects  = 0
-        for f in feat:
-            nr_objects = nr_objects + 1
-        self.dock.tableWidget.setRowCount(nr_objects)
+        timer_featureCount = time.clock()
+        nr_objects  = layer.featureCount() 
+        print("feature count: {}".format(time.clock() - timer_featureCount))
+        # for f in feat:
+        #     nr_objects = nr_objects + 1
+        # self.dock.tableWidget.setRowCount(nr_objects)
         
         # filling table values
         current_object = 0
         self.feature_id = {}
-        feat = layer.getFeatures() #resetting iterator
+        #feat = layer.getFeatures() #resetting iterator
+        timer_createTable = time.clock()
         for f in feat:
             self.feature_id[f['gml_id']] = f.id()
             for i in range(0,len(prov.fields())):
@@ -1054,6 +1095,7 @@ class Tilgjengelighet:
                     self.dock.tableWidget.setItem(current_object,i,QTableWidgetItem(f[i]))
 
             current_object = current_object + 1
+        priny("create table: {}".format(time.clock() - timer_createTable))
         self.dock.tableWidget.setSortingEnabled(True) #enabeling sorting
 
 
@@ -1318,12 +1360,19 @@ class Tilgjengelighet:
             featuretype = self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]
             self.current_attributes = self.attributes_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]
 
+        #for attribute in self.current_attributes:
+        #    if not attribute.valudeValid(): #enters if loop even if attribute.valudeValid() is true...
+        #        print("attribute is not valid")
+        #        self.show_message("Ugyldig verdi", msg_title="Ugyldig verdi", msg_info="En eller flere av verdiene valgt er ugyldig", msg_type=QMessageBox.Warning)
+        #        return
+
         url = u"http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet{0}?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::4258&typeNames=app:{1}&".format(tilgjDB, featuretype)
 
         filter_encoding = self.create_where_statement3(self.current_attributes)#= "FILTER=<fes:Filter><fes:PropertyIsEqualTo><fes:ValueReference>app:kommune</fes:ValueReference><fes:Literal>0301</fes:Literal></fes:PropertyIsEqualTo></fes:Filter>"
 
+        timer_newLayer = time.clock()
         new_layer = QgsVectorLayer(url + filter_encoding, self.layer_name, "ogr")
-
+        print("new layer: {}".format(time.clock() - timer_newLayer))
         if new_layer.isValid():
             existing_layers = self.iface.legendInterface().layers()
             try:
@@ -1332,23 +1381,34 @@ class Tilgjengelighet:
                         QgsMapLayerRegistry.instance().removeMapLayers( [lyr.id()] )
             except Exception as e:
                 print(str(e))
-            
+            timer_addLayer = time.clock()
             QgsMapLayerRegistry.instance().addMapLayer(new_layer)
+            print("add layer: {}".format(time.clock() - timer_addLayer))
             self.current_search_layer = new_layer
             self.current_search_layer.selectionChanged.connect(self.selectedObjects) #Filling infoWidget when objects are selected
             
+            timer_setExtent = time.clock()
             self.canvas.setExtent(self.current_search_layer.extent())
             self.canvas.zoomOut()
+            print("setExtent: {}".format(time.clock() - timer_setExtent))
 
+            timer_fillInfoWidgets = time.clock()
             self.fill_infoWidget(self.current_attributes)
-            self.fill_tableWidget(self.current_search_layer)
-            self.infoWidget.show()
-            
             self.infoWidget.label_typeSok.setText(self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()))
-            
+            self.infoWidget.show()
+            print("fillInfoWidgets: {}".format(time.clock() - timer_fillInfoWidgets))
+            timer_fillTabWidget = time.clock()
+            #self.iface.showAttributeTable(self.iface.activeLayer())
+            #self.fill_tableWidget(self.current_search_layer)
+            #attrTables = [d for d in QApplication.instance().allWidgets() if d.objectName() == u'AttributeTable']
+            #self.iface.addDockWidget(Qt.BottomDockWidgetArea, attrTables[0])
+            print("fillTabWidget: {}".format(time.clock() - timer_fillTabWidget))
+
             if self.rubberHighlight is not None: #removing previus single highlight
                 self.canvas.scene().removeItem(self.rubberHighlight)
+            timer_saveSearch = time.clock()
             self.save_search()
+            print("saveSearch: {}".format(time.clock() - timer_saveSearch))
             self.dlg.close() #closing main window for easyer visualisation of results
         else:
             self.show_message("Ingen objekter funnet", msg_title="layer not valid", msg_type=QMessageBox.Warning)
@@ -1593,6 +1653,7 @@ class Tilgjengelighet:
         self.selFeatures = selFeatures
         self.number_of_objects = len(selFeatures)
         self.cur_sel_obj = 0
+        self.selection = self.current_search_layer.selectedFeatures()
 
         self.infoWidget.label_object_number.setText("{0}/{1}".format(self.cur_sel_obj+1, self.number_of_objects))
         self.obj_info()
@@ -1606,19 +1667,18 @@ class Tilgjengelighet:
         if self.rubberHighlight is not None:
             self.canvas.scene().removeItem(self.rubberHighlight)
 
-        selection = self.iface.activeLayer().selectedFeatures()
-        if len(selection) > 0:
+        #selection = self.iface.activeLayer().selectedFeatures()
+        if len(self.selection) > 0:
             self.rubberHighlight = QgsRubberBand(self.canvas,QGis.Polygon)
             self.rubberHighlight.setBorderColor(QColor(255,0,0))
             self.rubberHighlight.setFillColor(QColor(255,0,0,255))
             #self.rubberHighlight.setLineStyle(Qt.PenStyle(Qt.DotLine))
             self.rubberHighlight.setWidth(4)
-            self.rubberHighlight.setToGeometry(selection[self.cur_sel_obj].geometry(), self.current_search_layer)
+            self.rubberHighlight.setToGeometry(self.selection[self.cur_sel_obj].geometry(), self.current_search_layer)
             self.rubberHighlight.show()
 
     def infoWidget_next(self):
         """shows next object in infoWidget"""
-
         try:
             self.cur_sel_obj+=1
             if self.cur_sel_obj >= self.number_of_objects:
@@ -1633,7 +1693,7 @@ class Tilgjengelighet:
 
     def infoWidget_prev(self):
         """shows previus object in infoWidget"""
-
+    
         try:
             self.cur_sel_obj-=1
             if self.cur_sel_obj < 0:
@@ -1644,27 +1704,31 @@ class Tilgjengelighet:
             pass
         except Exception as e:
             raise e
+    
 
     def show_tabell(self):
         """Shows or hide tableWidget"""
 
         if self.infoWidget.pushButton_tabell.isChecked():
-            self.dock.show()
+            self.iface.showAttributeTable(self.iface.activeLayer())
         else:
-            self.dock.close()
+            attrTables = [d for d in QApplication.instance().allWidgets() if d.objectName() == u'QgsAttributeTableDialog' or d.objectName() == u'AttributeTable']
+            for x in attrTables:
+                x.close()
         
 
 
     def obj_info(self):
         """Fills infowidget with info of current object"""
-
+    
         self.infoWidget.label_object_number.setText("{0}/{1}".format(self.cur_sel_obj+1, self.number_of_objects))
-        selection = self.current_search_layer.selectedFeatures()
+    
+        #selection = self.current_search_layer.selectedFeatures()
         
-        if len(selection) > 0:
+        if len(self.selection) > 0:
             for i in range(0, len(self.current_attributes)):
                 try:
-                    value = selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())]
+                    value = self.selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())]
                     try:
                         if isinstance(value, (int, float, long)):
                             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(value))
@@ -1673,16 +1737,13 @@ class Tilgjengelighet:
                         else:
                             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(value)
                     except Exception as e:
-                        print(str(e))
                         self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
-                        print(self.current_attributes[i].getAttribute())
                 except KeyError as e: #Rampe Stigning forsvinner...
-                    print("missing attribute due to no value")
                     pass
         else:
             for i in range(0, len(self.current_attributes)):
                 self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
-                    
+
     
     def tilgjengelighetsvurdering(self, value, notAcceceble=None, acceceble=None, relate_notAccec=None, relate_acces=None): #Not currently in use
         #["tilgjengelig", "ikkeTilgjengelig", "vanskeligTilgjengelig", "ikkeVurdert"]
@@ -1822,13 +1883,23 @@ class Tilgjengelighet:
 
     def reset(self): 
         """Resets the gui back to default"""
-        comboBoxes = [self.dlg.comboBox_fylker, self.dlg.comboBox_komuner, self.dlg.comboBox_avstand_hc, self.dlg.comboBox_ank_stigning, self.dlg.comboBox_byggningstype, self.dlg.comboBox_rampe, self.dlg.comboBox_dortype, self.dlg.comboBox_dorbredde, self.dlg.comboBox_terskel, self.dlg.comboBox_kontrast, self.dlg.comboBox_rmp_stigning, self.dlg.comboBox_rmp_bredde, self.dlg.comboBox_handliste, self.dlg.comboBox_hand1, self.dlg.comboBox_hand2, self.dlg.comboBox_manuell_rullestol, self.dlg.comboBox_el_rullestol, self.dlg.comboBox_syn]
-        for cmb in comboBoxes:
-            cmb.setCurrentIndex(0)
+        all_attributes = []
 
-        lineEdits = [self.dlg.lineEdit_avstand_hc, self.dlg.lineEdit_ank_stigning, self.dlg.lineEdit_dorbredde, self.dlg.lineEdit_terskel, self.dlg.lineEdit_rmp_stigning, self.dlg.lineEdit_rmp_bredde, self.dlg.lineEdit_hand1, self.dlg.lineEdit_hand2, self.dlg.lineEdit_navn_paa_sok]
-        for le in lineEdits:
-            le.setText("")
+        all_attributes.extend(self.attributes_inngang)
+        all_attributes.extend(self.attributes_vei)
+        all_attributes.extend(self.attributes_hcparkering)
+        all_attributes.extend(self.attributes_pomrade)
+
+        for attribute in all_attributes:
+            attribute.reset()
+
+        # comboBoxes = [self.dlg.comboBox_fylker, self.dlg.comboBox_komuner, self.dlg.comboBox_avstand_hc, self.dlg.comboBox_ank_stigning, self.dlg.comboBox_byggningstype, self.dlg.comboBox_rampe, self.dlg.comboBox_dortype, self.dlg.comboBox_dorbredde, self.dlg.comboBox_terskel, self.dlg.comboBox_kontrast, self.dlg.comboBox_rmp_stigning, self.dlg.comboBox_rmp_bredde, self.dlg.comboBox_handliste, self.dlg.comboBox_hand1, self.dlg.comboBox_hand2, self.dlg.comboBox_manuell_rullestol, self.dlg.comboBox_el_rullestol, self.dlg.comboBox_syn]
+        # for cmb in comboBoxes:
+        #     cmb.setCurrentIndex(0)
+
+        # lineEdits = [self.dlg.lineEdit_avstand_hc, self.dlg.lineEdit_ank_stigning, self.dlg.lineEdit_dorbredde, self.dlg.lineEdit_terskel, self.dlg.lineEdit_rmp_stigning, self.dlg.lineEdit_rmp_bredde, self.dlg.lineEdit_hand1, self.dlg.lineEdit_hand2, self.dlg.lineEdit_navn_paa_sok]
+        # for le in lineEdits:
+        #     le.setText("")
 
 
     ###############################################Xy-tools#####################################################
