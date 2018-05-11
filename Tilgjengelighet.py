@@ -87,7 +87,7 @@ class Tilgjengelighet:
         self.iface = iface
         self.canvas = self.iface.mapCanvas()
         self.settings = QSettings()
-        self.settings.setValue("/Qgis/dockAttributeTable", True)
+        
         
         # initialize locale
         locale = QSettings().value('locale/userLocale')[0:2]
@@ -113,6 +113,8 @@ class Tilgjengelighet:
 
         
         
+        #Settnings
+        self.settings.setValue("/Qgis/dockAttributeTable", True) 
 
         #WFS URLS
         self.namespace = "http://skjema.geonorge.no/SOSI/produktspesifikasjon/TilgjengelighetTettsted/4.5"
@@ -292,6 +294,9 @@ class Tilgjengelighet:
 
         self.dlg.label_Progress.setVisible(False) #label_prgress currently not in use
 
+        self.change_search_name() #Initiate a search name
+
+
         ### table window ###
         self.dock = TableDialog(self.iface.mainWindow())
         self.dock.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows) #select entire row in table
@@ -348,6 +353,7 @@ class Tilgjengelighet:
         
         ### Fill gui ###
         self.fill_fylker() #fill fylker combobox
+        self.fylke_valgt()
 
         #set combobox functions
         self.dlg.comboBox_fylker.currentIndexChanged.connect(self.fylke_valgt) #Filling cityes from county
@@ -1157,6 +1163,15 @@ class Tilgjengelighet:
                     self.dlg.comboBox_komuner.addItem(self.komm_dict_nr[komune_nr])
             except Exception as e:
                 print(str(e))
+        else:
+            filename = self.plugin_dir + "\komm.txt"
+            try:
+                with io.open(filename, 'r', encoding='utf-8') as f:
+                    for line in f:
+                        komm_nr, komune, fylke = line.rstrip('\n').split(("\t"))
+                        self.dlg.comboBox_komuner.addItem(self.komm_dict_nr[komm_nr])
+            except Exception as e:
+                print(str(e))
 
 
     def komune_valgt(self):
@@ -1176,11 +1191,11 @@ class Tilgjengelighet:
             self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + " " + self.dlg.tabWidget_friluft.tabText(self.dlg.tabWidget_friluft.currentIndex()))
         else:
             self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + " " + self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()))
-        if self.dlg.comboBox_fylker.currentText() != "Norge":
-            if self.dlg.comboBox_komuner.currentText() != "":
-                self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + ": " + self.dlg.comboBox_komuner.currentText())
-            else:
-                self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + ": " + self.dlg.comboBox_fylker.currentText())
+
+        if self.dlg.comboBox_komuner.currentText() != "":
+            self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + ": " + self.dlg.comboBox_komuner.currentText())
+        else:
+            self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + ": " + self.dlg.comboBox_fylker.currentText())
 
 
     def save_search(self):
@@ -1297,26 +1312,27 @@ class Tilgjengelighet:
         #query = "<fes:PropertyIsNotEqualTo><fes:ValueReference>app:lokalId</fes:ValueReference><fes:Literal>0</fes:Literal></fes:PropertyIsNotEqualTo>"
         constraint = []
         query = ""
-        if fylke != "Norge":
-            if komune == self.uspesifisert:
-                for komune_nr in range(0, len(self.fylke_dict[fylke])):
-                    valueReference = "kommune"
-                    if len(self.fylke_dict[fylke][komune_nr]) < 4:
-                        value = "0" + self.fylke_dict[fylke][komune_nr]
-                    else:
-                        value = self.fylke_dict[fylke][komune_nr]
-                    query += "<fes:PropertyIsEqualTo><fes:ValueReference>app:{0}</fes:ValueReference><fes:Literal>{1}</fes:Literal></fes:PropertyIsEqualTo>".format(valueReference,value)
-                    
-                if len(self.fylke_dict[fylke]) > 1: #Oslo har kun en kommune
-                    query = "<Or>{0}</Or>".format(query)
-            else:
+        if fylke != "Norge" and  komune == self.uspesifisert:
+            for komune_nr in range(0, len(self.fylke_dict[fylke])):
                 valueReference = "kommune"
-                if len(self.komm_dict_nm[komune]) < 4:
-                        value = "0" + self.komm_dict_nm[komune]
+                if len(self.fylke_dict[fylke][komune_nr]) < 4:
+                    value = "0" + self.fylke_dict[fylke][komune_nr]
                 else:
-                    value = self.komm_dict_nm[komune]
+                    value = self.fylke_dict[fylke][komune_nr]
                 query += "<fes:PropertyIsEqualTo><fes:ValueReference>app:{0}</fes:ValueReference><fes:Literal>{1}</fes:Literal></fes:PropertyIsEqualTo>".format(valueReference,value)
-                
+                    
+            if len(self.fylke_dict[fylke]) > 1: #Oslo har kun en kommune
+                query = "<Or>{0}</Or>".format(query)
+        elif komune != self.uspesifisert:
+            valueReference = "kommune"
+            if len(self.komm_dict_nm[komune]) < 4:
+                        value = "0" + self.komm_dict_nm[komune]
+            else:
+                value = self.komm_dict_nm[komune]
+            query += "<fes:PropertyIsEqualTo><fes:ValueReference>app:{0}</fes:ValueReference><fes:Literal>{1}</fes:Literal></fes:PropertyIsEqualTo>".format(valueReference,value)
+
+
+
         if len(query) > 0:
             constraint.append(query)
         
@@ -1336,7 +1352,7 @@ class Tilgjengelighet:
             return ("FILTER=" + self.to_unicode(filterString))
         elif len(constraint) == 1:
             filterString = "<fes:Filter>{0}</fes:Filter>".format(constraint[0])
-            print("filterString: ", filterString)
+            #print("filterString: ", filterString)
             return ("FILTER=" + self.to_unicode(filterString))
 
         return filterString
@@ -1372,6 +1388,7 @@ class Tilgjengelighet:
 
         timer_newLayer = time.clock()
         new_layer = QgsVectorLayer(url + filter_encoding, self.layer_name, "ogr")
+        #print(url + filter_encoding)
         print("new layer: {}".format(time.clock() - timer_newLayer))
         if new_layer.isValid():
             existing_layers = self.iface.legendInterface().layers()
