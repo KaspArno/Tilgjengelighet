@@ -7,6 +7,8 @@ Tilgjenglighet
 .. autoclass:: Tilgjengelighet.Tilgjengelighet
    :members: 
 
+   autodoc_mock_imports = ["qgis"]
+
 
 AttributForm
 ------------

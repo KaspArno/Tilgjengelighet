@@ -19,5 +19,9 @@
         <file>icons/IkkeTilgjengelig.png</file>
         <file>icons/IkkeTilgjengeligEl.png</file>
         <file>icons/IkkeTilgjengeligSyn.png</file>
+        <file>icons/Export_map.gif</file>
+        <file>icons/Select_point_1.gif</file>
+        <file>icons/Select_polygon.gif</file>
+        <file>icons/black-ms-excel-16.png</file>
     </qresource>
 </RCC>

@@ -280,15 +280,12 @@ class Tilgjengelighet:
         self.dlg.tabWidget_main.setTabIcon(0, QIcon(":/plugins/Tilgjengelighet/icons/friluft.png"))
         self.dlg.tabWidget_main.setTabIcon(1, QIcon(":/plugins/Tilgjengelighet/icons/tettsted.png"))
 
-        #self.dlg.pushButton_filtrer.clicked.connect(self.filtrer) #Filtering out the serach and show results
-        self.dlg.pushButton_filtrer.clicked.connect(self.newFilter)
+        self.dlg.pushButton_filtrer.clicked.connect(self.filtrer)
 
         #change search name based on tab
         self.dlg.tabWidget_main.currentChanged.connect(self.change_search_name) #change search name based on tab
         self.dlg.tabWidget_friluft.currentChanged.connect(self.change_search_name)
         self.dlg.tabWidget_tettsted.currentChanged.connect(self.change_search_name)
-
-        self.dlg.pushButton_HentData.clicked.connect(self.hentData) #collecting datata for inngangbygg (currently not in use)
 
         self.dlg.pushButton_reset.clicked.connect(self.reset) #resett all choses made by user
 
@@ -301,8 +298,6 @@ class Tilgjengelighet:
         self.dock = TableDialog(self.iface.mainWindow())
         self.dock.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows) #select entire row in table
         self.dock.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers) #Making table unediteble
-
-        self.dock.tableWidget.itemClicked.connect(self.table_item_clicked) #what happens when an item is clicked in table
         
         self.iface.addDockWidget( Qt.BottomDockWidgetArea , self.dock ) #adding seartch result Widget
         self.dock.close() #Start pløugin without this dialog
@@ -315,11 +310,11 @@ class Tilgjengelighet:
         self.infoWidget.pushButton_prev.clicked.connect(self.infoWidget_prev)
         self.infoWidget.pushButton_tabell.clicked.connect(self.show_tabell) #open tableWiddget
 
-        self.selectPolygon = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Tilgjengelig.png"),
+        self.selectPolygon = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Select_polygon.gif"),
                                        QCoreApplication.translate("MyPlugin", "Polygon"),
                                        self.iface.mainWindow()) #Change therese icons
-        self.selectPoint = QAction(QIcon(":/plugins/Tilgjengelighet/icon"),
-                                       QCoreApplication.translate("MyPlugin", "Punkt/Frihånd"),
+        self.selectPoint = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Select_point_1.gif"),
+                                       QCoreApplication.translate("MyPlugin", u"Punkt/Frihånd"),
                                        self.iface.mainWindow()) #Change therese icons
         self.selectPolygon.triggered.connect(lambda x: self.iface.actionSelectPolygon().trigger()) #select objects by polygon
         self.selectPoint.triggered.connect(lambda x: self.iface.actionSelectFreehand().trigger()) #select objects by freehand
@@ -327,10 +322,10 @@ class Tilgjengelighet:
         self.infoWidget.toolButton_velgikart.addAction(self.selectPolygon)
         self.infoWidget.toolButton_velgikart.addAction(self.selectPoint)
 
-        self.exportExcel = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Tilgjengelig.png"),
+        self.exportExcel = QAction(QIcon(":/plugins/Tilgjengelighet/icons/black-ms-excel-16.png"),
                                        QCoreApplication.translate("MyPlugin", "Excel"),
                                        self.iface.mainWindow()) #Change therese icons
-        self.exportImage = QAction(QIcon(":/plugins/Tilgjengelighet/icon"),
+        self.exportImage = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Export_map.gif"),
                                        QCoreApplication.translate("MyPlugin", "Bilde"),
                                        self.iface.mainWindow()) #Change therese icons
         self.exportExcel.triggered.connect(self.excelSave) #export tp excel
@@ -617,200 +612,6 @@ class Tilgjengelighet:
         return out_string
 
 
-    def updateDataReadProgress(self, bytesRead, totalBytes): #mey no longer be in use
-        """Updates the dataprogess of downwloading data"""
-
-        self.dlg.label_Progress.setVisible(True)
-        self.dlg.label_Progress.setText("Laster inn data: ") # + self.featuretype.getFeatureType())
-
-    def httpRequestStartet(self): #may no longer be in use
-        """Calls when reqest has started"""
-
-        print("The Request has started!")
-
-
-    def httpRequestFinished(self, requestId, error): #May no longer be in use
-        """Calls when reqest is finnished"""
-
-        if requestId != self.httpGetId:
-            print("requesrtd Id != httpGetId")
-            return
-        
-        self.outFile.close()
-        
-        if error:
-            print("error in requestFinished")
-            print(self.http.errorString())
-            print(type(error))
-            self.outFile.remove()
-        else:
-            print('No error')
-            gdaltimeout = "5"
-            gdal.SetConfigOption("GDAL_HTTP_TIMEOUT", gdaltimeout)
-            gdal.SetConfigOption('GML_SKIP_RESOLVE_ELEMS', 'ALL')
-            gdal.SetConfigOption('GML_ATTRIBUTES_TO_OGR_FIELDS', 'NO')
-            nasdetectionstring = 'asdf/asdf/asdf'
-            gdal.SetConfigOption('NAS_INDICATOR', nasdetectionstring)
-            
-            ogrdriver = ogr.GetDriverByName("GML")
-            ogrdatasource = ogrdriver.Open(self.outFile.fileName())
-            
-            if ogrdatasource is None:
-                print("ogrdatasource is None")
-            else: # Determine the LayerCount
-                print("ogrdatasource is some")
-                ogrlayercount = ogrdatasource.GetLayerCount()
-                print("ogrlayercount: ", ogrlayercount)
-                #for i in range(0, ogrlayercount):
-                if ogrlayercount > 0:
-                    print("no for i in range(0, ogrlayercount): loop")
-                    #j = ogrlayercount -1 - i
-                    j = ogrlayercount -1 - 0
-                    ogrlayer = ogrdatasource.GetLayerByIndex(j)
-                    ogrlayername = ogrlayer.GetName()
-                    ogrgeometrytype = ogrlayer.GetGeomType()
-                    geomtypeids = []
-                    
-                    if ogrgeometrytype==0:
-                        geomtypeids = ["1", "2", "3", "100"]
-                    else:
-                        geomtypeids = [str(ogrgeometrytype)]
-                    
-                    for geomtypeid in geomtypeids:
-                        print("geomtypeid: ", geomtypeid)
-                        #qgislayername = ogrlayername
-                        qgislayername = self.layer_name
-                        uri = self.outFile.fileName() + "|layerid=" + str(j)
-                        if len(geomtypeids) > 1:
-                            uri += "|subset=" + self.getsubset(geomtypeid)
-                        
-                        vlayer = QgsVectorLayer(uri, qgislayername, "ogr")
-                        vlayer.setProviderEncoding("UTF-8")
-                        #self.layers.append(QgsVectorLayer(uri, qgislayername, "ogr"))
-                        #self.layers[-1].setProviderEncoding("UTF-8")
-                        
-                        if not vlayer.isValid():
-                            print("vlayer not valid")
-                        else:
-                            print("vlayer is valid")
-                            featurecount = vlayer.featureCount()
-                            if featurecount > 0:
-                                print("featurecount > 0")
-                                self.dlg.label_Progress.setVisible(False)
-                                #for baselayer in self.layers:
-                                #    QgsMapLayerRegistry.instance().addMapLayer(baselayer)
-                                    #self.hideLayer(baselayer)
-                                    #self.iface.legendInterface().setLayerVisible(baselayer, False)
-
-                                #self.dlg.pushButton_filtrer.setEnabled(True)
-                                self.current_search_layer = vlayer
-                                self.fill_tableWidget(self.current_search_layer)
-                                self.fill_infoWidget(self.current_attributes)
-                                #self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget )
-
-                                self.search_history[self.layer_name] = SavedSearch(self.layer_name, self.current_search_layer, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
-                                for attribute in self.current_attributes: #lagrer valg av attributter
-                                    self.search_history[self.layer_name].add_attribute(attribute, int(attribute.getComboBox().currentIndex()), attribute.getLineEditText())
-
-                                self.search_history[self.layer_name].add_attribute(self.fylker, int(self.fylker.getComboBox().currentIndex()), None) #lagerer valg og fylter og komuner
-                                self.search_history[self.layer_name].add_attribute(self.kommuner, int(self.kommuner.getComboBox().currentIndex()), None)
-
-                                self.dlg.close() #closing main window for easyer visualisation of results
-                                try:
-                                    if self.current_search_layer is not None:
-                                        QgsMapLayerRegistry.instance().addMapLayer(self.current_search_layer)
-                                        self.current_search_layer.selectionChanged.connect(self.selectedObjects) #Filling infoWidget when objects are selected
-                                        mapCanvas = self.iface.mapCanvas()
-                                        mapCanvas.setExtent(self.current_search_layer.extent())
-                                        mapCanvas.zoomOut()
-                                        #self.canvas.setExtent(self.current_search_layer.extent())
-                                        #self.canvas.refresh()
-                                except Exception as e:
-                                    print(str(e))
-                                    #raise e
-                                
-                                if self.rubberHighlight is not None: #removing previus single highlight
-                                    self.canvas.scene().removeItem(self.rubberHighlight)
-
-                                self.infoWidget.label_typeSok.setText(self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()))
-                                #msg.done(1)
-                                print("Filtering End")
-                            else:
-                                print("featurecount not > 0")
-                                self.show_message("Søket fullførte uten at noen objecter ble funnet", "ingen Objecter funnet", msg_info=None, msg_details=None, msg_type=QMessageBox.Information)
-                                return
-                else:
-                    print("featurecount not > 0")
-                    self.show_message("Søket fullførte uten at noen objecter ble funnet", "ingen Objecter funnet", msg_info=None, msg_details=None, msg_type=QMessageBox.Information)
-                    return
-                            
-
-    def getFeatures(self, featuretype): #May no longer be in use
-        """This code is taken and adjusted from WFS 2.0 Client writen by Juergen Weichand
-        Getting features for TilgjengelighetTettsted, modifye to include friluft"""
-
-        namespace = "http://skjema.geonorge.no/SOSI/produktspesifikasjon/TilgjengelighetTettsted/4.5"
-        namespace_prefix = "app"
-        online_resource = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted"
-        typeNames= urllib.quote(featuretype.encode('utf8'))
-       
-        query_string = "?service=WFS&request=GetFeature&version=2.0.0&srsName={0}&typeNames={1}".format( "urn:ogc:def:crs:EPSG::{0}".format(str(self.iface.mapCanvas().mapRenderer().destinationCrs().postgisSrid())).strip(), typeNames)
-        query_string += "&namespaces=xmlns({0},{1})".format(namespace_prefix, urllib.quote(namespace,""))
-        query_string+= "&"
-
-        self.httpGetId = 0
-        self.http = QHttp()
-
-        self.http.requestStarted.connect(self.httpRequestStartet)
-        self.http.requestFinished.connect(self.httpRequestFinished)
-        self.http.dataReadProgress.connect(self.updateDataReadProgress)
-
-        layername="wfs{0}".format(''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(6)))
-        fileName = self.get_temppath("{0}.gml".format(layername))
-
-        #downloadFile
-        url = QUrl(online_resource)
-
-        print("url: ", url)
-        print("online resource: ", online_resource)
-        print("query string: ", query_string)
-        if QFile.exists(fileName):
-                    print("File  Exists")
-                    QFile.remove(fileName)
-
-        self.outFile = QFile(fileName)
-
-        port = url.port()
-        if port == -1:
-            port = 0
-        
-        self.http.setHost(url.host(), QHttp.ConnectionModeHttps, port) #starting request
-        #print("url.path: ", url.path())
-        self.httpGetId = self.http.get(url.path() + query_string, self.outFile)
-        print("url: ", url.path() + query_string)
-        #print("httpGetId", self.httpGetId)
-        
-
-    def hentData(self): #May no longer be in use
-        """Getting data based on current tab index"""
-        print("FeautureType: ", self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())])
-        self.getFeatures(self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]) #sending featuretype based on current tab index
-
-
-    def hideNode( self, node, bHide=True ): #May no longer be in use
-        if type( node ) in ( QgsLayerTreeLayer, QgsLayerTreeGroup ):
-            index = self.model.node2index( node )
-            self.ltv.setRowHidden( index.row(), index.parent(), bHide )
-            node.setCustomProperty( 'nodeHidden', 'true' if bHide else 'false' )
-            self.ltv.setCurrentIndex( self.model.node2index( self.root ) )
-
-
-    def hideLayer( self, mapLayer ): #May no longer be in use
-        """Hides a layer that is in layerpanel"""
-        if isinstance( mapLayer, QgsMapLayer ):
-            self.hideNode( self.root.findLayer( mapLayer.id() ) )
-
-
     #TODO: make generic hide/show modules
     def hide_show_rampe(self):
         """Hides or shows rampe"""
@@ -905,19 +706,6 @@ class Tilgjengelighet:
             self.dlg.lineEdit_lengde_vei.setVisible(False)
 
 
-    def toggle_enable(self, attributes, tr_or_fl): #May no longer be in use
-        """Enabels or disabels gui_attributes
-
-        :param attributes: list of attributes that are to be enabeld or disabeld
-        :type attributes: list<AttributeForms>
-        """
-        for att in attributes:
-            if att.getComboBox():
-                att.getComboBox().setEnabled(tr_or_fl)
-            if att.getLineEdit():
-                att.getLineEdit().setEnabled(tr_or_fl)
-
-
     def get_previus_search_activeLayer(self):
         """Open filtering window set to preweus choises"""
 
@@ -940,169 +728,12 @@ class Tilgjengelighet:
                 raise
 
 
-    def table_item_clicked(self):
-        """Action for item click in table. Selects corrisponding object in map, and fills info widget with its data"""
-        self.current_search_layer.setSelectedFeatures([]) #Disabels all selections in current search layer
-        indexes = self.dock.tableWidget.selectionModel().selectedRows()
-        if self.current_search_layer is not None: 
-            for index in sorted(indexes):
-                self.current_search_layer.setSelectedFeatures([self.feature_id[self.dock.tableWidget.item(index.row(), 0).text()]])
-  
-
-    def set_availebility_icon(self, tilgjenglighetsvurdering, icons, button):
-        """Method to set wheter object is availeble or not, not currently in use"""
-        button.setIcon(icons[tilgjenglighetsvurdering])
-        image_tilgjengelig = images[0]
-        image_vanskeligTilgjengelig = images[1]
-        image_ikkeTilgjengelig = images[2]
-        image_ikkeVurdert = images[3]
-
-        if tilgjenglighetsvurdering == "tilgjengelig":
-            button.setIcon(image_tilgjengelig)
-        elif tilgjenglighetsvurdering == "ikkeTilgjengelig":
-            button.setIcon(image_ikkeTilgjengelig)
-        elif tilgjenglighetsvurdering == "vanskeligTilgjengelig":
-            button.setIcon(image_vanskeligTilgjengelig)
-        else:
-            button.setIcon(image_ikkeVurdert)
-
-
-    def fill_combobox_old(self, layer, feat_name, combobox): #Not currently in use
-        """Filling out comboboxes based in features in layer
-
-        :param layer: the layer that holds the attributes
-        :param feat_name: the name of the feat that the attributes should be gatherd from
-        :param combobox: The combobox to fill
-
-        :type layer: qgis._core.QgsVectorLayer
-        :type feat_name: str
-        :type combobox: QComboBox
-        """
-        
-
-        combobox.clear()
-        combobox.addItem(self.uspesifisert)
-        
-        feat_name = self.to_unicode(feat_name)
-
-        if feat_name == u'funksjon':
-            textFile  = r'C:\Users\kaspa_000\.qgis2\python\plugins\Tilgjengelighet\tettstedInngangByggningstype.txt'#, 'w', 'utf-8'
-        elif feat_name == u'dørtype':
-            textFile  = r'C:\Users\kaspa_000\.qgis2\python\plugins\Tilgjengelighet\tettstedInngangDortype.txt'#, 'w', 'utf-8'
-        elif feat_name == u'døråpner':
-            textFile  = r'C:\Users\kaspa_000\.qgis2\python\plugins\Tilgjengelighet\tettstedInngangDorapner.txt'#, 'w', 'utf-8'
-        elif feat_name == 'kontrast':
-            textFile  = r'C:\Users\kaspa_000\.qgis2\python\plugins\Tilgjengelighet\tettstedInngangKontrast.txt'#, 'w', 'utf-8'
-        elif feat_name == u'håndlist':
-            textFile  = r'C:\Users\kaspa_000\.qgis2\python\plugins\Tilgjengelighet\tettstedInngangHandlist.txt'#, 'w', 'utf-8'
-        elif feat_name == u'tilgjengvurderingElRull':
-            textFile  = r'C:\Users\kaspa_000\.qgis2\python\plugins\Tilgjengelighet\tettstedInngangTilgjengvurdering.txt'#, 'w', 'utf-8')
-        else:
-            textFile = None
-        print("feat_name: ", feat_name)
-        for feature in layer.getFeatures(): #Sett inn error catchment her
-            try:
-                value = feature[feat_name]
-            except KeyError:
-                print("Layer does not contain given key")
-                return
-            if isinstance(value, int):
-                value = str(value)
-            if not isinstance(value, QPyNullVariant) and combobox.findText(value) < 0:
-                combobox.addItem(value)
-
-            AllItems = [combobox.itemText(i) for i in range(combobox.count())]
-            if textFile is not None:
-                with open(textFile, 'w') as f_out:
-                    for item in AllItems:
-                        f_out.write(item.encode('utf8') + '\n')
-                #textFile.write(str(value) + '\n')
-        #textFile.close()
-
-
     def fill_combobox(self, combobox, filename):
         combobox.clear()
         combobox.addItem(self.uspesifisert)
         with open(filename, 'r') as file:
             for line in file:
                 combobox.addItem(self.to_unicode(line).rstrip('\n'))
-
-
-
-    def fill_combobox_mer_mindre(self, combobox): #Not currently in use
-        """Fill combobox with defult text
-
-        :param combobx: QComboBox
-        """
-        combobox.clear()
-        combobox.addItem(self.uspesifisert)
-        combobox.addItem(self.mer)
-        combobox.addItem(self.mindre)
-        combobox.addItem(self.mer_eller_lik)
-        combobox.addItem(self.mindre_eller_lik)
-             
-
-    def fill_tableWidget(self, layer):
-        """filling tableWidget with the result of a seach in a table
-
-        :param layer: search result
-        :type layer: qgis._core.QgsVectorLayer
-        """
-        #reset table
-        timer_reset = time.clock()
-        self.dock.tableWidget.setRowCount(0)
-        self.dock.tableWidget.setColumnCount(0)
-        print("reset_tabell: {}".format(time.clock() - timer_reset))
-
-        #Create data providers
-        timer_prov = time.clock()
-        prov = layer.dataProvider()
-        print("prov: {}".format(time.clock() - timer_prov))
-        timer_feat = time.clock()
-        feat = layer.getFeatures()
-        print("feat: {}".format(time.clock() - timer_feat))
-        
-        #Create colums
-        timer_createColoms = time.clock()
-        self.nrColumn = len(prov.fields())
-        self.dock.tableWidget.setColumnCount(len(prov.fields())) #creating colums
-
-        for i in range(0, len(prov.fields())): #creating header in table         
-            self.dock.tableWidget.setHorizontalHeaderItem(i,QTableWidgetItem(prov.fields().field(i).name()))
-        print("create coloms: {}".format(time.clock() - timer_createColoms))
-        # creating rows
-        timer_featureCount = time.clock()
-        nr_objects  = layer.featureCount() 
-        print("feature count: {}".format(time.clock() - timer_featureCount))
-        # for f in feat:
-        #     nr_objects = nr_objects + 1
-        # self.dock.tableWidget.setRowCount(nr_objects)
-        
-        # filling table values
-        current_object = 0
-        self.feature_id = {}
-        #feat = layer.getFeatures() #resetting iterator
-        timer_createTable = time.clock()
-        for f in feat:
-            self.feature_id[f['gml_id']] = f.id()
-            for i in range(0,len(prov.fields())):
-                if isinstance(f[i], QDateTime):
-                    if f[i].isNull:
-                        self.dock.tableWidget.setItem(current_object,i,QTableWidgetItem("NULL"))
-                    else:
-                        self.dock.tableWidget.setItem(current_object,i,QTableWidgetItem(f[i].toString('dd.MM.yy')))
-                elif hasattr(f[i], 'toString'):
-                    self.dock.tableWidget.setItem(current_object,i,QTableWidgetItem(f[i].toString()))
-                elif isinstance(f[i], (int, float, long)):
-                    self.dock.tableWidget.setItem(current_object,i,QTableWidgetItem(str(f[i])))
-                elif isinstance(f[i], QPyNullVariant):
-                    self.dock.tableWidget.setItem(current_object,i,QTableWidgetItem("NULL"))
-                else:
-                    self.dock.tableWidget.setItem(current_object,i,QTableWidgetItem(f[i]))
-
-            current_object = current_object + 1
-        priny("create table: {}".format(time.clock() - timer_createTable))
-        self.dock.tableWidget.setSortingEnabled(True) #enabeling sorting
 
 
     def fill_infoWidget(self, attributes):
@@ -1209,88 +840,6 @@ class Tilgjengelighet:
         self.search_history[self.layer_name].add_attribute(self.kommuner, int(self.kommuner.getComboBox().currentIndex()), None)
 
 
-
-    def create_where_statement(self,attributes): #currently not in use
-        """Create a where statement for search
-        :param attributes:
-        :type attributes: list<AttributeForms>
-
-        :returns: a where statement string sorted after given attributes
-        :rtype: str
-        """
-
-        fylke = self.dlg.comboBox_fylker.currentText()
-        komune = self.dlg.comboBox_komuner.currentText()
-        where =  "WHERE lokalId > 0"
-
-        if fylke != "Norge":
-            if komune == self.uspesifisert:
-                where = where + " AND " + "(kommune = '{0}'".format(self.fylke_dict[fylke][0])
-                for komune_nr in range(1, len(self.fylke_dict[fylke])-1):
-                    where = where + " OR kommune = '{0}'".format(self.fylke_dict[fylke][komune_nr])
-                where = where + ")"
-            else:
-                where = where + " AND " + "kommune = '{0}'".format(self.komm_dict_nm[komune])
-
-        #onde_atributter = ["dørtype", "terskelHøyde", "håndlist", "håndlistHøyde1", "håndlistHøyde2"]
-        #one_att_dict = {"dørtype" : "d_rtype", "terskelHøyde" : "terskelH_yde", "håndlist" : "h_ndlist", "håndlistHøyde1" : "h_ndlistH_yde1", "håndlistHøyde2" : "h_ndlistH_yde2"}
-        for attribute in attributes:
-            if attribute.getLineEdit() is None:
-                if attribute.getComboBoxCurrentText() != self.uspesifisert:
-                    if len(where) == 0:
-                        where = "WHERE %s = '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
-                    else:
-                        where =  where + " AND " + "%s = '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
-            else:
-                if attribute.getLineEditText() != self.uspesifisert:
-                    if len(where) == 0:
-                        where = "WHERE %s %s '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
-                    else:
-                        where = where + " AND " +  "%s %s '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
-
-        return where
-
-    def create_where_statement2(self,attributes): #currently not in use
-        """Create an optinal where statement for search
-        :param attributes:
-        :type attributes: list<AttributeForms>
-
-        :returns: a where statement string sorted after given attributes
-        :rtype: str
-        """
-        fylke = self.dlg.comboBox_fylker.currentText()
-        komune = self.dlg.comboBox_komuner.currentText()
-        where = ""
-        if fylke != "Norge":
-            if komune == self.uspesifisert:
-                where = where + " (\"kommune\"={0}".format(self.fylke_dict[fylke][0])
-                for komune_nr in range(1, len(self.fylke_dict[fylke])-1):
-                    where = where + " OR \"kommune\"={0}".format(self.fylke_dict[fylke][komune_nr])
-                where = where + ")"
-            else:
-                where = where + " \"kommune\"={0}".format(self.komm_dict_nm[komune])
-        else:
-            where = " \"kommune\" > 0"
-
-        #onde_atributter = ["dørtype", "terskelHøyde", "håndlist", "håndlistHøyde1", "håndlistHøyde2"]
-        #one_att_dict = {"dørtype" : "d_rtype", "terskelHøyde" : "terskelH_yde", "håndlist" : "h_ndlist", "håndlistHøyde1" : "h_ndlistH_yde1", "håndlistHøyde2" : "h_ndlistH_yde2"}
-        for attribute in attributes:
-            if attribute.getLineEdit() is None:
-                if attribute.getComboBoxCurrentText() != self.uspesifisert:
-                    if len(where) == 0:
-                        where = "\"%s\" = '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
-                    else:
-                        where =  where + " AND " + "\"%s\" = '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText())
-            else:
-                if attribute.getLineEditText() != self.uspesifisert:
-                    if len(where) == 0:
-                        where = "\"%s\" %s '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
-                    else:
-                        where = where + " AND " +  "\"%s\" %s '%s'" % (attribute.getAttribute(), attribute.getComboBoxCurrentText(), attribute.getLineEditText())
-
-        return where
-
-
     def create_filter(self, opperator, valueReference, value):
         """creates FE based on input, made to take less space in other method"""
 
@@ -1298,7 +847,7 @@ class Tilgjengelighet:
         return constraint
 
 
-    def create_where_statement3(self, attributeList):
+    def create_filtherencoding(self, attributeList):
         """creates FE based on user choices
         :param attributeList:
         :type attributeList:list<AttributeForms>
@@ -1309,7 +858,6 @@ class Tilgjengelighet:
 
         fylke = self.dlg.comboBox_fylker.currentText()
         komune = self.dlg.comboBox_komuner.currentText()
-        #query = "<fes:PropertyIsNotEqualTo><fes:ValueReference>app:lokalId</fes:ValueReference><fes:Literal>0</fes:Literal></fes:PropertyIsNotEqualTo>"
         constraint = []
         query = ""
         if fylke != "Norge" and  komune == self.uspesifisert:
@@ -1352,13 +900,12 @@ class Tilgjengelighet:
             return ("FILTER=" + self.to_unicode(filterString))
         elif len(constraint) == 1:
             filterString = "<fes:Filter>{0}</fes:Filter>".format(constraint[0])
-            #print("filterString: ", filterString)
             return ("FILTER=" + self.to_unicode(filterString))
 
         return filterString
         
         
-    def newFilter(self):
+    def filtrer(self):
         """Makes FE and layer based on choises from user an current tab"""
 
         print (u"NewFilterStart")
@@ -1376,20 +923,12 @@ class Tilgjengelighet:
             featuretype = self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]
             self.current_attributes = self.attributes_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]
 
-        #for attribute in self.current_attributes:
-        #    if not attribute.valudeValid(): #enters if loop even if attribute.valudeValid() is true...
-        #        print("attribute is not valid")
-        #        self.show_message("Ugyldig verdi", msg_title="Ugyldig verdi", msg_info="En eller flere av verdiene valgt er ugyldig", msg_type=QMessageBox.Warning)
-        #        return
 
         url = u"http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet{0}?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::4258&typeNames=app:{1}&".format(tilgjDB, featuretype)
 
-        filter_encoding = self.create_where_statement3(self.current_attributes)#= "FILTER=<fes:Filter><fes:PropertyIsEqualTo><fes:ValueReference>app:kommune</fes:ValueReference><fes:Literal>0301</fes:Literal></fes:PropertyIsEqualTo></fes:Filter>"
+        filter_encoding = self.create_filtherencoding(self.current_attributes)#= "FILTER=<fes:Filter><fes:PropertyIsEqualTo><fes:ValueReference>app:kommune</fes:ValueReference><fes:Literal>0301</fes:Literal></fes:PropertyIsEqualTo></fes:Filter>"
 
-        timer_newLayer = time.clock()
         new_layer = QgsVectorLayer(url + filter_encoding, self.layer_name, "ogr")
-        #print(url + filter_encoding)
-        print("new layer: {}".format(time.clock() - timer_newLayer))
         if new_layer.isValid():
             existing_layers = self.iface.legendInterface().layers()
             try:
@@ -1398,269 +937,27 @@ class Tilgjengelighet:
                         QgsMapLayerRegistry.instance().removeMapLayers( [lyr.id()] )
             except Exception as e:
                 print(str(e))
-            timer_addLayer = time.clock()
             QgsMapLayerRegistry.instance().addMapLayer(new_layer)
-            print("add layer: {}".format(time.clock() - timer_addLayer))
             self.current_search_layer = new_layer
             self.current_search_layer.selectionChanged.connect(self.selectedObjects) #Filling infoWidget when objects are selected
             
-            timer_setExtent = time.clock()
             self.canvas.setExtent(self.current_search_layer.extent())
             self.canvas.zoomOut()
-            print("setExtent: {}".format(time.clock() - timer_setExtent))
 
-            timer_fillInfoWidgets = time.clock()
             self.fill_infoWidget(self.current_attributes)
             self.infoWidget.label_typeSok.setText(self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()))
             self.infoWidget.show()
-            print("fillInfoWidgets: {}".format(time.clock() - timer_fillInfoWidgets))
-            timer_fillTabWidget = time.clock()
-            #self.iface.showAttributeTable(self.iface.activeLayer())
-            #self.fill_tableWidget(self.current_search_layer)
-            #attrTables = [d for d in QApplication.instance().allWidgets() if d.objectName() == u'AttributeTable']
-            #self.iface.addDockWidget(Qt.BottomDockWidgetArea, attrTables[0])
-            print("fillTabWidget: {}".format(time.clock() - timer_fillTabWidget))
-
+            
             if self.rubberHighlight is not None: #removing previus single highlight
                 self.canvas.scene().removeItem(self.rubberHighlight)
-            timer_saveSearch = time.clock()
             self.save_search()
-            print("saveSearch: {}".format(time.clock() - timer_saveSearch))
             self.dlg.close() #closing main window for easyer visualisation of results
+
         else:
             self.show_message("Ingen objekter funnet", msg_title="layer not valid", msg_type=QMessageBox.Warning)
+
+
         print(u"NewFilterEnd")
-
-    def filtrer(self, attributes): #Currently not in use
-        """Goes throu all atributes in current tab, creates a where statement and create layer based on that"""
-        print("Filtering Start")
-
-        # msg = QMessageBox()
-        # msg.setText("Filtrerer, venligst vent")
-        # msg.open()
-    
-        #sok_metode = self.dlg.comboBox_sok_metode.currentText() #henter hvilke metode som benyttes(virtuelt eller memory)
-        self.layer_name = self.dlg.lineEdit_navn_paa_sok.text() #setter navn på laget
-        search_type = self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()) #henter hvilke søk som blir gjort (må spesifisere esenere for tettsted eller friluft)
-        search_type_pomrade = self.dlg.tabWidget_tettsted.tabText(3) #setter egen for pområde pga problemer med norske bokstaver
-
-        #setter baselayre basert på søketypen
-        try:
-            if search_type == "Vei":
-                #baselayer = QgsMapLayerRegistry.instance().mapLayersByName('TettstedVei')[0]
-                attributes = self.attributes_vei
-            elif search_type == "Inngang":
-                #baselayer = QgsMapLayerRegistry.instance().mapLayersByName('TettstedInngangBygg')[0]
-                attributes = self.attributes_inngang
-            elif search_type == "HC-Parkering":
-                #baselayer = QgsMapLayerRegistry.instance().mapLayersByName('TettstedHCparkering')[0]
-                attributes = self.attributes_hcparkering
-            elif search_type == search_type_pomrade:
-                #baselayer = QgsMapLayerRegistry.instance().mapLayersByName('TettstedParkeringsomr\xc3\xa5de')[0]
-                attributes = self.attributes_pomrade
-        except IndexError as e:
-            self.show_message("Kan ikke filtrere uten data, venligst hent data og prøv igjen", msg_title="Manger Data", msg_type=QMessageBox.Warning)
-            #QMessageBox.warning(self.iface.mainWindow(), "Mangler data, hent data før filtrering")
-            return
-        
-        #attributes = self.attributes_inngang
-        self.current_attributes = attributes
-
-        # if self.dlg.tabWidget_main.currentIndex() < 1:
-        #     namespace = "http://skjema.geonorge.no/SOSI/produktspesifikasjon/TilgjengelighetFriluft/1.0"
-        #     online_resource = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted"
-        #     featuretype = self.feature_type_tettsted[self.dlg.tabWidget_friluft.tabText(self.dlg.tabWidget_friluft.currentIndex())]
-        # else:
-        #     namespace = "http://skjema.geonorge.no/SOSI/produktspesifikasjon/TilgjengelighetTettsted/4.5"
-        #     online_resource = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted"
-        #     featuretype = self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]
-
-        namespace = "http://skjema.geonorge.no/SOSI/produktspesifikasjon/TilgjengelighetTettsted/4.5"
-        #namespace = "http://skjema.geonorge.no/SOSI/produktspesifikasjon/{0}".format(database)
-        namespace_prefix = "app"
-        online_resource = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted"
-
-        featuretype = self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]
-        typeNames= urllib.quote(featuretype.encode('utf8'))
-
-        query_string = "?service=WFS&request=GetFeature&version=2.0.0&srsName={0}&typeNames={1}".format( "urn:ogc:def:crs:EPSG::{0}".format(str(self.iface.mapCanvas().mapRenderer().destinationCrs().postgisSrid())).strip(), typeNames)
-        query_string += "&namespaces=xmlns({0},{1})".format(namespace_prefix, urllib.quote(namespace,""))
-        query_string+= "&"
-        query_string += self.create_where_statement3(self.current_attributes)
-        print("query_string: ", query_string)
-
-        self.httpGetId = 0
-        self.http = QHttp()
-
-        self.http.requestStarted.connect(self.httpRequestStartet)
-        self.http.requestFinished.connect(self.httpRequestFinished)
-        self.http.dataReadProgress.connect(self.updateDataReadProgress)
-
-
-        layername="wfs{0}".format(''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(6)))
-        fileName = self.get_temppath("{0}.gml".format(layername))
-
-        #downloadFile
-        url = QUrl(online_resource)
-
-        print("url: ", url)
-        print("online resource: ", online_resource)
-        print("query string: ", query_string)
-        if QFile.exists(fileName):
-                    print("File  Exists")
-                    QFile.remove(fileName)
-
-        self.outFile = QFile(fileName)
-
-        port = url.port()
-        if port == -1:
-            port = 0
-        
-        self.http.setHost(url.host(), QHttp.ConnectionModeHttps, port) #starting request
-        #print("url.path: ", url.path())
-        self.httpGetId = self.http.get(url.path() + query_string, self.outFile)
-        print("url: ", url.path() + query_string)
-        #print("httpGetId", self.httpGetId)
-
-
-        #self.sourceMapTool = IdentifyGeometry(self.canvas, self.infoWidget, self.current_attributes, pickMode='selection') #For selecting abject in map and showing data
-        
-        #fylke = self.dlg.comboBox_fylker.currentText()
-        #komune = self.dlg.comboBox_komuner.currentText()
-
-        #genererer express string og where spørringer med komuner
-        # expr_string  = self.create_where_statement2(attributes)
-        
-        # where = self.create_where_statement(attributes)
-
-        # print ("expr_string: ", expr_string, " where: ", where)
-        
-
-        # #genererer express string og where spørringer basert på tilstndte attributter
-        # #for attribute in attributes:
-        # #    where = self.create_where_statement(attribute, where)
-        # #    expr_string = self.create_where_statement2(attribute, expr_string)
-
-        # #Genererer lag basert på virtuell metode eller memory metode
-        # if sok_metode == "virtual":
-            
-        #     layer_name_text = layer_name.text() + "Virtual"
-        #     base_layer_name = baselayer.name()
-        #     query = "SELECT * FROM " + base_layer_name + " " + where
-        #     self.current_search_layer = QgsVectorLayer("?query=%s" % (query), layer_name_text, "virtual" )
-
-        #     if self.current_search_layer.featureCount() > 0: #Lager lag hvis noen objecter er funnet
-        #         if len(QgsMapLayerRegistry.instance().mapLayersByName(layer_name_text)) > 0:
-        #             try:
-        #                 QgsMapLayerRegistry.instance().removeMapLayer( QgsMapLayerRegistry.instance().mapLayersByName(layer_name_text)[0].id() ) #Fjerner lag med samme navn, for å ungå duplicates
-        #             except (RuntimeError, AttributeError) as e:
-        #                 print(str(e))
-
-        #         QgsMapLayerRegistry.instance().addMapLayer(self.current_search_layer) #Legger inn nytt lag
-        #         self.fill_infoWidget(attributes)
-        #         self.canvas.setExtent(self.current_search_layer.extent()) #zoomer inn på nytt lag
-        #         self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget ) #legger inn infowidget
-        #         self.fill_tableWidget(self.current_search_layer) #Legger inn tabell
-        #         #self.sourceMapTool.setLayer(self.current_search_layer) #new layer target for tools
-
-        #         self.search_history[layer_name_text] = SavedSearch(layer_name_text, self.current_search_layer, layer_name, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
-        #         for attribute in attributes: #lagrer valg av attributter
-        #             self.search_history[layer_name_text].add_attribute(attribute, int(attribute.getComboBox().currentIndex()), attribute.getLineEditText())
-
-        #         self.search_history[layer_name_text].add_attribute(self.fylker, int(self.fylker.getComboBox().currentIndex()), None) #lagerer valg og fylter og komuner
-        #         self.search_history[layer_name_text].add_attribute(self.kommuner, int(self.kommuner.getComboBox().currentIndex()), None)
-        #         if self.infoWidget.comboBox_search_history.findText(layer_name_text) == -1: #Legger til ikke existerende søk i søk historien
-        #             self.infoWidget.comboBox_search_history.addItem(layer_name_text)
-        #         self.dlg.close() #lukker hovedvindu for enklere se resultater
-                
-        #     else:
-        #         self.show_message("Søket fullførte uten at noen objecter ble funnet", "ingen Objecter funnet", msg_info=None, msg_details=None, msg_type=None) #Melding som vises om søket feilet
-        
-        # if sok_metode == "memory": #self.dlg.comboBox_sok_metode.currentText() == "memory":
-        #     try:
-        #         QgsMapLayerRegistry.instance().removeMapLayer( tempLayer )
-        #     except (RuntimeError, AttributeError, UnboundLocalError):
-        #         pass
-
-        #     layer_name_text = layer_name.text()# + "Memory"
-
-        #     if search_type == "Vei":
-        #         tempLayer = QgsVectorLayer("LineString?crs=epsg:4326", layer_name_text, "memory")
-        #     elif search_type == search_type_pomrade:
-        #         tempLayer = QgsVectorLayer("Polygon?crs=epsg:4326", layer_name_text, "memory")
-        #     else:
-        #         tempLayer = QgsVectorLayer("Point?crs=epsg:4326", layer_name_text, "memory")
-
-        #     if len(expr_string) == 0: #tester en liten ting med gitKrakken
-        #         #expr_string = " \"kommune\" > 0"
-        #         temp_data = mem_layer.dataProvider()
-        #         attr = layer.dataProvider().fields().toList()
-        #         temp_data.addAttributes(attr)
-        #         tempLayer.updateFields()
-        #         temp_data.addFeatures(feats)
-        #     else:
-        #         expr = QgsExpression(expr_string)
-        #         it = baselayer.getFeatures( QgsFeatureRequest( expr ) )
-        #         ids = [i.id() for i in it]
-        #         baselayer.setSelectedFeatures( ids )
-        #         selectedFeatures = baselayer.selectedFeatures()
-        #         temp_data = tempLayer.dataProvider()
-        #         attr = baselayer.dataProvider().fields().toList()
-        #         temp_data.addAttributes(attr)
-        #         tempLayer.updateFields()
-        #         temp_data.addFeatures(selectedFeatures)
-
-        #     if tempLayer.featureCount() > 0:
-        #         existing_layers = self.iface.legendInterface().layers()
-        #         try:
-        #             for layer in existing_layers: #Removing layers with same name
-        #                 if layer.name() == tempLayer.name():
-        #                     QgsMapLayerRegistry.instance().removeMapLayers( [layer.id()] )
-        #         except Exception as e:
-        #             print(str(e))
-
-        #         self.current_search_layer = tempLayer
-        #         QgsMapLayerRegistry.instance().addMapLayer(self.current_search_layer)
-
-        #         #self.canvas.setExtent(self.current_search_layer.extent())
-        #         #self.canvas.refresh()
-        #         #tempLayer.triggerRepaint()
-        #         self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget )
-        #         #self.sourceMapTool.setLayer(self.current_search_layer)
-        #         self.fill_tableWidget(self.current_search_layer)
-        #         self.fill_infoWidget(attributes)
-
-        #         self.search_history[layer_name_text] = SavedSearch(layer_name_text, self.current_search_layer, layer_name, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
-        #         for attribute in attributes: #lagrer valg av attributter
-        #             self.search_history[layer_name_text].add_attribute(attribute, int(attribute.getComboBox().currentIndex()), attribute.getLineEditText())
-
-        #         self.search_history[layer_name_text].add_attribute(self.fylker, int(self.fylker.getComboBox().currentIndex()), None) #lagerer valg og fylter og komuner
-        #         self.search_history[layer_name_text].add_attribute(self.kommuner, int(self.kommuner.getComboBox().currentIndex()), None)
-
-        #         self.dlg.close() #closing main window for easyer visualisation of results
-
-        #     else: #no objects found
-        #         #msg.done(1)
-        #         self.show_message("Søket fullførte uten at noen objecter ble funnet", "ingen Objecter funnet", msg_info=None, msg_details=None, msg_type=QMessageBox.Information)
-        #         QgsMapLayerRegistry.instance().removeMapLayer( tempLayer.id() )
-        # try:
-        #     if self.current_search_layer is not None:
-        #         self.current_search_layer.selectionChanged.connect(self.selectedObjects) #Filling infoWidget when objects are selected
-        #         mapCanvas = self.iface.mapCanvas()
-        #         mapCanvas.setExtent(self.current_search_layer.extent())
-        #         mapCanvas.zoomOut()
-        #         #self.canvas.setExtent(self.current_search_layer.extent())
-        #         #self.canvas.refresh()
-        # except Exception as e:
-        #     print(str(e))
-        #     #raise e
-        
-        # if self.rubberHighlight is not None: #removing previus single highlight
-        #     self.canvas.scene().removeItem(self.rubberHighlight)
-
-        # self.infoWidget.label_typeSok.setText(self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()))
-        # #msg.done(1)
-        # print("Filtering End")
 
 
     def selectedObjects(self, selFeatures):
@@ -1672,7 +969,7 @@ class Tilgjengelighet:
         self.cur_sel_obj = 0
         self.selection = self.current_search_layer.selectedFeatures()
 
-        self.infoWidget.label_object_number.setText("{0}/{1}".format(self.cur_sel_obj+1, self.number_of_objects))
+        #self.infoWidget.label_object_number.setText("{0}/{1}".format(self.cur_sel_obj+1, self.number_of_objects))
         self.obj_info()
 
         self.highlightSelected()
@@ -1769,22 +1066,17 @@ class Tilgjengelighet:
         elif self.is_int(value):
             value = int(value)
             
-        #print("Vurederer Tilgjenglighet")
         if value is None or value == "-" or isinstance(value, QPyNullVariant):
             print("ikkeVurdert")
             return "ikkeVurdert"
         elif notAcceceble:
             if relate_notAccec(value, notAcceceble):
-                #print("ikkeTilgjengelig")
                 return "ikkeTilgjengelig"
         elif acceceble:
             if relate_acces(value, acceceble):
-                #print("Tilgjengelig")
                 return "tilgjengelig"
         else:
-            #print("vanskeligTilgjengelig")
             return "vanskeligTilgjengelig"
-        #print("I should not see this")
         return "ikkeVurdert"
 
     def is_float(self, value):
@@ -1840,8 +1132,6 @@ class Tilgjengelighet:
             msg.setIcon(msg_type)
 
         msg.setStandardButtons(QMessageBox.Ok)
-
-        #msg.buttonClicked.connect()
 
         retval = msg.exec_()
         print(("value of pressed message box button:", retval))
@@ -1910,13 +1200,6 @@ class Tilgjengelighet:
         for attribute in all_attributes:
             attribute.reset()
 
-        # comboBoxes = [self.dlg.comboBox_fylker, self.dlg.comboBox_komuner, self.dlg.comboBox_avstand_hc, self.dlg.comboBox_ank_stigning, self.dlg.comboBox_byggningstype, self.dlg.comboBox_rampe, self.dlg.comboBox_dortype, self.dlg.comboBox_dorbredde, self.dlg.comboBox_terskel, self.dlg.comboBox_kontrast, self.dlg.comboBox_rmp_stigning, self.dlg.comboBox_rmp_bredde, self.dlg.comboBox_handliste, self.dlg.comboBox_hand1, self.dlg.comboBox_hand2, self.dlg.comboBox_manuell_rullestol, self.dlg.comboBox_el_rullestol, self.dlg.comboBox_syn]
-        # for cmb in comboBoxes:
-        #     cmb.setCurrentIndex(0)
-
-        # lineEdits = [self.dlg.lineEdit_avstand_hc, self.dlg.lineEdit_ank_stigning, self.dlg.lineEdit_dorbredde, self.dlg.lineEdit_terskel, self.dlg.lineEdit_rmp_stigning, self.dlg.lineEdit_rmp_bredde, self.dlg.lineEdit_hand1, self.dlg.lineEdit_hand2, self.dlg.lineEdit_navn_paa_sok]
-        # for le in lineEdits:
-        #     le.setText("")
 
 
     ###############################################Xy-tools#####################################################
@@ -1957,7 +1240,7 @@ class Tilgjengelighet:
         if fileExtension != '.xls':
             filename = filename + '.xls'
         try:
-            from providers import excel
+            from xytools.providers import excel
         except:
             QMessageBox.warning(self.iface.mainWindow(), "Unable to load Python module", "There is a problem with loading a python module which is needed to read/write Excel files. Please see documentation/help how to install python xlw and xlrd libraries.")
             return
@@ -2103,7 +1386,7 @@ class Tilgjengelighet:
 
     def setMapCrs(self, coordRefSys):
         """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
-        mapCanvas = self.iface.mapCanvas()
+        mapCanvas = self.canvas # self.iface.mapCanvas()
         # On the fly
         if QGis.QGIS_VERSION_INT >= 20300:
             #mapCanvas.setCrsTransformEnabled(True)
@@ -2117,17 +1400,19 @@ class Tilgjengelighet:
             extMap = mapCanvas.extent()
             extMap = coordTrans.transform(extMap, QgsCoordinateTransform.ForwardTransform)
             if QGis.QGIS_VERSION_INT >= 20300:
-                #mapCanvas.setDestinationCrs(coordRefSys)
-                pass
+                mapCanvas.setDestinationCrs(coordRefSys)
+                #pass
             elif QGis.QGIS_VERSION_INT >= 10900:
-                #mapCanvas.mapRenderer().setDestinationCrs(coordRefSys)
-                pass
+                mapCanvas.mapRenderer().setDestinationCrs(coordRefSys)
+                #pass
             else:
-                #mapCanvas.mapRenderer().setDestinationSrs(coordRefSys)
-                pass
-            #mapCanvas.freeze(False)
-            #mapCanvas.setMapUnits(coordRefSys.mapUnits())
-            #mapCanvas.setExtent(extMap)
+                mapCanvas.mapRenderer().setDestinationSrs(coordRefSys)
+                #pass
+            mapCanvas.freeze(False)
+            mapCanvas.setMapUnits(coordRefSys.mapUnits())
+            mapCanvas.setExtent(extMap)
+
+            
 
 
 
