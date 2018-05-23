@@ -102,7 +102,7 @@
           </font>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <property name="iconSize">
           <size>
@@ -136,298 +136,535 @@
               <attribute name="title">
                <string>Baderampe</string>
               </attribute>
-              <layout class="QVBoxLayout" name="verticalLayout_39">
+              <layout class="QVBoxLayout" name="verticalLayout_23">
                <item>
-                <layout class="QVBoxLayout" name="verticalLayout_28">
+                <layout class="QHBoxLayout" name="horizontalLayout_142">
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_43">
+                  <layout class="QVBoxLayout" name="verticalLayout_16">
                    <item>
-                    <layout class="QVBoxLayout" name="verticalLayout_27">
-                     <item>
-                      <widget class="QLabel" name="label_rampe_boxs_2">
-                       <property name="text">
-                        <string>Baderampe</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="Line" name="line_7">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <layout class="QFormLayout" name="formLayout_7">
-                       <item row="0" column="0">
-                        <widget class="QLabel" name="label_29">
-                         <property name="text">
-                          <string>Rampe</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="1">
-                        <widget class="QComboBox" name="comboBox_2">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <item>
-                          <property name="text">
-                           <string/>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Ja</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Nei</string>
-                          </property>
-                         </item>
-                        </widget>
-                       </item>
-                       <item row="1" column="0">
-                        <widget class="QLabel" name="label_rmp_stigning_2">
-                         <property name="text">
-                          <string>        Rampe Stigning</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="1" column="1">
-                        <layout class="QHBoxLayout" name="horizontalLayout_37">
-                         <item>
-                          <widget class="QComboBox" name="comboBox_rmp_stigning_2">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="lineEdit_rmp_stigning_2">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item row="2" column="0">
-                        <widget class="QLabel" name="label_rmp_bredde_2">
-                         <property name="text">
-                          <string>        Rampe Bredde</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="2" column="1">
-                        <layout class="QHBoxLayout" name="horizontalLayout_38">
-                         <item>
-                          <widget class="QComboBox" name="comboBox_rmp_bredde_2">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="lineEdit_rmp_bredde_2">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item row="3" column="0">
-                        <widget class="QLabel" name="label_handliste_2">
-                         <property name="text">
-                          <string>        Håndliste</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="3" column="1">
-                        <layout class="QHBoxLayout" name="horizontalLayout_39">
-                         <item>
-                          <widget class="QComboBox" name="comboBox_handliste_2">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item row="4" column="0">
-                        <widget class="QLabel" name="label_hand1_2">
-                         <property name="text">
-                          <string>        Håndliste Høyde 1</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="4" column="1">
-                        <layout class="QHBoxLayout" name="horizontalLayout_40">
-                         <item>
-                          <widget class="QComboBox" name="comboBox_hand1_2">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="lineEdit_hand1_2">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item row="5" column="0">
-                        <widget class="QLabel" name="label_hand2_2">
-                         <property name="text">
-                          <string>        Håndliste Høyde 2</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="5" column="1">
-                        <layout class="QHBoxLayout" name="horizontalLayout_41">
-                         <item>
-                          <widget class="QComboBox" name="comboBox_hand2_2">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="lineEdit_hand2_2">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item row="6" column="0">
-                        <widget class="QLabel" name="label_26">
-                         <property name="text">
-                          <string>        Rampe tilgjengelig</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="6" column="1">
-                        <widget class="QComboBox" name="comboBox">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
-                     <item>
-                      <spacer name="verticalSpacer_12">
-                       <property name="orientation">
-                        <enum>Qt::Vertical</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>20</width>
-                         <height>40</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                    </layout>
-                   </item>
-                   <item>
-                    <widget class="Line" name="line_10">
-                     <property name="orientation">
-                      <enum>Qt::Vertical</enum>
+                    <widget class="QLabel" name="label_rampe_boxs_2">
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>Baderampe</string>
+                     </property>
+                     <property name="margin">
+                      <number>10</number>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <layout class="QVBoxLayout" name="verticalLayout_25">
+                    <widget class="Line" name="line_7">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_38">
                      <item>
-                      <layout class="QVBoxLayout" name="verticalLayout_26">
+                      <widget class="QLabel" name="label_29">
+                       <property name="minimumSize">
+                        <size>
+                         <width>200</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>200</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Rampe</string>
+                       </property>
+                       <property name="margin">
+                        <number>10</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QComboBox" name="comboBox_baderampe_rampe">
+                       <property name="enabled">
+                        <bool>true</bool>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>140</width>
+                         <height>0</height>
+                        </size>
+                       </property>
                        <item>
-                        <widget class="QLabel" name="label_27">
-                         <property name="text">
-                          <string>Tilgjengelighet</string>
+                        <property name="text">
+                         <string/>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>Ja</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>Nei</string>
+                        </property>
+                       </item>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_43">
+                     <item>
+                      <widget class="QLabel" name="label_rmp_stigning_2">
+                       <property name="minimumSize">
+                        <size>
+                         <width>200</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>200</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Rampe Bredde</string>
+                       </property>
+                       <property name="margin">
+                        <number>10</number>
+                       </property>
+                       <property name="indent">
+                        <number>30</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_37">
+                       <item>
+                        <widget class="QComboBox" name="comboBox_baderampe_rampeBredde">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>50</width>
+                           <height>0</height>
+                          </size>
                          </property>
                         </widget>
                        </item>
                        <item>
-                        <widget class="Line" name="line_9">
-                         <property name="orientation">
-                          <enum>Qt::Horizontal</enum>
+                        <widget class="QLineEdit" name="lineEdit_baderampe_rampeBredde">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>40</width>
+                           <height>0</height>
+                          </size>
                          </property>
                         </widget>
-                       </item>
-                       <item>
-                        <layout class="QFormLayout" name="formLayout_8">
-                         <property name="fieldGrowthPolicy">
-                          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-                         </property>
-                         <item row="0" column="0">
-                          <widget class="QLabel" name="label_28">
-                           <property name="text">
-                            <string>Manuell Rullestol</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="0" column="1">
-                          <widget class="QComboBox" name="comboBox_manuell_rullestol_2">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="1" column="0">
-                          <widget class="QLabel" name="label_30">
-                           <property name="text">
-                            <string>Synshemmet</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="1" column="1">
-                          <widget class="QComboBox" name="comboBox_syn_2">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
                        </item>
                       </layout>
                      </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_136">
                      <item>
-                      <spacer name="verticalSpacer_13">
-                       <property name="orientation">
-                        <enum>Qt::Vertical</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
+                      <widget class="QLabel" name="label_rmp_bredde_2">
+                       <property name="minimumSize">
                         <size>
-                         <width>20</width>
-                         <height>40</height>
+                         <width>200</width>
+                         <height>0</height>
                         </size>
                        </property>
-                      </spacer>
+                       <property name="maximumSize">
+                        <size>
+                         <width>200</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Rampe Stigning</string>
+                       </property>
+                       <property name="margin">
+                        <number>10</number>
+                       </property>
+                       <property name="indent">
+                        <number>30</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_135">
+                       <item>
+                        <widget class="QComboBox" name="comboBox_baderampe_rampeStigning">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>50</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="lineEdit_baderampe_rampeStigning">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>40</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
                      </item>
                     </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_39">
+                     <item>
+                      <widget class="QLabel" name="label_handliste_2">
+                       <property name="minimumSize">
+                        <size>
+                         <width>200</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>200</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Håndliste</string>
+                       </property>
+                       <property name="margin">
+                        <number>10</number>
+                       </property>
+                       <property name="indent">
+                        <number>30</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QComboBox" name="comboBox_handlist">
+                       <property name="enabled">
+                        <bool>true</bool>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>140</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_137">
+                     <item>
+                      <widget class="QLabel" name="label_hand1_2">
+                       <property name="minimumSize">
+                        <size>
+                         <width>200</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>200</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Håndliste Høyde 1</string>
+                       </property>
+                       <property name="margin">
+                        <number>10</number>
+                       </property>
+                       <property name="indent">
+                        <number>30</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_40">
+                       <item>
+                        <widget class="QComboBox" name="comboBox_baderampe_handlistHoyde1">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>50</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="lineEdit_baderampe_handlistHoyde1">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>40</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_138">
+                     <item>
+                      <widget class="QLabel" name="label_hand2_2">
+                       <property name="minimumSize">
+                        <size>
+                         <width>200</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>200</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Håndliste Høyde 2</string>
+                       </property>
+                       <property name="margin">
+                        <number>10</number>
+                       </property>
+                       <property name="indent">
+                        <number>30</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_41">
+                       <item>
+                        <widget class="QComboBox" name="comboBox_baderampe_handlistHoyde2">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>50</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="lineEdit_baderampe_handlistHoyde2">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>40</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_139">
+                     <item>
+                      <widget class="QLabel" name="label_26">
+                       <property name="minimumSize">
+                        <size>
+                         <width>200</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>200</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Rampe tilgjengelig</string>
+                       </property>
+                       <property name="margin">
+                        <number>10</number>
+                       </property>
+                       <property name="indent">
+                        <number>30</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QComboBox" name="comboBox_baderampe_rampeTilgjengelig">
+                       <property name="enabled">
+                        <bool>true</bool>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>140</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <spacer name="verticalSpacer_12">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
                    </item>
                   </layout>
                  </item>
                  <item>
-                  <spacer name="verticalSpacer_14">
+                  <widget class="Line" name="line_10">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
                    </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_22">
+                   <item>
+                    <widget class="QLabel" name="label_27">
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>Tilgjengelighetsvurdering</string>
+                     </property>
+                     <property name="margin">
+                      <number>10</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="Line" name="line_9">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_140">
+                     <item>
+                      <widget class="QLabel" name="label_28">
+                       <property name="minimumSize">
+                        <size>
+                         <width>200</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Manuell Rullestol</string>
+                       </property>
+                       <property name="margin">
+                        <number>10</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QComboBox" name="comboBox_baderampe_tilgjengvurderingRullestol">
+                       <property name="enabled">
+                        <bool>true</bool>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>140</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_141">
+                     <item>
+                      <widget class="QLabel" name="label_30">
+                       <property name="minimumSize">
+                        <size>
+                         <width>200</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Synshemmet</string>
+                       </property>
+                       <property name="margin">
+                        <number>10</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QComboBox" name="comboBox_baderampe_tilgjengvurderingSyn">
+                       <property name="enabled">
+                        <bool>true</bool>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>140</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <spacer name="verticalSpacer_13">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
                  </item>
                 </layout>
                </item>

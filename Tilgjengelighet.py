@@ -136,7 +136,16 @@ class Tilgjengelighet:
         self.search_history = {} #history of all search
         self.rubberHighlight = None #Marking the object currently visulised in infoWidget
 
-        self.feature_type_tettsted = { u"HC-Parkering" : u'TettstedHCparkering', u"Inngang" : u'TettstedInngangBygg', u'Parkeringsomr\xe5de' : u'TettstedParkeringsomr\xe5de', u"Vei" : u'TettstedVei'} #use this to get featuretype based on current tab
+        self.feature_type_tettsted = {
+            u"HC-Parkering" : u'TettstedHCparkering', u"Inngang" : u'TettstedInngangBygg', 
+            u'Parkeringsomr\xe5de' : u'TettstedParkeringsomr\xe5de', u"Vei" : u'TettstedVei'
+            } #use this to get featuretype based on current tab
+        self.feature_type_friluft = {
+            u'Baderampe' : u'FriluftBaderampe', u'Fiskeplass' : u'FriluftFiskeplass', 
+            u'Turvei' : u'FriluftTurvei', u'HC-Parkeringsplass' : u'FriluftHCparkering', 
+            u'Parkeringsområde' : u'FriluftParkeringsområde', u'Friluftsområder' : u'FriluftFriluftsområde',
+            u'Gapahuk' : u'FriluftGapahuk', u'Grill-/Bålplass' : u'FriluftGrillBålplass',
+            u'Sittegruppe' : u'FriluftSittegruppe', u'Toalett' : u'FriluftToalett'}
 
         #Icons (may not be in use)
         self.icon_rullestol_tilgjengelig = QPixmap('icons/Tilgjengelig.png')#QIcon(':/plugins/Tilgjengelighet/icons/Tilgjengelig.png')
@@ -367,7 +376,16 @@ class Tilgjengelighet:
         self.assign_combobox_hc_parkering()
         self.assign_combobox_parkeringsomraade()
 
-        self.attributes_tettsted = { u"HC-Parkering" : self.attributes_hcparkering, u"Inngang" : self.attributes_inngang, u'Parkeringsområde' : self.attributes_pomrade, u"Vei" : self.attributes_vei}
+        #Create attributes object friluft
+        self.assign_combobox_baderampe()
+
+        self.attributes_tettsted = {
+            u"HC-Parkering" : self.attributes_hcparkering, u"Inngang" : self.attributes_inngang, 
+            u'Parkeringsområde' : self.attributes_pomrade, u"Vei" : self.attributes_vei}
+
+        self.attributes_friluft = {
+            u"Baderampe" : self.attributes_baderampe
+        }
 
         
         self.openLayer_background_init() #Activate open layers
@@ -416,7 +434,7 @@ class Tilgjengelighet:
         self.fill_combobox(self.dortype.getComboBox(), self.plugin_dir + r"\tettstedInngangdortype.txt")
         self.fill_combobox(self.dorapner.getComboBox(), self.plugin_dir + r"\tettstedInngangDorapner.txt")
         self.fill_combobox(self.kontrast.getComboBox(), self.plugin_dir + r"\tettstedKontrast.txt")
-        self.fill_combobox(self.handlist.getComboBox(), self.plugin_dir + r"\tettstedInngangHandlist.txt")
+        self.fill_combobox(self.handlist.getComboBox(), self.plugin_dir + r"\handlist.txt")
 
         self.fill_combobox(self.rmp_tilgjengelig.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
         self.fill_combobox(self.manuellRullestol.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
@@ -566,6 +584,34 @@ class Tilgjengelighet:
         self.fill_combobox(self.dekkeTilstand_pomrade.getComboBox(), self.plugin_dir + r"\tettstedDekkeTilstand.txt")
         
         self.fill_combobox(self.manuell_rullestol_pomrade.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+
+
+    def assign_combobox_baderampe(self):
+        """Assigning a AttributeForm object to each option in Baderampe"""
+
+        rampe = AttributeForm("rampe", self.dlg.comboBox_baderampe_rampe)
+        rampeBredde = AttributeForm("rampeBredde", self.dlg.comboBox_baderampe_rampeBredde, self.dlg.lineEdit_baderampe_rampeBredde)
+        rampeStigning = AttributeForm("rampeStigning", self.dlg.comboBox_baderampe_rampeStigning, self.dlg.lineEdit_baderampe_rampeStigning)
+        handlist = AttributeForm("håndlist", self.dlg.comboBox_handlist)
+        handlistHoyde1 = AttributeForm("håndlistHøyde1", self.dlg.comboBox_baderampe_handlistHoyde1, self.dlg.lineEdit_baderampe_handlistHoyde1)
+        handlistHoyde2 = AttributeForm("håndlistHøyde2", self.dlg.comboBox_baderampe_handlistHoyde2, self.dlg.lineEdit_baderampe_handlistHoyde2)
+        rampeTilgjengelig =  AttributeForm("rampeTilgjengelig", self.dlg.comboBox_baderampe_rampeTilgjengelig)
+
+        tilgjengvurderingRullestol = AttributeForm("tilgjengvurderingRullestol", self.dlg.comboBox_baderampe_tilgjengvurderingRullestol)
+        tilgjengvurderingSyn = AttributeForm("tilgjengvurderingSyn", self.dlg.comboBox_baderampe_tilgjengvurderingSyn)
+
+        self.attributes_baderampe = [rampe, rampeBredde, rampeStigning, handlist, handlistHoyde1, handlistHoyde2, rampeTilgjengelig, tilgjengvurderingRullestol, tilgjengvurderingSyn]
+        attributes_mer_mindre = [rampeBredde, rampeStigning, handlistHoyde1, handlistHoyde2]
+
+        for attributt in attributes_mer_mindre:
+            self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\mer_mindre.txt')
+
+        self.fill_combobox(rampe.getComboBox(), self.plugin_dir + r'\boolean.txt')
+        self.fill_combobox(handlist.getComboBox(), self.plugin_dir + r"\handlist.txt")
+        self.fill_combobox(rampeTilgjengelig.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(tilgjengvurderingRullestol.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(tilgjengvurderingSyn.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+
 
 
     def unload(self):
@@ -914,14 +960,18 @@ class Tilgjengelighet:
             self.current_search_layer.removeSelection()
 
         self.layer_name = self.dlg.lineEdit_navn_paa_sok.text() #setter navn på laget
-        search_type = self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()) #henter hvilke søk som blir gjort (må spesifisere esenere for tettsted eller friluft)
-        search_type_pomrade = self.dlg.tabWidget_tettsted.tabText(3) #setter egen for pområde pga problemer med norske bokstaver
+        #search_type = self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()) #henter hvilke søk som blir gjort (må spesifisere esenere for tettsted eller friluft)
+        #search_type_pomrade = self.dlg.tabWidget_tettsted.tabText(3) #setter egen for pområde pga problemer med norske bokstaver
         if self.dlg.tabWidget_main.currentIndex() < 1:
             tilgjDB = "friluft"
+            featuretype = self.feature_type_friluft[self.dlg.tabWidget_friluft.tabText(self.dlg.tabWidget_friluft.currentIndex())]
+            self.current_attributes = self.attributes_friluft[self.dlg.tabWidget_friluft.tabText(self.dlg.tabWidget_friluft.currentIndex())]
+            infoWidget_title = self.dlg.tabWidget_friluft.tabText(self.dlg.tabWidget_friluft.currentIndex())
         else:
             tilgjDB = "tettsted"
             featuretype = self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]
             self.current_attributes = self.attributes_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]
+            infoWidget_title = self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())
 
 
         url = u"http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet{0}?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::4258&typeNames=app:{1}&".format(tilgjDB, featuretype)
@@ -945,8 +995,12 @@ class Tilgjengelighet:
             self.canvas.zoomOut()
 
             self.fill_infoWidget(self.current_attributes)
-            self.infoWidget.label_typeSok.setText(self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()))
+            self.infoWidget.label_typeSok.setText(infoWidget_title)
             self.infoWidget.show()
+            attrTables = [d for d in QApplication.instance().allWidgets() if d.objectName() == u'QgsAttributeTableDialog' or d.objectName() == u'AttributeTable']
+            for x in attrTables:
+                x.close()
+            self.show_tabell()
             
             if self.rubberHighlight is not None: #removing previus single highlight
                 self.canvas.scene().removeItem(self.rubberHighlight)
