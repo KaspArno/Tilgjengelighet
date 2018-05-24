@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1200</width>
-    <height>765</height>
+    <height>733</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -27,7 +27,7 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QLabel" name="label_19">
+          <widget class="QLabel" name="label_fylke">
            <property name="font">
             <font>
              <pointsize>15</pointsize>
@@ -52,14 +52,14 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
-          <widget class="QLabel" name="label_20">
+          <widget class="QLabel" name="label_kommune">
            <property name="font">
             <font>
              <pointsize>15</pointsize>
             </font>
            </property>
            <property name="text">
-            <string>Komune</string>
+            <string>Kommune</string>
            </property>
           </widget>
          </item>
@@ -102,7 +102,7 @@
           </font>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <property name="iconSize">
           <size>
@@ -4733,7 +4733,7 @@
                      <item>
                       <layout class="QHBoxLayout" name="horizontalLayout_125">
                        <item>
-                        <widget class="QLabel" name="label">
+                        <widget class="QLabel" name="label_avstandHC">
                          <property name="minimumSize">
                           <size>
                            <width>200</width>
@@ -4782,7 +4782,7 @@
                            </property>
                            <property name="maximumSize">
                             <size>
-                             <width>250</width>
+                             <width>1000</width>
                              <height>16777215</height>
                             </size>
                            </property>
@@ -4795,7 +4795,7 @@
                      <item>
                       <layout class="QHBoxLayout" name="horizontalLayout_126">
                        <item>
-                        <widget class="QLabel" name="label_3">
+                        <widget class="QLabel" name="label_stigningAdkomstvei">
                          <property name="minimumSize">
                           <size>
                            <width>200</width>
@@ -4844,7 +4844,7 @@
                            </property>
                            <property name="maximumSize">
                             <size>
-                             <width>250</width>
+                             <width>1000</width>
                              <height>16777215</height>
                             </size>
                            </property>
@@ -4857,7 +4857,7 @@
                      <item>
                       <layout class="QHBoxLayout" name="horizontalLayout_127">
                        <item>
-                        <widget class="QLabel" name="label_2">
+                        <widget class="QLabel" name="label_funksjon">
                          <property name="enabled">
                           <bool>false</bool>
                          </property>
@@ -4900,7 +4900,7 @@
                          </property>
                          <property name="maximumSize">
                           <size>
-                           <width>250</width>
+                           <width>1000</width>
                            <height>16777215</height>
                           </size>
                          </property>
@@ -4911,7 +4911,7 @@
                      <item>
                       <layout class="QHBoxLayout" name="horizontalLayout_128">
                        <item>
-                        <widget class="QLabel" name="label_21">
+                        <widget class="QLabel" name="label_rampe">
                          <property name="minimumSize">
                           <size>
                            <width>200</width>
@@ -4945,7 +4945,7 @@
                          </property>
                          <property name="maximumSize">
                           <size>
-                           <width>250</width>
+                           <width>1000</width>
                            <height>16777215</height>
                           </size>
                          </property>
@@ -4956,7 +4956,7 @@
                      <item>
                       <layout class="QHBoxLayout" name="horizontalLayout_129">
                        <item>
-                        <widget class="QLabel" name="label_4">
+                        <widget class="QLabel" name="label_dortype">
                          <property name="minimumSize">
                           <size>
                            <width>200</width>
@@ -4990,7 +4990,7 @@
                          </property>
                          <property name="maximumSize">
                           <size>
-                           <width>250</width>
+                           <width>1000</width>
                            <height>16777215</height>
                           </size>
                          </property>
@@ -5001,7 +5001,7 @@
                      <item>
                       <layout class="QHBoxLayout" name="horizontalLayout_130">
                        <item>
-                        <widget class="QLabel" name="label_39">
+                        <widget class="QLabel" name="label_dorapner">
                          <property name="minimumSize">
                           <size>
                            <width>200</width>
@@ -5035,7 +5035,7 @@
                          </property>
                          <property name="maximumSize">
                           <size>
-                           <width>250</width>
+                           <width>1000</width>
                            <height>16777215</height>
                           </size>
                          </property>
@@ -5046,7 +5046,7 @@
                      <item>
                       <layout class="QHBoxLayout" name="horizontalLayout_131">
                        <item>
-                        <widget class="QLabel" name="label_41">
+                        <widget class="QLabel" name="label_manoverknappHoyde">
                          <property name="minimumSize">
                           <size>
                            <width>200</width>
@@ -5095,7 +5095,7 @@
                            </property>
                            <property name="maximumSize">
                             <size>
-                             <width>250</width>
+                             <width>1000</width>
                              <height>16777215</height>
                             </size>
                            </property>
@@ -5108,7 +5108,7 @@
                      <item>
                       <layout class="QHBoxLayout" name="horizontalLayout_132">
                        <item>
-                        <widget class="QLabel" name="label_5">
+                        <widget class="QLabel" name="label_inngangbredde">
                          <property name="minimumSize">
                           <size>
                            <width>200</width>
@@ -5157,7 +5157,7 @@
                            </property>
                            <property name="maximumSize">
                             <size>
-                             <width>250</width>
+                             <width>1000</width>
                              <height>16777215</height>
                             </size>
                            </property>
@@ -5219,7 +5219,7 @@
                            </property>
                            <property name="maximumSize">
                             <size>
-                             <width>250</width>
+                             <width>1000</width>
                              <height>16777215</height>
                             </size>
                            </property>
@@ -5266,7 +5266,7 @@
                          </property>
                          <property name="maximumSize">
                           <size>
-                           <width>250</width>
+                           <width>1000</width>
                            <height>16777215</height>
                           </size>
                          </property>
@@ -5315,7 +5315,7 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="Line" name="line_4">
+                      <widget class="Line" name="line_inngang_rampe">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -6094,7 +6094,7 @@
                      <item>
                       <layout class="QHBoxLayout" name="horizontalLayout_117">
                        <item>
-                        <widget class="QLabel" name="label_bredde_vei">
+                        <widget class="QLabel" name="label_bredde_hcp_merke">
                          <property name="minimumSize">
                           <size>
                            <width>200</width>
@@ -6121,7 +6121,7 @@
                        <item>
                         <layout class="QHBoxLayout" name="horizontalLayout_20">
                          <item>
-                          <widget class="QComboBox" name="comboBox_bredde_vei">
+                          <widget class="QComboBox" name="comboBox_bredde_hcp_merke">
                            <property name="enabled">
                             <bool>true</bool>
                            </property>
@@ -6134,7 +6134,7 @@
                           </widget>
                          </item>
                          <item>
-                          <widget class="QLineEdit" name="lineEdit_bredde_vei">
+                          <widget class="QLineEdit" name="lineEdit_bredde_hcp_merke">
                            <property name="enabled">
                             <bool>true</bool>
                            </property>
@@ -6153,7 +6153,7 @@
                      <item>
                       <layout class="QHBoxLayout" name="horizontalLayout_118">
                        <item>
-                        <widget class="QLabel" name="label_lengde_vei">
+                        <widget class="QLabel" name="label_lengde_hcp_merke">
                          <property name="minimumSize">
                           <size>
                            <width>200</width>
@@ -6180,7 +6180,7 @@
                        <item>
                         <layout class="QHBoxLayout" name="horizontalLayout_31">
                          <item>
-                          <widget class="QComboBox" name="comboBox_lengde_vei">
+                          <widget class="QComboBox" name="comboBox_lengde_hcp_merke">
                            <property name="enabled">
                             <bool>true</bool>
                            </property>
@@ -6193,7 +6193,7 @@
                           </widget>
                          </item>
                          <item>
-                          <widget class="QLineEdit" name="lineEdit_lengde_vei">
+                          <widget class="QLineEdit" name="lineEdit_lengde_hcp_merke">
                            <property name="enabled">
                             <bool>true</bool>
                            </property>
@@ -6804,13 +6804,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_HentData">
-         <property name="text">
-          <string>Hent Data</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <spacer name="horizontalSpacer_18">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -6836,26 +6829,6 @@
           <widget class="QLineEdit" name="lineEdit_navn_paa_sok"/>
          </item>
          <item>
-          <widget class="QComboBox" name="comboBox_sok_metode">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="currentIndex">
-            <number>1</number>
-           </property>
-           <item>
-            <property name="text">
-             <string>virtual</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>memory</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item>
           <widget class="QPushButton" name="pushButton_filtrer">
            <property name="enabled">
             <bool>true</bool>
@@ -6871,23 +6844,6 @@
         </layout>
        </item>
       </layout>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_Progress">
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Laster inn lag:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>

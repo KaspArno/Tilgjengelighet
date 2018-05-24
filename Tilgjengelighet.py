@@ -40,6 +40,7 @@ from PyQt4.QtNetwork import QHttp
 from qgis.gui import QgsRubberBand, QgsMessageBar
 from osgeo import gdal
 from osgeo import ogr
+from functools import partial
 
 
 # Initialize Qt resources from file resources.py
@@ -298,8 +299,6 @@ class Tilgjengelighet:
 
         self.dlg.pushButton_reset.clicked.connect(self.reset) #resett all choses made by user
 
-        self.dlg.label_Progress.setVisible(False) #label_prgress currently not in use
-
         self.change_search_name() #Initiate a search name
 
 
@@ -364,9 +363,9 @@ class Tilgjengelighet:
         self.dlg.comboBox_fylker.currentIndexChanged.connect(self.change_search_name) #setting search name based on fylke
         self.dlg.comboBox_komuner.currentIndexChanged.connect(self.change_search_name) #setting search name based on komune
 
-        self.fylker = AttributeForm("fylker")
+        self.fylker = AttributeForm("fylker", self.dlg.label_fylke)
         self.fylker.setComboBox(self.dlg.comboBox_fylker)
-        self.kommuner = AttributeForm("komune")
+        self.kommuner = AttributeForm("komune", self.dlg.label_kommune)
         self.kommuner.setComboBox(self.dlg.comboBox_komuner)
 
 
@@ -391,11 +390,7 @@ class Tilgjengelighet:
         self.openLayer_background_init() #Activate open layers
         
 
-    def resolve(name, basepath=None):
-        if not basepath:
-          basepath = os.path.dirname(os.path.realpath(__file__))
-        return os.path.join(basepath, name)
-
+    ############################# Assign widget to attributeform and fill comboboxes #################################
 
     def assign_combobox_inngang(self):
         """Assigning a AttributeForm object to each option in inngang"""
@@ -410,12 +405,12 @@ class Tilgjengelighet:
         self.dorbredde = AttributeForm("InngangBredde", self.dlg.comboBox_dorbredde, self.dlg.lineEdit_dorbredde)
         self.terskel = AttributeForm(u'terskelH\xf8yde', self.dlg.comboBox_terskel, self.dlg.lineEdit_terskel)
         self.kontrast = AttributeForm("kontrast", self.dlg.comboBox_kontrast)
-        self.rampe_stigning = AttributeForm("rampeStigning", self.dlg.comboBox_rmp_stigning, self.dlg.lineEdit_rmp_stigning)
-        self.rampe_bredde = AttributeForm("rampeBredde", self.dlg.comboBox_rmp_bredde, self.dlg.lineEdit_rmp_bredde)
-        self.handlist = AttributeForm(u'h\xe5ndlist', self.dlg.comboBox_handliste)
-        self.handlist1 = AttributeForm(u'h\xe5ndlistH\xf8yde1', self.dlg.comboBox_hand1, self.dlg.lineEdit_hand1)
-        self.handlist2 = AttributeForm(u'h\xe5ndlistH\xf8yde2', self.dlg.comboBox_hand2, self.dlg.lineEdit_hand2)
-        self.rmp_tilgjengelig = AttributeForm("rampeTilgjengelig", self.dlg.comboBox_rmp_tilgjengelig)
+        self.rampe_stigning = AttributeForm("rampeStigning", self.dlg.comboBox_rmp_stigning, self.dlg.lineEdit_rmp_stigning, label=self.dlg.label_rmp_stigning)
+        self.rampe_bredde = AttributeForm("rampeBredde", self.dlg.comboBox_rmp_bredde, self.dlg.lineEdit_rmp_bredde, label=self.dlg.label_rmp_bredde)
+        self.handlist = AttributeForm(u'h\xe5ndlist', self.dlg.comboBox_handliste, label=self.dlg.label_handliste)
+        self.handlist1 = AttributeForm(u'h\xe5ndlistH\xf8yde1', self.dlg.comboBox_hand1, self.dlg.lineEdit_hand1, label=self.dlg.label_hand1)
+        self.handlist2 = AttributeForm(u'h\xe5ndlistH\xf8yde2', self.dlg.comboBox_hand2, self.dlg.lineEdit_hand2, label=self.dlg.label_hand2)
+        self.rmp_tilgjengelig = AttributeForm("rampeTilgjengelig", self.dlg.comboBox_rmp_tilgjengelig, label=self.dlg.label_rmp_tilgjengelig)
         self.manuellRullestol = AttributeForm("tilgjengvurderingRullestol", self.dlg.comboBox_manuell_rullestol)
         self.elektriskRullestol = AttributeForm("tilgjengvurderingElRull", self.dlg.comboBox_el_rullestol)
         self.synshemmet = AttributeForm("tilgjengvurderingSyn", self.dlg.comboBox_syn)
@@ -423,6 +418,7 @@ class Tilgjengelighet:
         self.attributes_inngang = [self.avstandHC, self.ank_stigning, self.byggningstype, self.rampe, self.dortype, self.dorapner, self.man_hoyde, self.dorbredde, self.terskel, self.kontrast, self.rampe_stigning, self.rampe_bredde, self.handlist, self.handlist1, self.handlist2, self.rmp_tilgjengelig, self.manuellRullestol, self.elektriskRullestol, self.synshemmet]
         self.attributes_inngang_gui = [self.byggningstype, self.dortype, self.dorapner, self.kontrast, self.handlist, self.rmp_tilgjengelig, self.manuellRullestol, self.elektriskRullestol, self.synshemmet]
         self.attributes_inngang_mer_mindre = [self.avstandHC, self.ank_stigning, self.man_hoyde, self.dorbredde, self.terskel, self.rampe_stigning, self.rampe_bredde, self.handlist1, self.handlist2]
+        self.attributes_rampe = [self.rampe_stigning, self.rampe_bredde, self.handlist, self.handlist1, self.handlist2, self.rmp_tilgjengelig]
 
         #fill combobox
         path = ":/plugins/Tilgjengelighet/" #Mey not need this
@@ -441,123 +437,89 @@ class Tilgjengelighet:
         self.fill_combobox(self.elektriskRullestol.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
         self.fill_combobox(self.synshemmet.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
 
-        #hide gui options
-        self.dlg.label_rampe_boxs.setVisible(False)
-
-        self.dlg.lineEdit_rmp_stigning.setVisible(False)
-        self.dlg.comboBox_rmp_stigning.setVisible(False)
-        self.dlg.label_rmp_stigning.setVisible(False)
-
-        self.dlg.lineEdit_rmp_bredde.setVisible(False)
-        self.dlg.comboBox_rmp_bredde.setVisible(False)
-        self.dlg.label_rmp_bredde.setVisible(False)
-
-        self.dlg.comboBox_handliste.setVisible(False)
-        self.dlg.label_handliste.setVisible(False)
-
-        self.dlg.lineEdit_hand1.setVisible(False)
-        self.dlg.comboBox_hand1.setVisible(False)
-        self.dlg.label_hand1.setVisible(False)
-
-        self.dlg.lineEdit_hand2.setVisible(False)
-        self.dlg.comboBox_hand2.setVisible(False)
-        self.dlg.label_hand2.setVisible(False)
-
-        self.dlg.comboBox_rmp_tilgjengelig.setVisible(False)
-        self.dlg.label_rmp_tilgjengelig.setVisible(False)
-
-        self.dlg.line_4.setVisible(False)
-        self.dlg.line.setVisible(False)
-
-        self.dlg.comboBox_rampe.currentIndexChanged.connect(self.hide_show_rampe)
+        self.hide_show_gui(self.attributes_rampe, self.dlg.comboBox_rampe.currentText() == u"Ja", [self.dlg.label_rampe_boxs, self.dlg.line_inngang_rampe, self.dlg.line])
+        self.dlg.comboBox_rampe.currentIndexChanged.connect(lambda: self.hide_show_gui(self.attributes_rampe, self.dlg.comboBox_rampe.currentText() == u"Ja", [self.dlg.label_rampe_boxs, self.dlg.line_inngang_rampe, self.dlg.line]))
+        #self.dlg.comboBox_rampe.currentIndexChanged.connect(self.hide_show_rampe)
 
 
     def assign_combobox_vei(self):
         """Assigning a AttributeForm object to each option in vei"""
 
-        self.gatetype = AttributeForm("gatetype", self.dlg.comboBox_gatetype)
-        self.nedsenkning1 = AttributeForm("nedsenk1", self.dlg.comboBox_nedsenkning1, self.dlg.lineEdit_nedsenkning1)
-        self.nedsenkning2 = AttributeForm("nedsenk2", self.dlg.comboBox_nedsenkning2, self.dlg.lineEdit_nedsenkning2)
-        self.dekke_vei_tettsted = AttributeForm("dekke", self.dlg.comboBox_dekke_vei_tettsted)
-        self.dekkeTilstand_vei_tettsted = AttributeForm("dekkeTilstand", self.dlg.comboBox_dekkeTilstand_vei_tettsted)
-        self.bredde = AttributeForm("bredde", self.dlg.comboBox_bredde, self.dlg.lineEdit_bredde)
-        self.stigning = AttributeForm("stigning", self.dlg.comboBox_stigning, self.dlg.lineEdit_stigning)
-        self.tverfall = AttributeForm("tverrfall", self.dlg.comboBox_tverfall, self.dlg.lineEdit_tverfall)
-        self.ledelinje = AttributeForm("ledelinje", self.dlg.comboBox_ledelinje)
-        self.ledelinjeKontrast = AttributeForm("ledelinjeKontrast", self.dlg.comboBox_ledelinjeKontrast)
+        gatetype = AttributeForm("gatetype", self.dlg.comboBox_gatetype)
+        nedsenkning1 = AttributeForm("nedsenk1", self.dlg.comboBox_nedsenkning1, self.dlg.lineEdit_nedsenkning1, label=self.dlg.label_nedsenkning1)
+        nedsenkning2 = AttributeForm("nedsenk2", self.dlg.comboBox_nedsenkning2, self.dlg.lineEdit_nedsenkning2, label=self.dlg.label_nedsenkning2)
+        dekke_vei_tettsted = AttributeForm("dekke", self.dlg.comboBox_dekke_vei_tettsted)
+        dekkeTilstand_vei_tettsted = AttributeForm("dekkeTilstand", self.dlg.comboBox_dekkeTilstand_vei_tettsted)
+        bredde = AttributeForm("bredde", self.dlg.comboBox_bredde, self.dlg.lineEdit_bredde)
+        stigning = AttributeForm("stigning", self.dlg.comboBox_stigning, self.dlg.lineEdit_stigning)
+        tverfall = AttributeForm("tverrfall", self.dlg.comboBox_tverfall, self.dlg.lineEdit_tverfall)
+        ledelinje = AttributeForm("ledelinje", self.dlg.comboBox_ledelinje)
+        ledelinjeKontrast = AttributeForm("ledelinjeKontrast", self.dlg.comboBox_ledelinjeKontrast)
 
-        self.manuell_rullestol_vei = AttributeForm("tilgjengvurderingRullestol", self.dlg.comboBox_manuell_rullestol_vei)
-        self.electrisk_rullestol_vei = AttributeForm("tilgjengvurderingElRull", self.dlg.comboBox_electrisk_rullestol_vei)
-        self.syn_vei = AttributeForm("tilgjengvurderingSyn", self.dlg.comboBox_syn_vei)
+        manuell_rullestol_vei = AttributeForm("tilgjengvurderingRullestol", self.dlg.comboBox_manuell_rullestol_vei)
+        electrisk_rullestol_vei = AttributeForm("tilgjengvurderingElRull", self.dlg.comboBox_electrisk_rullestol_vei)
+        syn_vei = AttributeForm("tilgjengvurderingSyn", self.dlg.comboBox_syn_vei)
 
-        self.attributes_vei = [self.gatetype, self.nedsenkning1, self.nedsenkning2, self.dekke_vei_tettsted, self.dekkeTilstand_vei_tettsted, self.bredde, self.stigning, self.tverfall, self.ledelinje, self.ledelinjeKontrast, self.manuell_rullestol_vei, self.electrisk_rullestol_vei, self.syn_vei]
-        self.attributes_vei_gui = [self.gatetype, self.dekke_vei_tettsted, self.dekkeTilstand_vei_tettsted, self.ledelinje, self.ledelinjeKontrast, self.manuell_rullestol_vei, self.electrisk_rullestol_vei, self.syn_vei]
-        self.attributes_vei_mer_mindre = [self.nedsenkning1,self.nedsenkning2,self.bredde,self.stigning,self.tverfall]
+        self.attributes_vei = [gatetype, nedsenkning1, nedsenkning2, dekke_vei_tettsted, dekkeTilstand_vei_tettsted, bredde, stigning, tverfall, ledelinje, ledelinjeKontrast, manuell_rullestol_vei, electrisk_rullestol_vei, syn_vei]
+        attributes_vei_gui = [gatetype, dekke_vei_tettsted, dekkeTilstand_vei_tettsted, ledelinje, ledelinjeKontrast, manuell_rullestol_vei, electrisk_rullestol_vei, syn_vei]
+        attributes_vei_mer_mindre = [nedsenkning1,nedsenkning2,bredde,stigning,tverfall]
+        attributes_nedsenkning = [nedsenkning1, nedsenkning2]
 
         #fill combobox
-        for attributt in self.attributes_vei_mer_mindre:
+        for attributt in attributes_vei_mer_mindre:
             self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\mer_mindre.txt')
 
-        self.fill_combobox(self.gatetype.getComboBox(), self.plugin_dir + r'\tettstedVeiGatetype.txt')
-        self.fill_combobox(self.dekke_vei_tettsted.getComboBox(), self.plugin_dir + r"\tettstedDekke.txt")
-        self.fill_combobox(self.dekkeTilstand_vei_tettsted.getComboBox(), self.plugin_dir + r"\tettstedDekkeTilstand.txt")
-        self.fill_combobox(self.ledelinje.getComboBox(), self.plugin_dir + r"\tettstedVeiLedelinje.txt")
-        self.fill_combobox(self.ledelinjeKontrast.getComboBox(), self.plugin_dir + r"\tettstedKontrast.txt")
+        self.fill_combobox(gatetype.getComboBox(), self.plugin_dir + r'\tettstedVeiGatetype.txt')
+        self.fill_combobox(dekke_vei_tettsted.getComboBox(), self.plugin_dir + r"\tettstedDekke.txt")
+        self.fill_combobox(dekkeTilstand_vei_tettsted.getComboBox(), self.plugin_dir + r"\tettstedDekkeTilstand.txt")
+        self.fill_combobox(ledelinje.getComboBox(), self.plugin_dir + r"\tettstedVeiLedelinje.txt")
+        self.fill_combobox(ledelinjeKontrast.getComboBox(), self.plugin_dir + r"\tettstedKontrast.txt")
         
-        self.fill_combobox(self.manuell_rullestol_vei.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
-        self.fill_combobox(self.electrisk_rullestol_vei.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
-        self.fill_combobox(self.syn_vei.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(manuell_rullestol_vei.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(electrisk_rullestol_vei.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(syn_vei.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
 
-        #Hide GUI
-        self.dlg.comboBox_nedsenkning1.setVisible(False)
-        self.dlg.lineEdit_nedsenkning1.setVisible(False)
-        self.dlg.label_nedsenkning1.setVisible(False)
-        self.dlg.comboBox_nedsenkning2.setVisible(False)
-        self.dlg.lineEdit_nedsenkning2.setVisible(False)
-        self.dlg.label_nedsenkning2.setVisible(False)
+        self.hide_show_gui(attributes_nedsenkning, self.dlg.comboBox_gatetype.currentText() != self.uspesifisert)
+        self.dlg.comboBox_gatetype.currentIndexChanged.connect(lambda: self.hide_show_gui(attributes_nedsenkning, self.dlg.comboBox_gatetype.currentText() != self.uspesifisert))
 
-        self.dlg.comboBox_gatetype.currentIndexChanged.connect(self.hide_show_nedsenkning)
+        #self.dlg.comboBox_gatetype.currentIndexChanged.connect(self.hide_show_nedsenkning)
 
 
     def assign_combobox_hc_parkering(self):
         """Assigning a AttributeForm object to each option in hc parkering"""
 
-        self.avstandServicebygg = AttributeForm("avstandServicebygg", self.dlg.comboBox_avstandServicebygg, self.dlg.lineEdit_avstandServicebygg)
+        avstandServicebygg = AttributeForm("avstandServicebygg", self.dlg.comboBox_avstandServicebygg, self.dlg.lineEdit_avstandServicebygg)
 
-        self.overbygg = AttributeForm("overbygg", self.dlg.comboBox_overbygg, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
-        self.skiltet = AttributeForm("skiltet", self.dlg.comboBox_skiltet, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
-        self.merket = AttributeForm("merket", self.dlg.comboBox_merket, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
+        overbygg = AttributeForm("overbygg", self.dlg.comboBox_overbygg, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
+        skiltet = AttributeForm("skiltet", self.dlg.comboBox_skiltet, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
+        merket = AttributeForm("merket", self.dlg.comboBox_merket, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
 
-        self.bredde_vei = AttributeForm("bredde", self.dlg.comboBox_bredde_vei, self.dlg.lineEdit_bredde_vei)
-        self.lengde_vei = AttributeForm("lengde", self.dlg.comboBox_lengde_vei, self.dlg.lineEdit_lengde_vei)
+        bredde_hcp_merke = AttributeForm("bredde", self.dlg.comboBox_bredde_hcp_merke, self.dlg.lineEdit_bredde_hcp_merke, label=self.dlg.label_bredde_hcp_merke)
+        lengde_hcp_merke = AttributeForm("lengde", self.dlg.comboBox_lengde_hcp_merke, self.dlg.lineEdit_lengde_hcp_merke, label=self.dlg.label_lengde_hcp_merke)
 
-        self.manuell_rullestol_hcparkering = AttributeForm("tilgjengvurderingRullestol", self.dlg.comboBox_manuell_rullestol_hcparkering)
-        self.elektrisk_rullestol_hcparkering = AttributeForm("tilgjengvurderingElRull", self.dlg.comboBox_elektrisk_rullestol_hcparkering)
+        manuell_rullestol_hcparkering = AttributeForm("tilgjengvurderingRullestol", self.dlg.comboBox_manuell_rullestol_hcparkering)
+        elektrisk_rullestol_hcparkering = AttributeForm("tilgjengvurderingElRull", self.dlg.comboBox_elektrisk_rullestol_hcparkering)
 
-        self.attributes_hcparkering = [self.avstandServicebygg, self.overbygg, self.skiltet, self.merket, self.bredde_vei, self.lengde_vei, self.manuell_rullestol_hcparkering, self.elektrisk_rullestol_hcparkering]
-        self.attributes_hcparkering_gui = [self.manuell_rullestol_hcparkering, self.elektrisk_rullestol_hcparkering]
-        self.attributes_hcparkering_mer_mindre = [self.avstandServicebygg, self.bredde_vei, self.lengde_vei]
+        self.attributes_hcparkering = [avstandServicebygg, overbygg, skiltet, merket, bredde_hcp_merke, lengde_hcp_merke, manuell_rullestol_hcparkering, elektrisk_rullestol_hcparkering]
+        attributes_hcparkering_gui = [manuell_rullestol_hcparkering, elektrisk_rullestol_hcparkering]
+        attributes_hcparkering_mer_mindre = [avstandServicebygg, bredde_hcp_merke, lengde_hcp_merke]
 
         #fill combobox
         for attributt in self.attributes_hcparkering:
             self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\mer_mindre.txt')
 
-        self.fill_combobox(self.overbygg.getComboBox(), self.plugin_dir + r'\boolean.txt')
-        self.fill_combobox(self.skiltet.getComboBox(), self.plugin_dir + r"\boolean.txt")
-        self.fill_combobox(self.merket.getComboBox(), self.plugin_dir + r"\boolean.txt")
+        self.fill_combobox(overbygg.getComboBox(), self.plugin_dir + r'\boolean.txt')
+        self.fill_combobox(skiltet.getComboBox(), self.plugin_dir + r"\boolean.txt")
+        self.fill_combobox(merket.getComboBox(), self.plugin_dir + r"\boolean.txt")
         
-        self.fill_combobox(self.manuell_rullestol_hcparkering.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
-        self.fill_combobox(self.elektrisk_rullestol_hcparkering.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(manuell_rullestol_hcparkering.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(elektrisk_rullestol_hcparkering.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
 
-        #Hide GUI
-        self.dlg.label_bredde_vei.setVisible(False)
-        self.dlg.comboBox_bredde_vei.setVisible(False)
-        self.dlg.lineEdit_bredde_vei.setVisible(False)
-        self.dlg.label_lengde_vei.setVisible(False)
-        self.dlg.comboBox_lengde_vei.setVisible(False)
-        self.dlg.lineEdit_lengde_vei.setVisible(False)
+        self.hide_show_gui([bredde_hcp_merke, lengde_hcp_merke], self.dlg.comboBox_merket.currentText() == "Ja")
+        self.dlg.comboBox_merket.currentIndexChanged.connect(lambda: self.hide_show_gui([bredde_hcp_merke, lengde_hcp_merke], self.dlg.comboBox_merket.currentText() == "Ja"))
 
-        self.dlg.comboBox_merket.currentIndexChanged.connect(self.hide_show_merket)
+
+        #self.dlg.comboBox_merket.currentIndexChanged.connect(self.hide_show_merket)
 
 
     def assign_combobox_parkeringsomraade(self):
@@ -613,6 +575,13 @@ class Tilgjengelighet:
         self.fill_combobox(tilgjengvurderingSyn.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
 
 
+    ################################# Automate tools ####################################
+
+    def resolve(name, basepath=None):
+        if not basepath:
+          basepath = os.path.dirname(os.path.realpath(__file__))
+        return os.path.join(basepath, name)
+
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
@@ -658,121 +627,27 @@ class Tilgjengelighet:
         return out_string
 
 
-    #TODO: make generic hide/show modules
-    def hide_show_rampe(self):
-        """Hides or shows rampe"""
-        if self.dlg.comboBox_rampe.currentText() == u"Ja":
-            self.dlg.label_rampe_boxs.setVisible(True)
+    def hide_show_gui(self, attributeForms, condition, extra = None):
+        """Shows parts of GUI if conditions are meat, hids it if not
 
-            self.dlg.lineEdit_rmp_stigning.setVisible(True)
-            self.dlg.comboBox_rmp_stigning.setVisible(True)
-            self.dlg.label_rmp_stigning.setVisible(True)
-
-            self.dlg.lineEdit_rmp_bredde.setVisible(True)
-            self.dlg.comboBox_rmp_bredde.setVisible(True)
-            self.dlg.label_rmp_bredde.setVisible(True)
-
-            self.dlg.comboBox_handliste.setVisible(True)
-            self.dlg.label_handliste.setVisible(True)
-
-            self.dlg.lineEdit_hand1.setVisible(True)
-            self.dlg.comboBox_hand1.setVisible(True)
-            self.dlg.label_hand1.setVisible(True)
-
-            self.dlg.lineEdit_hand2.setVisible(True)
-            self.dlg.comboBox_hand2.setVisible(True)
-            self.dlg.label_hand2.setVisible(True)
-
-            self.dlg.comboBox_rmp_tilgjengelig.setVisible(True)
-            self.dlg.label_rmp_tilgjengelig.setVisible(True)
-
-            self.dlg.line_4.setVisible(True)
-            self.dlg.line.setVisible(True)
+        :param attributeForms: A list of witch attributes to hide in GUI
+        :param condition: The condition to show GUI parts
+        :param extra: include if gui consists of more than attributes that needs to be showed/hidden
+        """
+        if condition:
+            visible = True
         else:
-            self.dlg.label_rampe_boxs.setVisible(False)
+            visible = False
 
-            self.dlg.lineEdit_rmp_stigning.setVisible(False)
-            self.dlg.comboBox_rmp_stigning.setVisible(False)
-            self.dlg.label_rmp_stigning.setVisible(False)
-
-            self.dlg.lineEdit_rmp_bredde.setVisible(False)
-            self.dlg.comboBox_rmp_bredde.setVisible(False)
-            self.dlg.label_rmp_bredde.setVisible(False)
-
-            self.dlg.comboBox_handliste.setVisible(False)
-            self.dlg.label_handliste.setVisible(False)
-
-            self.dlg.lineEdit_hand1.setVisible(False)
-            self.dlg.comboBox_hand1.setVisible(False)
-            self.dlg.label_hand1.setVisible(False)
-
-            self.dlg.lineEdit_hand2.setVisible(False)
-            self.dlg.comboBox_hand2.setVisible(False)
-            self.dlg.label_hand2.setVisible(False)
-
-            self.dlg.comboBox_rmp_tilgjengelig.setVisible(False)
-            self.dlg.label_rmp_tilgjengelig.setVisible(False)
-
-
-            self.dlg.line_4.setVisible(False)
-            self.dlg.line.setVisible(False)
-
-
-    def hide_show_nedsenkning(self):
-        if self.dlg.comboBox_gatetype.currentText() != self.uspesifisert:
-            self.dlg.comboBox_nedsenkning1.setVisible(True)
-            self.dlg.lineEdit_nedsenkning1.setVisible(True)
-            self.dlg.label_nedsenkning1.setVisible(True)
-            self.dlg.comboBox_nedsenkning2.setVisible(True)
-            self.dlg.lineEdit_nedsenkning2.setVisible(True)
-            self.dlg.label_nedsenkning2.setVisible(True)
-        else:
-            self.dlg.comboBox_nedsenkning1.setVisible(False)
-            self.dlg.lineEdit_nedsenkning1.setVisible(False)
-            self.dlg.label_nedsenkning1.setVisible(False)
-            self.dlg.comboBox_nedsenkning2.setVisible(False)
-            self.dlg.lineEdit_nedsenkning2.setVisible(False)
-            self.dlg.label_nedsenkning2.setVisible(False)
-
-
-    def hide_show_merket(self):
-        if self.dlg.comboBox_merket.currentText() == "Ja":
-            self.dlg.label_bredde_vei.setVisible(True)
-            self.dlg.comboBox_bredde_vei.setVisible(True)
-            self.dlg.lineEdit_bredde_vei.setVisible(True)
-            self.dlg.label_lengde_vei.setVisible(True)
-            self.dlg.comboBox_lengde_vei.setVisible(True)
-            self.dlg.lineEdit_lengde_vei.setVisible(True)
-        else:
-            self.dlg.label_bredde_vei.setVisible(False)
-            self.dlg.comboBox_bredde_vei.setVisible(False)
-            self.dlg.lineEdit_bredde_vei.setVisible(False)
-            self.dlg.label_lengde_vei.setVisible(False)
-            self.dlg.comboBox_lengde_vei.setVisible(False)
-            self.dlg.lineEdit_lengde_vei.setVisible(False)
-
-
-    def get_previus_search_activeLayer(self):
-        """Open filtering window set to preweus choises"""
-
-        activeLayer = self.iface.activeLayer()
-        #if self.search_history[activeLayer.name()]:
-        if activeLayer is not None and activeLayer.name() in self.search_history:
-            try:
-                pre_search = self.search_history[activeLayer.name()]
-                for key, value in pre_search.attributes.iteritems():
-                    key.getComboBox().setCurrentIndex(int(value[0]))
-                    if value[1]:
-                        key.getLineEdit().setText(value[1])
-                self.dlg.tabWidget_main.setCurrentIndex(pre_search.tabIndex_main)
-                self.dlg.tabWidget_friluft.setCurrentIndex(pre_search.tabIndex_friluft)
-                self.dlg.tabWidget_tettsted.setCurrentIndex(pre_search.tabIndex_tettsted)
-                self.dlg.lineEdit_navn_paa_sok.setText(self.layer_name)
-                self.dlg.show()
-
-            except KeyError:
-                raise
-
+        for attribute in attributeForms:
+            attribute.getComboBox().setVisible(visible)
+            if attribute.getLineEdit():
+                attribute.getLineEdit().setVisible(visible)
+            if attribute.getLabel():
+                attribute.getLabel().setVisible(visible)
+        if extra:
+            for widget in extra:
+                widget.setVisible(visible)
 
     def fill_combobox(self, combobox, filename):
         combobox.clear()
@@ -826,6 +701,31 @@ class Tilgjengelighet:
                     self.dlg.comboBox_fylker.addItem(fylke)
 
                 self.fylke_dict[fylke].append(komm_nr)
+
+
+    ############################ Actions ##################################
+
+    def get_previus_search_activeLayer(self):
+        """Open filtering window set to preweus choises"""
+
+        activeLayer = self.iface.activeLayer()
+        #if self.search_history[activeLayer.name()]:
+        if activeLayer is not None and activeLayer.name() in self.search_history:
+            try:
+                pre_search = self.search_history[activeLayer.name()]
+                for key, value in pre_search.attributes.iteritems():
+                    key.getComboBox().setCurrentIndex(int(value[0]))
+                    if value[1]:
+                        key.getLineEdit().setText(value[1])
+                self.dlg.tabWidget_main.setCurrentIndex(pre_search.tabIndex_main)
+                self.dlg.tabWidget_friluft.setCurrentIndex(pre_search.tabIndex_friluft)
+                self.dlg.tabWidget_tettsted.setCurrentIndex(pre_search.tabIndex_tettsted)
+                self.dlg.lineEdit_navn_paa_sok.setText(self.layer_name)
+                self.dlg.show()
+
+            except KeyError:
+                raise
+
 
 
     def fylke_valgt(self):
@@ -884,6 +784,17 @@ class Tilgjengelighet:
 
         self.search_history[self.layer_name].add_attribute(self.fylker, int(self.fylker.getComboBox().currentIndex()), None) #lagerer valg og fylter og komuner
         self.search_history[self.layer_name].add_attribute(self.kommuner, int(self.kommuner.getComboBox().currentIndex()), None)
+
+
+    def show_tabell(self):
+        """Shows or hide tableWidget"""
+
+        if self.infoWidget.pushButton_tabell.isChecked():
+            self.iface.showAttributeTable(self.iface.activeLayer())
+        else:
+            attrTables = [d for d in QApplication.instance().allWidgets() if d.objectName() == u'QgsAttributeTableDialog' or d.objectName() == u'AttributeTable']
+            for x in attrTables:
+                x.close()
 
 
     def create_filter(self, opperator, valueReference, value):
@@ -1014,6 +925,7 @@ class Tilgjengelighet:
         print(u"NewFilterEnd")
 
 
+    ############################## Selection and info of Objects ################################################
     def selectedObjects(self, selFeatures):
         """changing number of selected objects in infowidget and settning current selected object
         :param selFeatures: Selected features of layer
@@ -1072,18 +984,6 @@ class Tilgjengelighet:
             pass
         except Exception as e:
             raise e
-    
-
-    def show_tabell(self):
-        """Shows or hide tableWidget"""
-
-        if self.infoWidget.pushButton_tabell.isChecked():
-            self.iface.showAttributeTable(self.iface.activeLayer())
-        else:
-            attrTables = [d for d in QApplication.instance().allWidgets() if d.objectName() == u'QgsAttributeTableDialog' or d.objectName() == u'AttributeTable']
-            for x in attrTables:
-                x.close()
-        
 
 
     def obj_info(self):
@@ -1111,45 +1011,6 @@ class Tilgjengelighet:
         else:
             for i in range(0, len(self.current_attributes)):
                 self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
-
-    
-    def tilgjengelighetsvurdering(self, value, notAcceceble=None, acceceble=None, relate_notAccec=None, relate_acces=None): #Not currently in use
-        #["tilgjengelig", "ikkeTilgjengelig", "vanskeligTilgjengelig", "ikkeVurdert"]
-        if self.is_float(value):
-            value = float(value)
-        elif self.is_int(value):
-            value = int(value)
-            
-        if value is None or value == "-" or isinstance(value, QPyNullVariant):
-            print("ikkeVurdert")
-            return "ikkeVurdert"
-        elif notAcceceble:
-            if relate_notAccec(value, notAcceceble):
-                return "ikkeTilgjengelig"
-        elif acceceble:
-            if relate_acces(value, acceceble):
-                return "tilgjengelig"
-        else:
-            return "vanskeligTilgjengelig"
-        return "ikkeVurdert"
-
-    def is_float(self, value):
-        """Checks if an object is float"""
-
-        try:
-            float(value)
-            return True
-        except (ValueError, TypeError) as e:
-            return False
-
-    def is_int(self, value):
-        """checks if an object is int"""
-
-        try:
-            int(value)
-            return True
-        except (ValueError, TypeError) as e:
-            return False
 
 
     def show_message(self, msg_text, msg_title=None, msg_info=None, msg_details=None, msg_type=None):
@@ -1199,11 +1060,11 @@ class Tilgjengelighet:
         (filename, filter) = QFileDialog.getSaveFileNameAndFilter(self.iface.mainWindow(),
                     "Please save {0} file as...".format(saveType),
                     dirPath,
-                    "Image files (*{0})".format(saveExtension),
+                    "{0} files (*{1})".format(saveType, saveExtension),
                     "Filter list for selecting files from a dialog box")
         fn, fileExtension = os.path.splitext(unicode(filename))
         if len(fn) == 0: # user choose cancel
-            return
+            return None, None
         self.settings.setValue("/Tilgjengelighet/savePath", QFileInfo(filename).absolutePath())
         if fileExtension != saveExtension:
             filename = filename + saveExtension
@@ -1215,6 +1076,8 @@ class Tilgjengelighet:
         """saves a screenshot of canvas"""
 
         dirPath, filename = self.savePath("Image", ".png")
+        if dirPath is None:
+            return
 
         size = self.canvas.size()
         image = QImage(size, QImage.Format_RGB32)
@@ -1281,18 +1144,8 @@ class Tilgjengelighet:
             if len(names) == 0:
                 QMessageBox.warning(self.iface.mainWindow(), "No fields selected", "Please select at least one field.")
 
-        dirPath = self.settings.value("/xytools/excelSavePath", ".", type=str)    
-        (filename, filter) = QFileDialog.getSaveFileNameAndFilter(self.iface.mainWindow(),
-                    "Please save excel file as...",
-                    dirPath,
-                    "Excel files (*.xls)",
-                    "Filter list for selecting files from a dialog box")
-        fn, fileExtension = os.path.splitext(unicode(filename))
-        if len(fn) == 0: # user choose cancel
-            return
-        self.settings.setValue("/xytools/excelSavePath", QFileInfo(filename).absolutePath())
-        if fileExtension != '.xls':
-            filename = filename + '.xls'
+        dirPath, filename = self.savePath("Excel", ".xls")
+       
         try:
             from xytools.providers import excel
         except:

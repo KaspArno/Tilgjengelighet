@@ -4,7 +4,7 @@ class AttributeForm(object):
     """Saves attributes and assosiated gui widgets"""
 
 
-    def __init__(self, attribute, comboBox=None, lineEdit=None, comboBoxText=None):
+    def __init__(self, attribute, comboBox=None, lineEdit=None, comboBoxText=None, label=None):
         """Constructor
 
         :param attribute: The name of the attribute in layer
@@ -20,6 +20,7 @@ class AttributeForm(object):
         self.attribute = attribute
         self.comboBox = comboBox
         self.lineEdit = lineEdit
+        self.label = label
         self.alt_comboboxText = comboBoxText
 
         self.opperatorDict = {u'=' : 'PropertyIsEqualTo', u'<' : 'PropertyIsLessThan', u'>' : 'PropertyIsGreaterThan', u'<=' : 'PropertyIsLessThanOrEqualTo', u'>=' : 'PropertyIsGreaterThanOrEqualTo'}
@@ -77,6 +78,13 @@ class AttributeForm(object):
         :rtype: QLineEdit
         """
         return self.lineEdit
+
+    def getLabel(self):
+        """:returns: returns the associated lineEdit
+        :rtype: QLabel
+        """
+        return self.label
+
 
     def getAttribute(self):
         """:returns: returns the associated attribute name
