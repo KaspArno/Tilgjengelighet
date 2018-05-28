@@ -13,7 +13,7 @@ class SavedSearch(object):
         :type layer: QgsVectorLayer
         :type tabIndex_main: int
         :type tabIndex_friluft: int
-        type tabIndex_tettsted: int
+        :type tabIndex_tettsted: int
         """
 
         self.search_name = search_name #Name of layer
