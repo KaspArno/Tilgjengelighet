@@ -85,14 +85,14 @@ class Tilgjengelighet:
         """
         
         # Save reference to the QGIS interface
-        self.iface = iface
-        self.canvas = self.iface.mapCanvas()
-        self.settings = QSettings()
+        self.iface = iface #Accsess to QGIS interface
+        self.canvas = self.iface.mapCanvas() #Access to QGIS canvas
+        self.settings = QSettings() #Access to QGIS settings
         
         
         # initialize locale
         locale = QSettings().value('locale/userLocale')[0:2]
-        self.plugin_dir = os.path.dirname(__file__)
+        self.plugin_dir = os.path.dirname(__file__) #Plugin path
         self.locale_path = os.path.join(
             self.plugin_dir,
             'i18n',
@@ -112,31 +112,17 @@ class Tilgjengelighet:
         self.toolbar = self.iface.addToolBar(u'Tilgjengelighet')
         self.toolbar.setObjectName(u'Tilgjengelighet')
 
-        
-        
         #Settnings
-        self.settings.setValue("/Qgis/dockAttributeTable", True) 
+        self.settings.setValue("/Qgis/dockAttributeTable", True) #Get attribute table at bottom of screen
 
-        #WFS URLS
-        self.namespace = "http://skjema.geonorge.no/SOSI/produktspesifikasjon/TilgjengelighetTettsted/4.5"
-        self.namespace_prefix = "app"
-        self.online_resource = "https://wfs.geonorge.no/skwms1/wfs.tilgjengelighettettsted"
-
-        #GUI dropdown (may not be in use)
-        self.uspesifisert = u"" #For emty comboboxses and lineEdtis
-        self.mer = u">" #for combobokser linked to more or less iterations
-        self.mindre = u"<"
-        self.mer_eller_lik = u">="
-        self.mindre_eller_lik = u"<="
-
-        #layers and search
-        self.layers = [] #gather all baselayers (may not be in use)
-
+        #Layer and attributes
         self.current_search_layer = None #The last searched layer
         self.current_attributes = None #The attributes for current search layer
         self.search_history = {} #history of all search
         self.rubberHighlight = None #Marking the object currently visulised in infoWidget
+        self.unspecified = u"" #unspecified attributes
 
+       #Lists of feature types for tettested and friluft, key equeals name of tabs
         self.feature_type_tettsted = {
             u"HC-Parkering" : u'TettstedHCparkering', u"Inngang" : u'TettstedInngangBygg', 
             u'Parkeringsomr\xe5de' : u'TettstedParkeringsomr\xe5de', u"Vei" : u'TettstedVei'
@@ -148,34 +134,7 @@ class Tilgjengelighet:
             u'Gapahuk' : u'FriluftGapahuk', u'Grill-/Bålplass' : u'FriluftGrillBålplass',
             u'Sittegruppe' : u'FriluftSittegruppe', u'Toalett' : u'FriluftToalett'}
 
-        #Icons (may not be in use)
-        self.icon_rullestol_tilgjengelig = QPixmap('icons/Tilgjengelig.png')#QIcon(':/plugins/Tilgjengelighet/icons/Tilgjengelig.png')
-        self.icon_rullestol_ikkeTilgjengelig = QPixmap('icons/IkkeTilgjengelig.png')#QIcon(':/plugins/Tilgjengelighet/icons/IkkeTilgjengelig.png')
-        self.icon_rullestol_vansekligTilgjengelig = QPixmap('icons/VanskeligTilgjengelig.png')#QIcon(':/plugins/Tilgjengelighet/icons/VanskeligTilgjengelig.png')
-        self.icon_rullestol_ikkeVurdert = QPixmap('icons/IkkeVurdert.png')#QIcon(':/plugins/Tilgjengelighet/icons/IkkeVurdert.png')
-        self.icons_rullestol = {"tilgjengelig" : self.icon_rullestol_tilgjengelig, "ikkeTilgjengelig" : self.icon_rullestol_ikkeTilgjengelig, "vanskeligTilgjengelig" : self.icon_rullestol_vansekligTilgjengelig, "ikkeVurdert" : self.icon_rullestol_ikkeTilgjengelig}
-
-        self.icon_elrullestol_tilgjengelig = QPixmap('icons/TilgjengeligEl.png')#QIcon(':/plugins/Tilgjengelighet/icons/TilgjengeligEl.png')
-        self.icon_elrullestol_ikkeTilgjengelig = QPixmap('icons/IkkeTilgjengeligEl.png')#QIcon(':/plugins/Tilgjengelighet/icons/IkkeTilgjengeligEl.png')
-        self.icon_elrullestol_vansekligTilgjengelig = QPixmap('icons/VanskeligTilgjengeligEl.png')#QIcon(':/plugins/Tilgjengelighet/icons/VanskeligTilgjengeligEl.png')
-        self.icon_elrullestol_ikkeVurdert = QPixmap('icons/IkkeVurdertEl.png')#QIcon(':/plugins/Tilgjengelighet/icons/IkkeVurdertEl.png')
-        self.icons_elrullestol = {"tilgjengelig" : self.icon_elrullestol_tilgjengelig, "ikkeTilgjengelig" : self.icon_elrullestol_ikkeTilgjengelig, "vanskeligTilgjengelig" : self.icon_elrullestol_vansekligTilgjengelig, "ikkeVurdert" : self.icon_elrullestol_ikkeTilgjengelig}
-
-        self.icon_syn_tilgjengelig = QPixmap('icons/TilgjengeligSyn.png')#QIcon(':/plugins/Tilgjengelighet/icons/TilgjengeligSyn.png')
-        self.icon_syn_ikkeTilgjengelig = QPixmap('icons/IkkeTilgjengeligSyn.png')#QIcon(':/plugins/Tilgjengelighet/icons/IkkeTilgjengeligSyn.png')
-        self.icon_syn_vansekligTilgjengelig = QPixmap('icons/VanskeligTilgjengeligSyn.png')#QIcon(':/plugins/Tilgjengelighet/icons/VanskeligTilgjengeligSyn.png')
-        self.icon_syn_ikkeVurdert = QPixmap('icons/IkkeVurdertSyn.png')#QIcon(':/plugins/Tilgjengelighet/icons/IkkeVurdertSyn.png')
-        self.icons_syn = {"tilgjengelig" : self.icon_syn_tilgjengelig, "ikkeTilgjengelig" : self.icon_syn_ikkeTilgjengelig, "vanskeligTilgjengelig" : self.icon_syn_vansekligTilgjengelig, "ikkeVurdert" : self.icon_syn_ikkeTilgjengelig}
-
-        self.icons = [self.icons_rullestol, self.icons_elrullestol, self.icons_syn]
-
-        #to hide layers (may not be in use)
-        self.ltv = self.iface.layerTreeView()
-        self.model = self.ltv.model()
-        self.root = QgsProject.instance().layerTreeRoot()
-
         #Open Layers, background layers
-
         self._olLayerTypeRegistry = WebLayerTypeRegistry(self)
         self._ol_layers = []
 
@@ -287,22 +246,25 @@ class Tilgjengelighet:
 
 
         ### main window ###
+
+        #Set Icons main tab
         self.dlg.tabWidget_main.setTabIcon(0, QIcon(":/plugins/Tilgjengelighet/icons/friluft.png"))
         self.dlg.tabWidget_main.setTabIcon(1, QIcon(":/plugins/Tilgjengelighet/icons/tettsted.png"))
-
-        self.dlg.pushButton_filtrer.clicked.connect(self.filtrer)
 
         #change search name based on tab
         self.dlg.tabWidget_main.currentChanged.connect(self.change_search_name) #change search name based on tab
         self.dlg.tabWidget_friluft.currentChanged.connect(self.change_search_name)
         self.dlg.tabWidget_tettsted.currentChanged.connect(self.change_search_name)
 
+        #Connect pushbuttons
+        self.dlg.pushButton_filtrer.clicked.connect(self.filtrer) #Connect pushbytton filtrer action
         self.dlg.pushButton_reset.clicked.connect(self.reset) #resett all choses made by user
 
         self.change_search_name() #Initiate a search name
 
 
         ### table window ###
+        ## NB: Table window changed to attribute table
         self.dock = TableDialog(self.iface.mainWindow())
         self.dock.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows) #select entire row in table
         self.dock.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers) #Making table unediteble
@@ -318,6 +280,7 @@ class Tilgjengelighet:
         self.infoWidget.pushButton_prev.clicked.connect(self.infoWidget_prev)
         self.infoWidget.pushButton_tabell.clicked.connect(self.show_tabell) #open tableWiddget
 
+        # Set tools an icons
         self.selectPolygon = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Select_polygon.gif"),
                                        QCoreApplication.translate("MyPlugin", "Polygon"),
                                        self.iface.mainWindow()) #Change therese icons
@@ -356,18 +319,18 @@ class Tilgjengelighet:
         
         ### Fill gui ###
         self.fill_fylker() #fill fylker combobox
-        self.fylke_valgt()
+        self.fylke_valgt() #Filling up kommune combobox
 
         #set combobox functions
         self.dlg.comboBox_fylker.currentIndexChanged.connect(self.fylke_valgt) #Filling cityes from county
         self.dlg.comboBox_fylker.currentIndexChanged.connect(self.change_search_name) #setting search name based on fylke
-        self.dlg.comboBox_komuner.currentIndexChanged.connect(self.change_search_name) #setting search name based on komune
+        self.dlg.comboBox_kommuner.currentIndexChanged.connect(self.change_search_name) #setting search name based on komune
 
+        #Assign fylker and kommuner to AttributeForm
         self.fylker = AttributeForm("fylker", self.dlg.label_fylke)
         self.fylker.setComboBox(self.dlg.comboBox_fylker)
         self.kommuner = AttributeForm("komune", self.dlg.label_kommune)
-        self.kommuner.setComboBox(self.dlg.comboBox_komuner)
-
+        self.kommuner.setComboBox(self.dlg.comboBox_kommuner)
 
         #Create attributes object tettsted
         self.assign_combobox_inngang()
@@ -375,9 +338,10 @@ class Tilgjengelighet:
         self.assign_combobox_hc_parkering()
         self.assign_combobox_parkeringsomraade()
 
-        #Create attributes object friluft
+        #Create attributes object friluft (Needs futher methods for filling rest of friluft)
         self.assign_combobox_baderampe()
 
+        #Dictionarys for all attributes in different object type. Key equals name of tab
         self.attributes_tettsted = {
             u"HC-Parkering" : self.attributes_hcparkering, u"Inngang" : self.attributes_inngang, 
             u'Parkeringsområde' : self.attributes_pomrade, u"Vei" : self.attributes_vei}
@@ -423,20 +387,21 @@ class Tilgjengelighet:
         #fill combobox
         path = ":/plugins/Tilgjengelighet/" #Mey not need this
         for attributt in self.attributes_inngang_mer_mindre:
-            self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\mer_mindre.txt')
+            self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\combobox_values\mer_mindre.txt')
 
-        self.fill_combobox(self.rampe.getComboBox(), self.plugin_dir + r'\boolean.txt')
-        self.fill_combobox(self.byggningstype.getComboBox(), self.plugin_dir + r"\tettstedInngangByggningstype.txt")
-        self.fill_combobox(self.dortype.getComboBox(), self.plugin_dir + r"\tettstedInngangdortype.txt")
-        self.fill_combobox(self.dorapner.getComboBox(), self.plugin_dir + r"\tettstedInngangDorapner.txt")
-        self.fill_combobox(self.kontrast.getComboBox(), self.plugin_dir + r"\tettstedKontrast.txt")
-        self.fill_combobox(self.handlist.getComboBox(), self.plugin_dir + r"\handlist.txt")
+        self.fill_combobox(self.rampe.getComboBox(), self.plugin_dir + r'\combobox_values\boolean.txt')
+        self.fill_combobox(self.byggningstype.getComboBox(), self.plugin_dir + r"\combobox_values\tettstedInngangByggningstype.txt")
+        self.fill_combobox(self.dortype.getComboBox(), self.plugin_dir + r"\combobox_values\tettstedInngangdortype.txt")
+        self.fill_combobox(self.dorapner.getComboBox(), self.plugin_dir + r"\combobox_values\tettstedInngangDorapner.txt")
+        self.fill_combobox(self.kontrast.getComboBox(), self.plugin_dir + r"\combobox_values\tettstedKontrast.txt")
+        self.fill_combobox(self.handlist.getComboBox(), self.plugin_dir + r"\combobox_values\handlist.txt")
 
-        self.fill_combobox(self.rmp_tilgjengelig.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
-        self.fill_combobox(self.manuellRullestol.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
-        self.fill_combobox(self.elektriskRullestol.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
-        self.fill_combobox(self.synshemmet.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(self.rmp_tilgjengelig.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
+        self.fill_combobox(self.manuellRullestol.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
+        self.fill_combobox(self.elektriskRullestol.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
+        self.fill_combobox(self.synshemmet.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
 
+        #Set what to be hidden in form and conditions for showing parts
         self.hide_show_gui(self.attributes_rampe, self.dlg.comboBox_rampe.currentText() == u"Ja", [self.dlg.label_rampe_boxs, self.dlg.line_inngang_rampe, self.dlg.line])
         self.dlg.comboBox_rampe.currentIndexChanged.connect(lambda: self.hide_show_gui(self.attributes_rampe, self.dlg.comboBox_rampe.currentText() == u"Ja", [self.dlg.label_rampe_boxs, self.dlg.line_inngang_rampe, self.dlg.line]))
         #self.dlg.comboBox_rampe.currentIndexChanged.connect(self.hide_show_rampe)
@@ -467,22 +432,21 @@ class Tilgjengelighet:
 
         #fill combobox
         for attributt in attributes_vei_mer_mindre:
-            self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\mer_mindre.txt')
+            self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\combobox_values\mer_mindre.txt')
 
-        self.fill_combobox(gatetype.getComboBox(), self.plugin_dir + r'\tettstedVeiGatetype.txt')
-        self.fill_combobox(dekke_vei_tettsted.getComboBox(), self.plugin_dir + r"\tettstedDekke.txt")
-        self.fill_combobox(dekkeTilstand_vei_tettsted.getComboBox(), self.plugin_dir + r"\tettstedDekkeTilstand.txt")
-        self.fill_combobox(ledelinje.getComboBox(), self.plugin_dir + r"\tettstedVeiLedelinje.txt")
-        self.fill_combobox(ledelinjeKontrast.getComboBox(), self.plugin_dir + r"\tettstedKontrast.txt")
+        self.fill_combobox(gatetype.getComboBox(), self.plugin_dir + r'\combobox_values\tettstedVeiGatetype.txt')
+        self.fill_combobox(dekke_vei_tettsted.getComboBox(), self.plugin_dir + r"\combobox_values\tettstedDekke.txt")
+        self.fill_combobox(dekkeTilstand_vei_tettsted.getComboBox(), self.plugin_dir + r"\combobox_values\tettstedDekkeTilstand.txt")
+        self.fill_combobox(ledelinje.getComboBox(), self.plugin_dir + r"\combobox_values\tettstedVeiLedelinje.txt")
+        self.fill_combobox(ledelinjeKontrast.getComboBox(), self.plugin_dir + r"\combobox_values\tettstedKontrast.txt")
         
-        self.fill_combobox(manuell_rullestol_vei.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
-        self.fill_combobox(electrisk_rullestol_vei.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
-        self.fill_combobox(syn_vei.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(manuell_rullestol_vei.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
+        self.fill_combobox(electrisk_rullestol_vei.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
+        self.fill_combobox(syn_vei.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
 
-        self.hide_show_gui(attributes_nedsenkning, self.dlg.comboBox_gatetype.currentText() != self.uspesifisert)
-        self.dlg.comboBox_gatetype.currentIndexChanged.connect(lambda: self.hide_show_gui(attributes_nedsenkning, self.dlg.comboBox_gatetype.currentText() != self.uspesifisert))
-
-        #self.dlg.comboBox_gatetype.currentIndexChanged.connect(self.hide_show_nedsenkning)
+        #Set what to be hidden in form and conditions for showing parts
+        self.hide_show_gui(attributes_nedsenkning, self.dlg.comboBox_gatetype.currentText() != self.unspecified)
+        self.dlg.comboBox_gatetype.currentIndexChanged.connect(lambda: self.hide_show_gui(attributes_nedsenkning, self.dlg.comboBox_gatetype.currentText() != self.unspecified))
 
 
     def assign_combobox_hc_parkering(self):
@@ -506,20 +470,18 @@ class Tilgjengelighet:
 
         #fill combobox
         for attributt in self.attributes_hcparkering:
-            self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\mer_mindre.txt')
+            self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\combobox_values\mer_mindre.txt')
 
-        self.fill_combobox(overbygg.getComboBox(), self.plugin_dir + r'\boolean.txt')
-        self.fill_combobox(skiltet.getComboBox(), self.plugin_dir + r"\boolean.txt")
-        self.fill_combobox(merket.getComboBox(), self.plugin_dir + r"\boolean.txt")
+        self.fill_combobox(overbygg.getComboBox(), self.plugin_dir + r'\combobox_values\boolean.txt')
+        self.fill_combobox(skiltet.getComboBox(), self.plugin_dir + r"\combobox_values\boolean.txt")
+        self.fill_combobox(merket.getComboBox(), self.plugin_dir + r"\combobox_values\boolean.txt")
         
-        self.fill_combobox(manuell_rullestol_hcparkering.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
-        self.fill_combobox(elektrisk_rullestol_hcparkering.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(manuell_rullestol_hcparkering.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
+        self.fill_combobox(elektrisk_rullestol_hcparkering.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
 
+        #Set what to be hidden in form and conditions for showing parts
         self.hide_show_gui([bredde_hcp_merke, lengde_hcp_merke], self.dlg.comboBox_merket.currentText() == "Ja")
         self.dlg.comboBox_merket.currentIndexChanged.connect(lambda: self.hide_show_gui([bredde_hcp_merke, lengde_hcp_merke], self.dlg.comboBox_merket.currentText() == "Ja"))
-
-
-        #self.dlg.comboBox_merket.currentIndexChanged.connect(self.hide_show_merket)
 
 
     def assign_combobox_parkeringsomraade(self):
@@ -539,13 +501,13 @@ class Tilgjengelighet:
 
         #fill combobox
         for attributt in self.attributes_pomrade_mer_mindre:
-            self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\mer_mindre.txt')
+            self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\combobox_values\mer_mindre.txt')
 
-        self.fill_combobox(self.overbygg_pomrade.getComboBox(), self.plugin_dir + r'\boolean.txt')
-        self.fill_combobox(self.dekke_pomrade.getComboBox(), self.plugin_dir + r"\tettstedDekke.txt")
-        self.fill_combobox(self.dekkeTilstand_pomrade.getComboBox(), self.plugin_dir + r"\tettstedDekkeTilstand.txt")
+        self.fill_combobox(self.overbygg_pomrade.getComboBox(), self.plugin_dir + r'\combobox_values\boolean.txt')
+        self.fill_combobox(self.dekke_pomrade.getComboBox(), self.plugin_dir + r"\combobox_values\tettstedDekke.txt")
+        self.fill_combobox(self.dekkeTilstand_pomrade.getComboBox(), self.plugin_dir + r"\combobox_values\tettstedDekkeTilstand.txt")
         
-        self.fill_combobox(self.manuell_rullestol_pomrade.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(self.manuell_rullestol_pomrade.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
 
 
     def assign_combobox_baderampe(self):
@@ -565,14 +527,15 @@ class Tilgjengelighet:
         self.attributes_baderampe = [rampe, rampeBredde, rampeStigning, handlist, handlistHoyde1, handlistHoyde2, rampeTilgjengelig, tilgjengvurderingRullestol, tilgjengvurderingSyn]
         attributes_mer_mindre = [rampeBredde, rampeStigning, handlistHoyde1, handlistHoyde2]
 
+        #Fill combobox
         for attributt in attributes_mer_mindre:
-            self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\mer_mindre.txt')
+            self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\combobox_values\mer_mindre.txt')
 
-        self.fill_combobox(rampe.getComboBox(), self.plugin_dir + r'\boolean.txt')
-        self.fill_combobox(handlist.getComboBox(), self.plugin_dir + r"\handlist.txt")
-        self.fill_combobox(rampeTilgjengelig.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
-        self.fill_combobox(tilgjengvurderingRullestol.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
-        self.fill_combobox(tilgjengvurderingSyn.getComboBox(), self.plugin_dir + r"\tilgjengvurdering.txt")
+        self.fill_combobox(rampe.getComboBox(), self.plugin_dir + r'\combobox_values\boolean.txt')
+        self.fill_combobox(handlist.getComboBox(), self.plugin_dir + r"\combobox_values\handlist.txt")
+        self.fill_combobox(rampeTilgjengelig.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
+        self.fill_combobox(tilgjengvurderingRullestol.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
+        self.fill_combobox(tilgjengvurderingSyn.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
 
 
     ################################# Automate tools ####################################
@@ -631,30 +594,39 @@ class Tilgjengelighet:
         """Shows parts of GUI if conditions are meat, hids it if not
 
         :param attributeForms: A list of witch attributes to hide in GUI
+        :type attributeForms: list<AttributeForm>
         :param condition: The condition to show GUI parts
+        :type condotion: boolean
         :param extra: include if gui consists of more than attributes that needs to be showed/hidden
+        :type extra: list<QtWidgets>
         """
-        if condition:
-            visible = True
-        else:
-            visible = False
 
+        #Itterate throu alle attributes that need to be hidden or showd
         for attribute in attributeForms:
-            attribute.getComboBox().setVisible(visible)
+            attribute.getComboBox().setVisible(condition)
             if attribute.getLineEdit():
-                attribute.getLineEdit().setVisible(visible)
+                attribute.getLineEdit().setVisible(condition)
             if attribute.getLabel():
-                attribute.getLabel().setVisible(visible)
-        if extra:
+                attribute.getLabel().setVisible(condition)
+        
+        if extra: #Hide/Show additional widgets
             for widget in extra:
-                widget.setVisible(visible)
+                widget.setVisible(condition)
 
     def fill_combobox(self, combobox, filename):
-        combobox.clear()
-        combobox.addItem(self.uspesifisert)
+        """Fikks combobox with lines from filename
+
+        :param combobox: The combobox to be filled
+        :type combobox: QComboBox
+        :param filename: name of file with info to be filled in combobox
+        :type filename: str, QString
+        """
+
+        combobox.clear() #Clear possible information in combobox
+        combobox.addItem(self.unspecified) #Include an empty, unspesifised field for combobox
         with open(filename, 'r') as file:
             for line in file:
-                combobox.addItem(self.to_unicode(line).rstrip('\n'))
+                combobox.addItem(self.to_unicode(line).rstrip('\n')) #Add line to combobox
 
 
     def fill_infoWidget(self, attributes):
@@ -665,9 +637,10 @@ class Tilgjengelighet:
         """
 
         for i in range(0, len(attributes)):
-            self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setText(attributes[i].getAttribute())
-            self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
+            self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setText(attributes[i].getAttribute()) #Sets attribute name
+            self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-") #Set sign for no value
 
+            #Show line in case the line is hidden
             self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setVisible(True)
             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setVisible(True)
 
@@ -680,27 +653,34 @@ class Tilgjengelighet:
         """Fill up the combobox fylker with fylker from komm.txt"""
 
         self.dlg.comboBox_fylker.clear()
-        self.dlg.comboBox_fylker.addItem("Norge")
+        self.dlg.comboBox_fylker.addItem("Norge") #Option for not chosing a single county
 
         filename = self.plugin_dir + "\komm.txt"
+
+        #Inititate dictionarys for fylke and kommune
         self.komm_dict_nr = {}
         self.komm_dict_nm = {}
         self.fylke_dict = {}
 
         with io.open(filename, 'r', encoding='utf-8') as f:
             for line in f:
-                komm_nr, komune, fylke = line.rstrip('\n').split(("\t"))
+                komm_nr, kommune, fylke = line.rstrip('\n').split(("\t")) #remove linebreak, spilt on tab
+
+                #translate text to unicode
                 komm_nr = self.to_unicode(komm_nr)
-                komune = self.to_unicode(komune)
+                kommune = self.to_unicode(kommune)
                 fylke = self.to_unicode(fylke)
 
-                self.komm_dict_nr[komm_nr] = komune
-                self.komm_dict_nm[komune] = komm_nr
+                #Fill dictionarys
+                self.komm_dict_nr[komm_nr] = kommune
+                self.komm_dict_nm[kommune] = komm_nr
+
+                #If fylke is not in combobox, add fylke and list to fylke_dict
                 if not fylke in self.fylke_dict:
                     self.fylke_dict[fylke] = []
                     self.dlg.comboBox_fylker.addItem(fylke)
 
-                self.fylke_dict[fylke].append(komm_nr)
+                self.fylke_dict[fylke].append(komm_nr) #add kommune numbers to fylke list in fylke dict
 
 
     ############################ Actions ##################################
@@ -710,18 +690,18 @@ class Tilgjengelighet:
 
         activeLayer = self.iface.activeLayer()
         #if self.search_history[activeLayer.name()]:
-        if activeLayer is not None and activeLayer.name() in self.search_history:
+        if activeLayer is not None and activeLayer.name() in self.search_history: #Check that actice layers is in search history
             try:
-                pre_search = self.search_history[activeLayer.name()]
-                for key, value in pre_search.attributes.iteritems():
-                    key.getComboBox().setCurrentIndex(int(value[0]))
-                    if value[1]:
-                        key.getLineEdit().setText(value[1])
-                self.dlg.tabWidget_main.setCurrentIndex(pre_search.tabIndex_main)
-                self.dlg.tabWidget_friluft.setCurrentIndex(pre_search.tabIndex_friluft)
-                self.dlg.tabWidget_tettsted.setCurrentIndex(pre_search.tabIndex_tettsted)
-                self.dlg.lineEdit_navn_paa_sok.setText(self.layer_name)
-                self.dlg.show()
+                pre_search = self.search_history[activeLayer.name()] #Get previus search
+                for key, value in pre_search.attributes.iteritems(): #key: AttributeForm, value[0]: combobox index, value[1]; lineEdit text
+                    key.getComboBox().setCurrentIndex(int(value[0])) #Set combobx to given index
+                    if value[1]: #if attribute has lineEdit and text
+                        key.getLineEdit().setText(value[1]) #Fill lineEdit with given text
+                self.dlg.tabWidget_main.setCurrentIndex(pre_search.tabIndex_main) #set main tab to given index
+                self.dlg.tabWidget_friluft.setCurrentIndex(pre_search.tabIndex_friluft) #Set friluft tab to given index
+                self.dlg.tabWidget_tettsted.setCurrentIndex(pre_search.tabIndex_tettsted) #Set tettsted tab to given index
+                self.dlg.lineEdit_search_name.setText(self.layer_name) #Sett search name to given text
+                self.dlg.show() #Open filtrer window
 
             except KeyError:
                 raise
@@ -729,67 +709,68 @@ class Tilgjengelighet:
 
 
     def fylke_valgt(self):
-        """Fill up komune combobox with kommune in chosen fylke"""
+        """Fill up kommune combobox with kommune in chosen fylke"""
 
         fylke = self.dlg.comboBox_fylker.currentText()
-        self.dlg.comboBox_komuner.clear()
-        self.dlg.comboBox_komuner.addItem(self.uspesifisert)
-        if fylke != "Norge":
+        self.dlg.comboBox_kommuner.clear() #Clear combobox to fill with new values
+        self.dlg.comboBox_kommuner.addItem(self.unspecified) #Add unspesified value
+        if fylke != "Norge": #If value other that Norge was chosen
             try:
-                for komune_nr in self.fylke_dict[fylke]:
-                    self.dlg.comboBox_komuner.addItem(self.komm_dict_nr[komune_nr])
+                for kommune_nr in self.fylke_dict[fylke]: #Fill combobx with all values given county
+                    self.dlg.comboBox_kommuner.addItem(self.komm_dict_nr[kommune_nr]) #Get kommune name from kommune nummber
             except Exception as e:
                 print(str(e))
-        else:
+        else: #No spesific county chosen, add all kommuner
             filename = self.plugin_dir + "\komm.txt"
             try:
                 with io.open(filename, 'r', encoding='utf-8') as f:
                     for line in f:
                         komm_nr, komune, fylke = line.rstrip('\n').split(("\t"))
-                        self.dlg.comboBox_komuner.addItem(self.komm_dict_nr[komm_nr])
+                        self.dlg.comboBox_kommuner.addItem(self.komm_dict_nr[komm_nr])
             except Exception as e:
                 print(str(e))
 
 
-    def komune_valgt(self):
-        """Alter the name on seach after kommune is chosen"""
+    def kommune_valgt(self):
+        """Alter the name on seach after a kommune is chosen"""
 
-        if self.dlg.comboBox_komuner.currentText() != "":
-            self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + ": " + self.dlg.comboBox_komuner.currentText())
+        if self.dlg.comboBox_kommuner.currentText() != "": #A kommune is chocen
+            self.dlg.lineEdit_search_name.setText(self.dlg.lineEdit_search_name.text() + ": " + self.dlg.comboBox_kommuner.currentText()) #Set searchname with name of kommune as ending
         else:
-            self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + ": " + self.dlg.comboBox_fylker.currentText())
+            self.dlg.lineEdit_search_name.setText(self.dlg.lineEdit_search_name.text() + ": " + self.dlg.comboBox_fylker.currentText()) #Set searchname with name of county as ending
 
 
     def change_search_name(self):
-        """Changes the name of search baes on current tab and fyle and kommune"""
+        """Changes the name of search based on current tab and fyle and kommune"""
 
-        self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.tabWidget_main.tabText(self.dlg.tabWidget_main.currentIndex()))
-        if self.dlg.tabWidget_main.currentIndex() == 0:
-            self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + " " + self.dlg.tabWidget_friluft.tabText(self.dlg.tabWidget_friluft.currentIndex()))
-        else:
-            self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + " " + self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()))
+        self.dlg.lineEdit_search_name.setText(self.dlg.tabWidget_main.tabText(self.dlg.tabWidget_main.currentIndex()))
+        if self.dlg.tabWidget_main.currentIndex() == 0: #If main tab is in friluft
+            self.dlg.lineEdit_search_name.setText(self.dlg.lineEdit_search_name.text() + " " + self.dlg.tabWidget_friluft.tabText(self.dlg.tabWidget_friluft.currentIndex()))
+        else: #if main tab is in tettsted
+            self.dlg.lineEdit_search_name.setText(self.dlg.lineEdit_search_name.text() + " " + self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()))
 
-        if self.dlg.comboBox_komuner.currentText() != "":
-            self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + ": " + self.dlg.comboBox_komuner.currentText())
-        else:
-            self.dlg.lineEdit_navn_paa_sok.setText(self.dlg.lineEdit_navn_paa_sok.text() + ": " + self.dlg.comboBox_fylker.currentText())
+        self.kommune_valgt()
+        # if self.dlg.comboBox_kommuner.currentText() != "":
+        #     self.dlg.lineEdit_search_name.setText(self.dlg.lineEdit_search_name.text() + ": " + self.dlg.comboBox_kommuner.currentText())
+        # else:
+        #     self.dlg.lineEdit_search_name.setText(self.dlg.lineEdit_search_name.text() + ": " + self.dlg.comboBox_fylker.currentText())
 
 
     def save_search(self):
         """"Saves the search to search history so it can set choises in GUI bac to preveus desisions"""
 
-        self.search_history[self.layer_name] = SavedSearch(self.layer_name, self.current_search_layer, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #lagerer søkets tab indes, lagnavn og lag referanse
-        for attribute in self.current_attributes: #lagrer valg av attributter
-            self.search_history[self.layer_name].add_attribute(attribute, int(attribute.getComboBox().currentIndex()), attribute.getLineEditText())
+        self.search_history[self.layer_name] = SavedSearch(self.layer_name, self.current_search_layer, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #saves search tab index, layer name and layer referense
+        for attribute in self.current_attributes: #Stores the choises made in current form
+            self.search_history[self.layer_name].add_attribute(attribute, int(attribute.getComboBox().currentIndex()), attribute.getLineEditText()) #Attributes are stored as key in dictionary, index and tex are stored as value
 
-        self.search_history[self.layer_name].add_attribute(self.fylker, int(self.fylker.getComboBox().currentIndex()), None) #lagerer valg og fylter og komuner
+        self.search_history[self.layer_name].add_attribute(self.fylker, int(self.fylker.getComboBox().currentIndex()), None) #stores the choises of fylke and kommune
         self.search_history[self.layer_name].add_attribute(self.kommuner, int(self.kommuner.getComboBox().currentIndex()), None)
 
 
     def show_tabell(self):
         """Shows or hide tableWidget"""
 
-        if self.infoWidget.pushButton_tabell.isChecked():
+        if self.infoWidget.pushButton_tabell.isChecked(): #If pushbutton tabell is check, open attributetable, if not, close attributetable
             self.iface.showAttributeTable(self.iface.activeLayer())
         else:
             attrTables = [d for d in QApplication.instance().allWidgets() if d.objectName() == u'QgsAttributeTableDialog' or d.objectName() == u'AttributeTable']
@@ -798,7 +779,16 @@ class Tilgjengelighet:
 
 
     def create_filter(self, opperator, valueReference, value):
-        """creates FE based on input, made to take less space in other method"""
+        """creates FE based on input, made to take less space in other method create_filtherencoding
+
+        :param opperator: opperator for FE
+        :param valueReference: name of attribute for FE
+        :param value: value for FE
+
+        :type opperator: str
+        :type valueReference: str
+        :type value: str
+        """
 
         constraint = u"<fes:{0}><fes:ValueReference>app:{1}</fes:ValueReference><fes:Literal>{2}</fes:Literal></fes:{0}>".format(opperator,valueReference,value)
         return constraint
@@ -806,60 +796,60 @@ class Tilgjengelighet:
 
     def create_filtherencoding(self, attributeList):
         """creates FE based on user choices
-        :param attributeList:
-        :type attributeList:list<AttributeForms>
+        :param attributeList: list of all attriubtes for filterencoding
+        :type attributeList: list<AttributeForms>
 
         :returns: Filter Encoding
         :rtype: str
         """
 
         fylke = self.dlg.comboBox_fylker.currentText()
-        komune = self.dlg.comboBox_komuner.currentText()
+        kommune = self.dlg.comboBox_kommuner.currentText()
         constraint = []
         query = ""
-        if fylke != "Norge" and  komune == self.uspesifisert:
-            for komune_nr in range(0, len(self.fylke_dict[fylke])):
-                valueReference = "kommune"
-                if len(self.fylke_dict[fylke][komune_nr]) < 4:
-                    value = "0" + self.fylke_dict[fylke][komune_nr]
+        if fylke != "Norge" and  kommune == self.unspecified: #County is chosen, not kommune
+            for kommune_nr in range(0, len(self.fylke_dict[fylke])): #itterate all kommune numbers in fylke
+                valueReference = "kommune" 
+                if len(self.fylke_dict[fylke][kommune_nr]) < 4: #Syntax demands 4 numbers in kommune number
+                    value = "0" + self.fylke_dict[fylke][kommune_nr]
                 else:
-                    value = self.fylke_dict[fylke][komune_nr]
-                query += "<fes:PropertyIsEqualTo><fes:ValueReference>app:{0}</fes:ValueReference><fes:Literal>{1}</fes:Literal></fes:PropertyIsEqualTo>".format(valueReference,value)
+                    value = self.fylke_dict[fylke][kommune_nr]
+                query += "<fes:PropertyIsEqualTo><fes:ValueReference>app:{0}</fes:ValueReference><fes:Literal>{1}</fes:Literal></fes:PropertyIsEqualTo>".format(valueReference,value) #Input values to FE
                     
-            if len(self.fylke_dict[fylke]) > 1: #Oslo har kun en kommune
-                query = "<Or>{0}</Or>".format(query)
-        elif komune != self.uspesifisert:
+            if len(self.fylke_dict[fylke]) > 1: #Oslo only has 1 kommune, and can't use or opperators
+                query = "<Or>{0}</Or>".format(query) #Att string within or to include all kommune numbers
+        elif kommune != self.unspecified: #Kommune is chosen
             valueReference = "kommune"
-            if len(self.komm_dict_nm[komune]) < 4:
-                        value = "0" + self.komm_dict_nm[komune]
+            if len(self.komm_dict_nm[kommune]) < 4: #Syntax demands 4 numbers in kommune number
+                        value = "0" + self.komm_dict_nm[kommune]
             else:
-                value = self.komm_dict_nm[komune]
-            query += "<fes:PropertyIsEqualTo><fes:ValueReference>app:{0}</fes:ValueReference><fes:Literal>{1}</fes:Literal></fes:PropertyIsEqualTo>".format(valueReference,value)
+                value = self.komm_dict_nm[kommune]
+            query += "<fes:PropertyIsEqualTo><fes:ValueReference>app:{0}</fes:ValueReference><fes:Literal>{1}</fes:Literal></fes:PropertyIsEqualTo>".format(valueReference,value) #Input values to FE
 
 
 
-        if len(query) > 0:
+        if len(query) > 0: #A counto or kommune is chocen
             constraint.append(query)
         
-        for attribute in attributeList:
-            if attribute.getComboBoxCurrentText() != self.uspesifisert:
-                valueReference = attribute.valueReference()
-                value = attribute.value()
-                opperator = attribute.opperator()
-                constraint.append(self.create_filter(opperator, valueReference, value))
+        for attribute in attributeList: #Itterate all attributes in search
+            if attribute.getComboBoxCurrentText() != self.unspecified: #Combobox  value defined
+                valueReference = attribute.valueReference() #Get valueReference
+                value = attribute.value() #Get FE value
+                opperator = attribute.opperator() #Get FE opperator
+                constraint.append(self.create_filter(opperator, valueReference, value)) #Add contraint to list of constraints
 
         query = ""
         filterString = ""
-        if len(constraint) > 1:
+        if len(constraint) > 1: #More than one constraint, contraint must be withing And
             for q in constraint:
-                query += q
+                query += q #Create constraint string
             filterString = u"<fes:Filter><And>{0}</And></fes:Filter>".format(query)
             return ("FILTER=" + self.to_unicode(filterString))
-        elif len(constraint) == 1:
+        elif len(constraint) == 1: #One constraint, contraint cabn't be withing And
             filterString = "<fes:Filter>{0}</fes:Filter>".format(constraint[0])
             return ("FILTER=" + self.to_unicode(filterString))
 
-        return filterString
+        return filterString #return empty filsterString (without "Filter=")
         
         
     def filtrer(self):
@@ -867,30 +857,32 @@ class Tilgjengelighet:
 
         print (u"NewFilterStart")
 
-        if not self.current_search_layer is None:
+        if not self.current_search_layer is None: #Remove selection for previus search layer
             self.current_search_layer.removeSelection()
 
-        self.layer_name = self.dlg.lineEdit_navn_paa_sok.text() #setter navn på laget
-        #search_type = self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()) #henter hvilke søk som blir gjort (må spesifisere esenere for tettsted eller friluft)
-        #search_type_pomrade = self.dlg.tabWidget_tettsted.tabText(3) #setter egen for pområde pga problemer med norske bokstaver
-        if self.dlg.tabWidget_main.currentIndex() < 1:
+        self.layer_name = self.dlg.lineEdit_search_name.text() #gives search layer a name
+
+        if self.dlg.tabWidget_main.currentIndex() < 1: #Maintab is set at friluft, gets values for friluft
             tilgjDB = "friluft"
-            featuretype = self.feature_type_friluft[self.dlg.tabWidget_friluft.tabText(self.dlg.tabWidget_friluft.currentIndex())]
-            self.current_attributes = self.attributes_friluft[self.dlg.tabWidget_friluft.tabText(self.dlg.tabWidget_friluft.currentIndex())]
-            infoWidget_title = self.dlg.tabWidget_friluft.tabText(self.dlg.tabWidget_friluft.currentIndex())
-        else:
+            featuretype = self.feature_type_friluft[self.dlg.tabWidget_friluft.tabText(self.dlg.tabWidget_friluft.currentIndex())] #gets feature type based on freaturetype tab in friluft
+            self.current_attributes = self.attributes_friluft[self.dlg.tabWidget_friluft.tabText(self.dlg.tabWidget_friluft.currentIndex())] #gets attributes based on freaturetype tab in friluft
+            infoWidget_title = self.dlg.tabWidget_friluft.tabText(self.dlg.tabWidget_friluft.currentIndex()) #gets infowidget title based on freaturetype tab in friluft
+        else: #Main tab is set at tettsted, gets values for tettsted
             tilgjDB = "tettsted"
-            featuretype = self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]
-            self.current_attributes = self.attributes_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())]
-            infoWidget_title = self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())
+            featuretype = self.feature_type_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())] #gets feature type based on freaturetype tab in tettsted
+            self.current_attributes = self.attributes_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())] #gets attributes based on freaturetype tab in tettsted
+            infoWidget_title = self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()) #gets infowidget title based on freaturetype tab in tettsted
 
-
+        #Create url
         url = u"http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet{0}?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::4258&typeNames=app:{1}&".format(tilgjDB, featuretype)
 
+        #Create FE
         filter_encoding = self.create_filtherencoding(self.current_attributes)#= "FILTER=<fes:Filter><fes:PropertyIsEqualTo><fes:ValueReference>app:kommune</fes:ValueReference><fes:Literal>0301</fes:Literal></fes:PropertyIsEqualTo></fes:Filter>"
 
+        #Create new layer
         new_layer = QgsVectorLayer(url + filter_encoding, self.layer_name, "ogr")
-        if new_layer.isValid():
+
+        if new_layer.isValid(): #If new layer is valid/contains objekcts, add to canvas
             existing_layers = self.iface.legendInterface().layers()
             try:
                 for lyr in existing_layers: #Removing layers with same name
@@ -898,28 +890,34 @@ class Tilgjengelighet:
                         QgsMapLayerRegistry.instance().removeMapLayers( [lyr.id()] )
             except Exception as e:
                 print(str(e))
-            QgsMapLayerRegistry.instance().addMapLayer(new_layer)
-            self.current_search_layer = new_layer
+            QgsMapLayerRegistry.instance().addMapLayer(new_layer) #Add new layer
+
+            self.current_search_layer = new_layer #Sett current layer
             self.current_search_layer.selectionChanged.connect(self.selectedObjects) #Filling infoWidget when objects are selected
             
+            #Zoom to layer
             self.canvas.setExtent(self.current_search_layer.extent())
             self.canvas.zoomOut()
 
+            #inititate new infowidget
             self.fill_infoWidget(self.current_attributes)
             self.infoWidget.label_typeSok.setText(infoWidget_title)
             self.infoWidget.show()
+
+            #Close old atribute table
             attrTables = [d for d in QApplication.instance().allWidgets() if d.objectName() == u'QgsAttributeTableDialog' or d.objectName() == u'AttributeTable']
             for x in attrTables:
                 x.close()
-            self.show_tabell()
+            self.show_tabell() #Show or hide new attribute table
             
             if self.rubberHighlight is not None: #removing previus single highlight
                 self.canvas.scene().removeItem(self.rubberHighlight)
-            self.save_search()
+            
+            self.save_search() #Store search attributes
             self.dlg.close() #closing main window for easyer visualisation of results
 
         else:
-            self.show_message("Ingen objekter funnet", msg_title="layer not valid", msg_type=QMessageBox.Warning)
+            self.show_message("Ingen objekter funnet", msg_title="layer not valid", msg_type=QMessageBox.Warning) #Messeage if layer is not valid/not objects was found
 
 
         print(u"NewFilterEnd")
@@ -931,40 +929,39 @@ class Tilgjengelighet:
         :param selFeatures: Selected features of layer
          """
         self.selFeatures = selFeatures
-        self.number_of_objects = len(selFeatures)
-        self.cur_sel_obj = 0
-        self.selection = self.current_search_layer.selectedFeatures()
+        self.number_of_objects = len(selFeatures) #number of objects selected
+        self.cur_sel_obj = 0 #Current selected object
+        self.selection = self.current_search_layer.selectedFeatures() #Set selected features
 
-        #self.infoWidget.label_object_number.setText("{0}/{1}".format(self.cur_sel_obj+1, self.number_of_objects))
-        self.obj_info()
 
-        self.highlightSelected()
+        self.obj_info() #Fill infowidget with info on current selected object
+
+        self.highlightSelected() #highligt current selected object viewd in infowidget
 
 
     def highlightSelected(self):
         """Highlights the object viewed in infowidget"""
 
         if self.rubberHighlight is not None:
-            self.canvas.scene().removeItem(self.rubberHighlight)
+            self.canvas.scene().removeItem(self.rubberHighlight) #remove previus rubberband
 
-        #selection = self.iface.activeLayer().selectedFeatures()
-        if len(self.selection) > 0:
-            self.rubberHighlight = QgsRubberBand(self.canvas,QGis.Polygon)
-            self.rubberHighlight.setBorderColor(QColor(255,0,0))
-            self.rubberHighlight.setFillColor(QColor(255,0,0,255))
+        if len(self.selection) > 0: #objects selected is more than 0
+            self.rubberHighlight = QgsRubberBand(self.canvas,QGis.Polygon) #create new rubberband
+            self.rubberHighlight.setBorderColor(QColor(255,0,0)) #Set birder color for new rubberband (red)
+            self.rubberHighlight.setFillColor(QColor(255,0,0,255)) #set fill color for new rubberband (red)
             #self.rubberHighlight.setLineStyle(Qt.PenStyle(Qt.DotLine))
-            self.rubberHighlight.setWidth(4)
-            self.rubberHighlight.setToGeometry(self.selection[self.cur_sel_obj].geometry(), self.current_search_layer)
-            self.rubberHighlight.show()
+            self.rubberHighlight.setWidth(4) #Set widht of new rubberband
+            self.rubberHighlight.setToGeometry(self.selection[self.cur_sel_obj].geometry(), self.current_search_layer) #set geometry of rubberband equal to current selected object
+            self.rubberHighlight.show() #Show rubberband
 
     def infoWidget_next(self):
         """shows next object in infoWidget"""
         try:
             self.cur_sel_obj+=1
-            if self.cur_sel_obj >= self.number_of_objects:
+            if self.cur_sel_obj >= self.number_of_objects: #when exiding objects, go back to first
                 self.cur_sel_obj = 0
-            self.obj_info()
-            self.highlightSelected()
+            self.obj_info() #Fill infowidget with new info
+            self.highlightSelected() #set new rubberband to highlight new object
         except AttributeError as e:
             pass
         except Exception as e:
@@ -976,10 +973,10 @@ class Tilgjengelighet:
     
         try:
             self.cur_sel_obj-=1
-            if self.cur_sel_obj < 0:
+            if self.cur_sel_obj < 0: #when exiding objects, go to last
                 self.cur_sel_obj = self.number_of_objects-1
-            self.obj_info()
-            self.highlightSelected()
+            self.obj_info() #Fill infowidget with new info
+            self.highlightSelected() #set new rubberband to highlight new object
         except AttributeError as e:
             pass
         except Exception as e:
@@ -989,26 +986,25 @@ class Tilgjengelighet:
     def obj_info(self):
         """Fills infowidget with info of current object"""
     
-        self.infoWidget.label_object_number.setText("{0}/{1}".format(self.cur_sel_obj+1, self.number_of_objects))
+        self.infoWidget.label_object_number.setText("{0}/{1}".format(self.cur_sel_obj+1, self.number_of_objects)) #Show current object, and number of objects selected
     
-        #selection = self.current_search_layer.selectedFeatures()
         
         if len(self.selection) > 0:
             for i in range(0, len(self.current_attributes)):
                 try:
-                    value = self.selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())]
-                    try:
+                    value = self.selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())] #Get attribute value of current selected objects for 
+                    try: #insert valu to infowidget
                         if isinstance(value, (int, float, long)):
-                            self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(value))
-                        elif isinstance(value, (QPyNullVariant)):
+                            self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(value)) #make value str
+                        elif isinstance(value, (QPyNullVariant)): #No value
                             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
                         else:
                             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(value)
                     except Exception as e:
-                        self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
-                except KeyError as e: #Rampe Stigning forsvinner...
+                        self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-") #No value
+                except KeyError as e: #attribute not in layer do to no value in any objects
                     pass
-        else:
+        else: #No objects chocen, set value to "-"
             for i in range(0, len(self.current_attributes)):
                 self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
 
@@ -1055,8 +1051,9 @@ class Tilgjengelighet:
     
 
 
-    def savePath(self, saveType, saveExtension): #sett inn denne for exel også
-        dirPath = self.settings.value("/Tilgjengelighet/savePath", ".", type=str)    
+    def savePath(self, saveType, saveExtension): #find savepath
+        dirPath = self.settings.value("/Tilgjengelighet/savePath", ".", type=str)
+        #Open file expoorer and save file
         (filename, filter) = QFileDialog.getSaveFileNameAndFilter(self.iface.mainWindow(),
                     "Please save {0} file as...".format(saveType),
                     dirPath,
@@ -1066,17 +1063,17 @@ class Tilgjengelighet:
         if len(fn) == 0: # user choose cancel
             return None, None
         self.settings.setValue("/Tilgjengelighet/savePath", QFileInfo(filename).absolutePath())
-        if fileExtension != saveExtension:
+        if fileExtension != saveExtension: #set file extention to filename
             filename = filename + saveExtension
 
-        return dirPath, filename
+        return dirPath, filename #return path to save folder and filname
 
 
     def imageSave(self):
         """saves a screenshot of canvas"""
 
         dirPath, filename = self.savePath("Image", ".png")
-        if dirPath is None:
+        if dirPath is None: #user chose cansel
             return
 
         size = self.canvas.size()
@@ -1109,13 +1106,14 @@ class Tilgjengelighet:
         """Resets the gui back to default"""
         all_attributes = []
 
-        all_attributes.extend(self.attributes_inngang)
-        all_attributes.extend(self.attributes_vei)
-        all_attributes.extend(self.attributes_hcparkering)
-        all_attributes.extend(self.attributes_pomrade)
+        #add all attributes to lost
+        for attributeList in self.attributes_tettsted:
+            all_attributes.extend(self.attributes_tettsted[attributeList])
+        for attributeList in self.attributes_friluft:
+            all_attributes.extend(self.attributes_friluft[attributeList])
 
         for attribute in all_attributes:
-            attribute.reset()
+            attribute.reset() #resets attribute value
 
 
 

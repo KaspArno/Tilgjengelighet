@@ -64,7 +64,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="comboBox_komuner">
+          <widget class="QComboBox" name="comboBox_kommuner">
            <property name="font">
             <font>
              <pointsize>15</pointsize>
@@ -6826,7 +6826,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_navn_paa_sok"/>
+          <widget class="QLineEdit" name="lineEdit_search_name"/>
          </item>
          <item>
           <widget class="QPushButton" name="pushButton_filtrer">
