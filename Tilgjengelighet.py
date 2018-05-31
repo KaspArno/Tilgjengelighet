@@ -340,6 +340,7 @@ class Tilgjengelighet:
 
         #Create attributes object friluft (Needs futher methods for filling rest of friluft)
         self.assign_combobox_baderampe()
+        self.assign_combobox_fiskeplass()
 
         #Dictionarys for all attributes in different object type. Key equals name of tab
         self.attributes_tettsted = {
@@ -347,7 +348,7 @@ class Tilgjengelighet:
             u'Parkeringsområde' : self.attributes_pomrade, u"Vei" : self.attributes_vei}
 
         self.attributes_friluft = {
-            u"Baderampe" : self.attributes_baderampe
+            u"Baderampe" : self.attributes_baderampe, u"Fiskeplass" : self.attributes_fiskeplass
         }
 
         
@@ -436,7 +437,7 @@ class Tilgjengelighet:
 
         self.fill_combobox(gatetype.getComboBox(), self.plugin_dir + r'\combobox_values\tettstedVeiGatetype.txt')
         self.fill_combobox(dekke_vei_tettsted.getComboBox(), self.plugin_dir + r"\combobox_values\tettstedDekke.txt")
-        self.fill_combobox(dekkeTilstand_vei_tettsted.getComboBox(), self.plugin_dir + r"\combobox_values\tettstedDekkeTilstand.txt")
+        self.fill_combobox(dekkeTilstand_vei_tettsted.getComboBox(), self.plugin_dir + r"\combobox_values\dekkeTilstand.txt")
         self.fill_combobox(ledelinje.getComboBox(), self.plugin_dir + r"\combobox_values\tettstedVeiLedelinje.txt")
         self.fill_combobox(ledelinjeKontrast.getComboBox(), self.plugin_dir + r"\combobox_values\tettstedKontrast.txt")
         
@@ -505,7 +506,7 @@ class Tilgjengelighet:
 
         self.fill_combobox(self.overbygg_pomrade.getComboBox(), self.plugin_dir + r'\combobox_values\boolean.txt')
         self.fill_combobox(self.dekke_pomrade.getComboBox(), self.plugin_dir + r"\combobox_values\tettstedDekke.txt")
-        self.fill_combobox(self.dekkeTilstand_pomrade.getComboBox(), self.plugin_dir + r"\combobox_values\tettstedDekkeTilstand.txt")
+        self.fill_combobox(self.dekkeTilstand_pomrade.getComboBox(), self.plugin_dir + r"\combobox_values\dekkeTilstand.txt")
         
         self.fill_combobox(self.manuell_rullestol_pomrade.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
 
@@ -513,16 +514,16 @@ class Tilgjengelighet:
     def assign_combobox_baderampe(self):
         """Assigning a AttributeForm object to each option in Baderampe"""
 
-        rampe = AttributeForm("rampe", self.dlg.comboBox_baderampe_rampe)
-        rampeBredde = AttributeForm("rampeBredde", self.dlg.comboBox_baderampe_rampeBredde, self.dlg.lineEdit_baderampe_rampeBredde)
-        rampeStigning = AttributeForm("rampeStigning", self.dlg.comboBox_baderampe_rampeStigning, self.dlg.lineEdit_baderampe_rampeStigning)
-        handlist = AttributeForm("håndlist", self.dlg.comboBox_handlist)
-        handlistHoyde1 = AttributeForm("håndlistHøyde1", self.dlg.comboBox_baderampe_handlistHoyde1, self.dlg.lineEdit_baderampe_handlistHoyde1)
-        handlistHoyde2 = AttributeForm("håndlistHøyde2", self.dlg.comboBox_baderampe_handlistHoyde2, self.dlg.lineEdit_baderampe_handlistHoyde2)
-        rampeTilgjengelig =  AttributeForm("rampeTilgjengelig", self.dlg.comboBox_baderampe_rampeTilgjengelig)
+        rampe = AttributeForm(u"rampe", self.dlg.comboBox_baderampe_rampe)
+        rampeBredde = AttributeForm(u"rampeBredde", self.dlg.comboBox_baderampe_rampeBredde, self.dlg.lineEdit_baderampe_rampeBredde)
+        rampeStigning = AttributeForm(u"rampeStigning", self.dlg.comboBox_baderampe_rampeStigning, self.dlg.lineEdit_baderampe_rampeStigning)
+        handlist = AttributeForm(u"håndlist", self.dlg.comboBox_baderampe_handliste)
+        handlistHoyde1 = AttributeForm(u"håndlistHøyde1", self.dlg.comboBox_baderampe_handlistHoyde1, self.dlg.lineEdit_baderampe_handlistHoyde1)
+        handlistHoyde2 = AttributeForm(u"håndlistHøyde2", self.dlg.comboBox_baderampe_handlistHoyde2, self.dlg.lineEdit_baderampe_handlistHoyde2)
+        rampeTilgjengelig =  AttributeForm(u"rampeTilgjengelig", self.dlg.comboBox_baderampe_rampeTilgjengelig)
 
-        tilgjengvurderingRullestol = AttributeForm("tilgjengvurderingRullestol", self.dlg.comboBox_baderampe_tilgjengvurderingRullestol)
-        tilgjengvurderingSyn = AttributeForm("tilgjengvurderingSyn", self.dlg.comboBox_baderampe_tilgjengvurderingSyn)
+        tilgjengvurderingRullestol = AttributeForm(u"tilgjengvurderingRullestol", self.dlg.comboBox_baderampe_tilgjengvurderingRullestol)
+        tilgjengvurderingSyn = AttributeForm(u"tilgjengvurderingSyn", self.dlg.comboBox_baderampe_tilgjengvurderingSyn)
 
         self.attributes_baderampe = [rampe, rampeBredde, rampeStigning, handlist, handlistHoyde1, handlistHoyde2, rampeTilgjengelig, tilgjengvurderingRullestol, tilgjengvurderingSyn]
         attributes_mer_mindre = [rampeBredde, rampeStigning, handlistHoyde1, handlistHoyde2]
@@ -536,6 +537,61 @@ class Tilgjengelighet:
         self.fill_combobox(rampeTilgjengelig.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
         self.fill_combobox(tilgjengvurderingRullestol.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
         self.fill_combobox(tilgjengvurderingSyn.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
+
+    def assign_combobox_fiskeplass(self):
+        """Assigning a AttributeForm object to each option in Baderampe"""
+
+        rampe = AttributeForm(u"rampe", self.dlg.comboBox_fiskeplass_rampe, label=self.dlg.label_fiskeplass_rampe)
+        dekke = AttributeForm(u"dekke", self.dlg.comboBox_fiskeplass_dekke)
+        plankeavstand =  AttributeForm(u"plankeavstand  ", self.dlg.comboBox_fiskeplass_plankeavstand, self.dlg.lineEdit_fiskeplass_plankeavstand,  label=self.dlg.label_fiskeplass_plankeavstand)
+        dekkeTilstand = AttributeForm(u"dekkeTilstand", self.dlg.comboBox_fiskeplass_dekke_tilstand)
+        diameter = AttributeForm(u"diameter", self.dlg.comboBox_fiskeplass_snusirkel, self.dlg.lineEdit_fiskeplass_snusirkel)
+        rekkverk = AttributeForm(u"rekkverk", self.dlg.comboBox_fiskeplass_rekkverk)
+        stoppkant = AttributeForm(u"stoppkant", self.dlg.comboBox_fiskeplass_stoppkant)
+        stoppkantHoyde = AttributeForm(u"stoppkantHøyde", self.dlg.comboBox_fiskeplass_stoppkant_hoyde, self.dlg.lineEdit_fiskeplass_stoppkant_hoyde, label=self.dlg.label_fiskeplass_stoppkant_hoyde)
+
+        rampeBredde = AttributeForm(u"rampeBredde", self.dlg.comboBox_fiskeplass_rampe_bredde, self.dlg.lineEdit_fiskeplass_rampe_bredde, label=self.dlg.label_fiskeplass_rampe_bredde)
+        rampeStigning = AttributeForm(u"rampeStigning", self.dlg.comboBox_fiskeplass_rampe_stigning, self.dlg.lineEdit_fiskeplass_rampe_stigning, label=self.dlg.label_fiskeplass_rampe_stigning)
+        handlist = AttributeForm(u"håndlist", self.dlg.comboBox_fiskeplass_handliste, label=self.dlg.label_fiskeplass_handliste)
+        handlistHoyde1 = AttributeForm(u"håndlistHøyde1", self.dlg.comboBox_fiskeplass_handlist1, self.dlg.lineEdit_fiskeplass_handlist1, label=self.dlg.label_fiskeplass_handlist1)
+        handlistHoyde2 = AttributeForm(u"håndlistHøyde2", self.dlg.comboBox_fiskeplass_handlist2, self.dlg.lineEdit_fiskeplass_handlist2, label=self.dlg.label_fiskeplass_handlist2)
+        rampeTilgjengelig =  AttributeForm(u"rampeTilgjengelig", self.dlg.comboBox_fiskeplass_rampe_tilgjengelig, label=self.dlg.label_fiskeplass_rampe_tilgjengelig)
+
+        tilgjengvurderingRullestol = AttributeForm(u"tilgjengvurderingRullestol", self.dlg.comboBox_fiskeplass_manuell_rullestol)
+        tilgjengvurderingElRullestol = AttributeForm(u"tilgjengvurderingElRullestol", self.dlg.comboBox_fiskeplass_el_rullestol)
+        tilgjengvurderingSyn = AttributeForm(u"tilgjengvurderingSyn", self.dlg.comboBox_fiskeplass_syn)
+
+        self.attributes_fiskeplass = [rampe, dekke, plankeavstand, dekkeTilstand, diameter, rekkverk, stoppkant, stoppkantHoyde, rampeBredde, rampeStigning, handlist, handlistHoyde1, handlistHoyde2, rampeTilgjengelig, tilgjengvurderingRullestol, tilgjengvurderingElRullestol, tilgjengvurderingSyn]
+        attributes_mer_mindre = [plankeavstand, diameter, stoppkantHoyde, rampeBredde, rampeStigning, handlistHoyde1, handlistHoyde2]
+        attributes_rampe = [rampeBredde, rampeStigning, handlist, handlistHoyde1, handlistHoyde2, rampeTilgjengelig]
+
+        #Fill combobox
+        for attributt in attributes_mer_mindre:
+            self.fill_combobox(attributt.getComboBox(), self.plugin_dir + '\combobox_values\mer_mindre.txt')
+
+        self.fill_combobox(rampe.getComboBox(), self.plugin_dir + r'\combobox_values\boolean.txt')
+        self.fill_combobox(dekke.getComboBox(), self.plugin_dir + r'\combobox_values\friluftDekke.txt')
+        self.fill_combobox(dekkeTilstand.getComboBox(), self.plugin_dir + r'\combobox_values\dekkeTilstand.txt')
+        self.fill_combobox(rekkverk.getComboBox(), self.plugin_dir + r'\combobox_values\boolean.txt')
+        self.fill_combobox(stoppkant.getComboBox(), self.plugin_dir + r'\combobox_values\boolean.txt')
+
+        self.fill_combobox(handlist.getComboBox(), self.plugin_dir + r"\combobox_values\handlist.txt")
+        self.fill_combobox(rampeTilgjengelig.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
+        self.fill_combobox(tilgjengvurderingRullestol.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
+        self.fill_combobox(tilgjengvurderingElRullestol.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
+        self.fill_combobox(tilgjengvurderingSyn.getComboBox(), self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt")
+
+        #Set what to be hidden in form and conditions for showing parts
+        self.hide_show_gui(attributes_rampe, self.dlg.comboBox_fiskeplass_rampe.currentText() == u"Ja", [self.dlg.label_fiskeplass_rampe, self.dlg.line_fiskeplass_rampe, self.dlg.line_fiskeplass])
+        self.dlg.comboBox_fiskeplass_rampe.currentIndexChanged.connect(lambda: self.hide_show_gui(attributes_rampe, self.dlg.comboBox_fiskeplass_rampe.currentText() == u"Ja", [self.dlg.label_fiskeplass_rampe, self.dlg.line_fiskeplass_rampe, self.dlg.line_fiskeplass]))
+        
+        self.hide_show_gui([plankeavstand], self.dlg.comboBox_fiskeplass_dekke.currentText() != self.unspecified)
+        self.dlg.comboBox_fiskeplass_dekke.currentIndexChanged.connect(lambda: self.hide_show_gui([plankeavstand], self.dlg.comboBox_fiskeplass_dekke.currentText() != self.unspecified))
+
+        self.hide_show_gui([stoppkantHoyde], self.dlg.comboBox_fiskeplass_stoppkant.currentText() == u"Ja")
+        self.dlg.comboBox_fiskeplass_stoppkant.currentIndexChanged.connect(lambda: self.hide_show_gui([stoppkantHoyde], self.dlg.comboBox_fiskeplass_stoppkant.currentText() == u"Ja"))
+
+
 
 
     ################################# Automate tools ####################################
@@ -846,7 +902,7 @@ class Tilgjengelighet:
             filterString = u"<fes:Filter><And>{0}</And></fes:Filter>".format(query)
             return ("FILTER=" + self.to_unicode(filterString))
         elif len(constraint) == 1: #One constraint, contraint cabn't be withing And
-            filterString = "<fes:Filter>{0}</fes:Filter>".format(constraint[0])
+            filterString = u"<fes:Filter>{0}</fes:Filter>".format(self.to_unicode(constraint[0]))
             return ("FILTER=" + self.to_unicode(filterString))
 
         return filterString #return empty filsterString (without "Filter=")
@@ -875,10 +931,10 @@ class Tilgjengelighet:
 
         #Create url
         url = u"http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet{0}?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::4258&typeNames=app:{1}&".format(tilgjDB, featuretype)
-
+        #print("url: {}".format(url))
         #Create FE
         filter_encoding = self.create_filtherencoding(self.current_attributes)#= "FILTER=<fes:Filter><fes:PropertyIsEqualTo><fes:ValueReference>app:kommune</fes:ValueReference><fes:Literal>0301</fes:Literal></fes:PropertyIsEqualTo></fes:Filter>"
-
+        #print("FE: {}".format(filter_encoding))
         #Create new layer
         new_layer = QgsVectorLayer(url + filter_encoding, self.layer_name, "ogr")
 

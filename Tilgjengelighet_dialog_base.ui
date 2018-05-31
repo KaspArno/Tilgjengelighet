@@ -102,7 +102,7 @@
           </font>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <property name="iconSize">
           <size>
@@ -130,7 +130,7 @@
               </font>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="tab_7">
               <attribute name="title">
@@ -364,7 +364,7 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QComboBox" name="comboBox_handlist">
+                      <widget class="QComboBox" name="comboBox_baderampe_handliste">
                        <property name="enabled">
                         <bool>true</bool>
                        </property>
@@ -675,17 +675,26 @@
               <attribute name="title">
                <string>Fiskeplass</string>
               </attribute>
-              <layout class="QVBoxLayout" name="verticalLayout_38">
+              <layout class="QVBoxLayout" name="verticalLayout_28">
                <item>
-                <layout class="QVBoxLayout" name="verticalLayout_33">
+                <layout class="QVBoxLayout" name="verticalLayout_27">
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_56">
+                  <layout class="QHBoxLayout" name="horizontalLayout_157">
                    <item>
-                    <layout class="QVBoxLayout" name="verticalLayout_32">
+                    <layout class="QVBoxLayout" name="verticalLayout_24">
                      <item>
                       <widget class="QLabel" name="label_53">
+                       <property name="font">
+                        <font>
+                         <weight>75</weight>
+                         <bold>true</bold>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Fiskeplass</string>
+                       </property>
+                       <property name="margin">
+                        <number>10</number>
                        </property>
                       </widget>
                      </item>
@@ -697,147 +706,361 @@
                       </widget>
                      </item>
                      <item>
-                      <layout class="QFormLayout" name="formLayout_10">
-                       <item row="0" column="0">
+                      <layout class="QHBoxLayout" name="horizontalLayout_56">
+                       <item>
                         <widget class="QLabel" name="label_57">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="text">
                           <string>Rampe</string>
                          </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="1">
-                        <widget class="QComboBox" name="comboBox_6">
-                         <property name="enabled">
-                          <bool>false</bool>
+                         <property name="margin">
+                          <number>10</number>
                          </property>
                         </widget>
                        </item>
-                       <item row="1" column="0">
+                       <item>
+                        <widget class="QComboBox" name="comboBox_fiskeplass_rampe">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>140</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_57">
+                       <item>
                         <widget class="QLabel" name="label_33">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="text">
                           <string>Dekke</string>
                          </property>
+                         <property name="margin">
+                          <number>10</number>
+                         </property>
                         </widget>
                        </item>
-                       <item row="1" column="1">
-                        <widget class="QComboBox" name="comboBox_5">
+                       <item>
+                        <widget class="QComboBox" name="comboBox_fiskeplass_dekke">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                         </widget>
                        </item>
-                       <item row="2" column="0">
-                        <widget class="QLabel" name="label_46">
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_58">
+                       <item>
+                        <widget class="QLabel" name="label_fiskeplass_plankeavstand">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="text">
-                          <string>        Plankeavstnad</string>
+                          <string>Plankeavstnad</string>
+                         </property>
+                         <property name="margin">
+                          <number>10</number>
+                         </property>
+                         <property name="indent">
+                          <number>30</number>
                          </property>
                         </widget>
                        </item>
-                       <item row="2" column="1">
+                       <item>
                         <layout class="QHBoxLayout" name="horizontalLayout_53">
                          <item>
-                          <widget class="QComboBox" name="comboBox_12">
+                          <widget class="QComboBox" name="comboBox_fiskeplass_plankeavstand">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>50</width>
+                             <height>0</height>
+                            </size>
                            </property>
                           </widget>
                          </item>
                          <item>
-                          <widget class="QLineEdit" name="lineEdit">
+                          <widget class="QLineEdit" name="lineEdit_fiskeplass_plankeavstand">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>70</width>
+                             <height>0</height>
+                            </size>
                            </property>
                           </widget>
                          </item>
                         </layout>
                        </item>
-                       <item row="3" column="0">
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_144">
+                       <item>
                         <widget class="QLabel" name="label_37">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="text">
                           <string>Dekke tilstand</string>
                          </property>
-                        </widget>
-                       </item>
-                       <item row="3" column="1">
-                        <widget class="QComboBox" name="comboBox_9">
-                         <property name="enabled">
-                          <bool>false</bool>
+                         <property name="margin">
+                          <number>10</number>
                          </property>
                         </widget>
                        </item>
-                       <item row="4" column="0">
+                       <item>
+                        <widget class="QComboBox" name="comboBox_fiskeplass_dekke_tilstand">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>140</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_145">
+                       <item>
                         <widget class="QLabel" name="label_47">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="text">
                           <string>Diameter snusirkel</string>
                          </property>
+                         <property name="margin">
+                          <number>10</number>
+                         </property>
                         </widget>
                        </item>
-                       <item row="4" column="1">
+                       <item>
                         <layout class="QHBoxLayout" name="horizontalLayout_54">
                          <item>
-                          <widget class="QComboBox" name="comboBox_13">
+                          <widget class="QComboBox" name="comboBox_fiskeplass_snusirkel">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>50</width>
+                             <height>0</height>
+                            </size>
                            </property>
                           </widget>
                          </item>
                          <item>
-                          <widget class="QLineEdit" name="lineEdit_2">
+                          <widget class="QLineEdit" name="lineEdit_fiskeplass_snusirkel">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>70</width>
+                             <height>0</height>
+                            </size>
                            </property>
                           </widget>
                          </item>
                         </layout>
                        </item>
-                       <item row="5" column="0">
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_146">
+                       <item>
                         <widget class="QLabel" name="label_36">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="text">
                           <string>Rekkverk</string>
                          </property>
-                        </widget>
-                       </item>
-                       <item row="5" column="1">
-                        <widget class="QComboBox" name="comboBox_8">
-                         <property name="enabled">
-                          <bool>false</bool>
+                         <property name="margin">
+                          <number>10</number>
                          </property>
                         </widget>
                        </item>
-                       <item row="6" column="0">
+                       <item>
+                        <widget class="QComboBox" name="comboBox_fiskeplass_rekkverk">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>140</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_147">
+                       <item>
                         <widget class="QLabel" name="label_35">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="text">
                           <string>Stoppkant</string>
                          </property>
+                         <property name="margin">
+                          <number>10</number>
+                         </property>
                         </widget>
                        </item>
-                       <item row="6" column="1">
-                        <widget class="QComboBox" name="comboBox_7">
+                       <item>
+                        <widget class="QComboBox" name="comboBox_fiskeplass_stoppkant">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>140</width>
+                           <height>0</height>
+                          </size>
                          </property>
                         </widget>
                        </item>
-                       <item row="7" column="0">
-                        <widget class="QLabel" name="label_48">
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_148">
+                       <item>
+                        <widget class="QLabel" name="label_fiskeplass_stoppkant_hoyde">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="text">
-                          <string>        Stoppkant h;yde</string>
+                          <string>Stoppkant høyde</string>
+                         </property>
+                         <property name="margin">
+                          <number>10</number>
+                         </property>
+                         <property name="indent">
+                          <number>30</number>
                          </property>
                         </widget>
                        </item>
-                       <item row="7" column="1">
+                       <item>
                         <layout class="QHBoxLayout" name="horizontalLayout_55">
                          <item>
-                          <widget class="QComboBox" name="comboBox_14">
+                          <widget class="QComboBox" name="comboBox_fiskeplass_stoppkant_hoyde">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>50</width>
+                             <height>0</height>
+                            </size>
                            </property>
                           </widget>
                          </item>
                          <item>
-                          <widget class="QLineEdit" name="lineEdit_3">
+                          <widget class="QLineEdit" name="lineEdit_fiskeplass_stoppkant_hoyde">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>70</width>
+                             <height>0</height>
+                            </size>
                            </property>
                           </widget>
                          </item>
@@ -861,162 +1084,334 @@
                     </layout>
                    </item>
                    <item>
-                    <widget class="Line" name="line_13">
+                    <widget class="Line" name="line_fiskeplass">
                      <property name="orientation">
                       <enum>Qt::Vertical</enum>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <layout class="QVBoxLayout" name="verticalLayout_29">
+                    <layout class="QVBoxLayout" name="verticalLayout_25">
                      <item>
-                      <widget class="QLabel" name="label_rampe_boxs_3">
+                      <widget class="QLabel" name="label_fiskeplass_rampe">
+                       <property name="font">
+                        <font>
+                         <weight>75</weight>
+                         <bold>true</bold>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Rampe</string>
+                       </property>
+                       <property name="margin">
+                        <number>10</number>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="Line" name="line_11">
+                      <widget class="Line" name="line_fiskeplass_rampe">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <layout class="QFormLayout" name="formLayout_9">
-                       <property name="fieldGrowthPolicy">
-                        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-                       </property>
-                       <item row="0" column="0">
-                        <widget class="QLabel" name="label_rmp_stigning_3">
+                      <layout class="QHBoxLayout" name="horizontalLayout_149">
+                       <item>
+                        <widget class="QLabel" name="label_fiskeplass_rampe_stigning">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="text">
                           <string>Rampe Stigning</string>
                          </property>
+                         <property name="margin">
+                          <number>10</number>
+                         </property>
                         </widget>
                        </item>
-                       <item row="0" column="1">
+                       <item>
                         <layout class="QHBoxLayout" name="horizontalLayout_48">
                          <item>
-                          <widget class="QComboBox" name="comboBox_rmp_stigning_3">
+                          <widget class="QComboBox" name="comboBox_fiskeplass_rampe_stigning">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>50</width>
+                             <height>0</height>
+                            </size>
                            </property>
                           </widget>
                          </item>
                          <item>
-                          <widget class="QLineEdit" name="lineEdit_rmp_stigning_3">
+                          <widget class="QLineEdit" name="lineEdit_fiskeplass_rampe_stigning">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>70</width>
+                             <height>0</height>
+                            </size>
                            </property>
                           </widget>
                          </item>
                         </layout>
                        </item>
-                       <item row="1" column="0">
-                        <widget class="QLabel" name="label_rmp_bredde_3">
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_150">
+                       <item>
+                        <widget class="QLabel" name="label_fiskeplass_rampe_bredde">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="text">
                           <string>Rampe Bredde</string>
                          </property>
+                         <property name="margin">
+                          <number>10</number>
+                         </property>
                         </widget>
                        </item>
-                       <item row="1" column="1">
+                       <item>
                         <layout class="QHBoxLayout" name="horizontalLayout_49">
                          <item>
-                          <widget class="QComboBox" name="comboBox_rmp_bredde_3">
+                          <widget class="QComboBox" name="comboBox_fiskeplass_rampe_bredde">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>50</width>
+                             <height>0</height>
+                            </size>
                            </property>
                           </widget>
                          </item>
                          <item>
-                          <widget class="QLineEdit" name="lineEdit_rmp_bredde_3">
+                          <widget class="QLineEdit" name="lineEdit_fiskeplass_rampe_bredde">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>70</width>
+                             <height>0</height>
+                            </size>
                            </property>
                           </widget>
                          </item>
                         </layout>
                        </item>
-                       <item row="2" column="0">
-                        <widget class="QLabel" name="label_handliste_3">
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_50">
+                       <item>
+                        <widget class="QLabel" name="label_fiskeplass_handliste">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="text">
                           <string>Håndliste</string>
                          </property>
+                         <property name="margin">
+                          <number>10</number>
+                         </property>
                         </widget>
                        </item>
-                       <item row="2" column="1">
-                        <layout class="QHBoxLayout" name="horizontalLayout_50">
-                         <item>
-                          <widget class="QComboBox" name="comboBox_handliste_4">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
+                       <item>
+                        <widget class="QComboBox" name="comboBox_fiskeplass_handliste">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>140</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                        </widget>
                        </item>
-                       <item row="3" column="0">
-                        <widget class="QLabel" name="label_hand1_3">
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_151">
+                       <item>
+                        <widget class="QLabel" name="label_fiskeplass_handlist1">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="text">
                           <string>Håndliste Høyde 1</string>
                          </property>
+                         <property name="margin">
+                          <number>10</number>
+                         </property>
                         </widget>
                        </item>
-                       <item row="3" column="1">
+                       <item>
                         <layout class="QHBoxLayout" name="horizontalLayout_51">
                          <item>
-                          <widget class="QComboBox" name="comboBox_hand1_3">
+                          <widget class="QComboBox" name="comboBox_fiskeplass_handlist1">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>50</width>
+                             <height>0</height>
+                            </size>
                            </property>
                           </widget>
                          </item>
                          <item>
-                          <widget class="QLineEdit" name="lineEdit_hand1_3">
+                          <widget class="QLineEdit" name="lineEdit_fiskeplass_handlist1">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>70</width>
+                             <height>0</height>
+                            </size>
                            </property>
                           </widget>
                          </item>
                         </layout>
                        </item>
-                       <item row="4" column="0">
-                        <widget class="QLabel" name="label_hand2_3">
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_152">
+                       <item>
+                        <widget class="QLabel" name="label_fiskeplass_handlist2">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="text">
                           <string>Håndliste Høyde 2</string>
                          </property>
+                         <property name="margin">
+                          <number>10</number>
+                         </property>
                         </widget>
                        </item>
-                       <item row="4" column="1">
+                       <item>
                         <layout class="QHBoxLayout" name="horizontalLayout_52">
                          <item>
-                          <widget class="QComboBox" name="comboBox_hand2_3">
+                          <widget class="QComboBox" name="comboBox_fiskeplass_handlist2">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>50</width>
+                             <height>0</height>
+                            </size>
                            </property>
                           </widget>
                          </item>
                          <item>
-                          <widget class="QLineEdit" name="lineEdit_hand2_3">
+                          <widget class="QLineEdit" name="lineEdit_fiskeplass_handlist2">
                            <property name="enabled">
-                            <bool>false</bool>
+                            <bool>true</bool>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>70</width>
+                             <height>0</height>
+                            </size>
                            </property>
                           </widget>
                          </item>
                         </layout>
                        </item>
-                       <item row="5" column="0">
-                        <widget class="QLabel" name="label_32">
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_153">
+                       <item>
+                        <widget class="QLabel" name="label_fiskeplass_rampe_tilgjengelig">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="text">
                           <string>Rampe tilgjengelig</string>
                          </property>
+                         <property name="margin">
+                          <number>10</number>
+                         </property>
                         </widget>
                        </item>
-                       <item row="5" column="1">
-                        <widget class="QComboBox" name="comboBox_4">
+                       <item>
+                        <widget class="QComboBox" name="comboBox_fiskeplass_rampe_tilgjengelig">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>140</width>
+                           <height>0</height>
+                          </size>
                          </property>
                         </widget>
                        </item>
@@ -1045,71 +1440,144 @@
                     </widget>
                    </item>
                    <item>
-                    <layout class="QVBoxLayout" name="verticalLayout_30">
+                    <layout class="QVBoxLayout" name="verticalLayout_26">
                      <item>
-                      <layout class="QVBoxLayout" name="verticalLayout_31">
+                      <widget class="QLabel" name="label_34">
+                       <property name="font">
+                        <font>
+                         <weight>75</weight>
+                         <bold>true</bold>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Tilgjengelighet</string>
+                       </property>
+                       <property name="margin">
+                        <number>10</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="Line" name="line_12">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_154">
                        <item>
-                        <widget class="QLabel" name="label_34">
+                        <widget class="QLabel" name="label_38">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
                          <property name="text">
-                          <string>Tilgjengelighet</string>
+                          <string>Manuell Rullestol</string>
+                         </property>
+                         <property name="margin">
+                          <number>10</number>
                          </property>
                         </widget>
                        </item>
                        <item>
-                        <widget class="Line" name="line_12">
-                         <property name="orientation">
-                          <enum>Qt::Horizontal</enum>
+                        <widget class="QComboBox" name="comboBox_fiskeplass_manuell_rullestol">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>140</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_155">
+                       <item>
+                        <widget class="QLabel" name="label_45">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Elektrisk Rullestol</string>
+                         </property>
+                         <property name="margin">
+                          <number>10</number>
                          </property>
                         </widget>
                        </item>
                        <item>
-                        <layout class="QFormLayout" name="formLayout_11">
-                         <property name="fieldGrowthPolicy">
-                          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+                        <widget class="QComboBox" name="comboBox_fiskeplass_el_rullestol">
+                         <property name="enabled">
+                          <bool>true</bool>
                          </property>
-                         <item row="0" column="0">
-                          <widget class="QLabel" name="label_38">
-                           <property name="text">
-                            <string>Manuell Rullestol</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="0" column="1">
-                          <widget class="QComboBox" name="comboBox_manuell_rullestol_3">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="1" column="0">
-                          <widget class="QLabel" name="label_45">
-                           <property name="text">
-                            <string>Elektrisk Rullestol</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="1" column="1">
-                          <widget class="QComboBox" name="comboBox_el_rullestol_2">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="2" column="0">
-                          <widget class="QLabel" name="label_51">
-                           <property name="text">
-                            <string>Synshemmet</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="2" column="1">
-                          <widget class="QComboBox" name="comboBox_syn_3">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
+                         <property name="minimumSize">
+                          <size>
+                           <width>140</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_156">
+                       <item>
+                        <widget class="QLabel" name="label_51">
+                         <property name="minimumSize">
+                          <size>
+                           <width>200</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>200</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Synshemmet</string>
+                         </property>
+                         <property name="margin">
+                          <number>10</number>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QComboBox" name="comboBox_fiskeplass_syn">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>140</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                        </widget>
                        </item>
                       </layout>
                      </item>
@@ -1143,69 +1611,11 @@
                    </property>
                   </spacer>
                  </item>
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_57">
-                   <item>
-                    <widget class="QPushButton" name="pushButton_LastInngang_5">
-                     <property name="text">
-                      <string>Last inn Lag</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <spacer name="horizontalSpacer_10">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_58">
-                     <item>
-                      <widget class="QLabel" name="label_59">
-                       <property name="text">
-                        <string>Navn på Søk</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QLineEdit" name="lineEdit_navn_paa_sok_inngang_4"/>
-                     </item>
-                     <item>
-                      <widget class="QComboBox" name="comboBox_sok_metode_4">
-                       <item>
-                        <property name="text">
-                         <string>virtual</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>memory</string>
-                        </property>
-                       </item>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QPushButton" name="pushButton_filtrerInngang_4">
-                       <property name="text">
-                        <string>Filtrer</string>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                  </layout>
-                 </item>
                 </layout>
                </item>
               </layout>
               <zorder></zorder>
+              <zorder>line_fiskeplass_rampe</zorder>
              </widget>
              <widget class="QWidget" name="tab_9">
               <attribute name="title">
@@ -4704,7 +5114,7 @@
                <item>
                 <layout class="QVBoxLayout" name="verticalLayout_11">
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_163">
+                  <layout class="QHBoxLayout" name="horizontalLayout_143">
                    <item>
                     <layout class="QVBoxLayout" name="verticalLayout_9">
                      <item>
@@ -4782,7 +5192,7 @@
                            </property>
                            <property name="maximumSize">
                             <size>
-                             <width>1000</width>
+                             <width>16777215</width>
                              <height>16777215</height>
                             </size>
                            </property>
@@ -4844,7 +5254,7 @@
                            </property>
                            <property name="maximumSize">
                             <size>
-                             <width>1000</width>
+                             <width>16777215</width>
                              <height>16777215</height>
                             </size>
                            </property>
@@ -4859,7 +5269,7 @@
                        <item>
                         <widget class="QLabel" name="label_funksjon">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="minimumSize">
                           <size>
@@ -4884,7 +5294,7 @@
                        <item>
                         <widget class="QComboBox" name="comboBox_byggningstype">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="sizePolicy">
                           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -4900,7 +5310,7 @@
                          </property>
                          <property name="maximumSize">
                           <size>
-                           <width>1000</width>
+                           <width>16777215</width>
                            <height>16777215</height>
                           </size>
                          </property>
@@ -4945,7 +5355,7 @@
                          </property>
                          <property name="maximumSize">
                           <size>
-                           <width>1000</width>
+                           <width>16777215</width>
                            <height>16777215</height>
                           </size>
                          </property>
@@ -4990,7 +5400,7 @@
                          </property>
                          <property name="maximumSize">
                           <size>
-                           <width>1000</width>
+                           <width>16777215</width>
                            <height>16777215</height>
                           </size>
                          </property>
@@ -5035,7 +5445,7 @@
                          </property>
                          <property name="maximumSize">
                           <size>
-                           <width>1000</width>
+                           <width>16777215</width>
                            <height>16777215</height>
                           </size>
                          </property>
@@ -5095,7 +5505,7 @@
                            </property>
                            <property name="maximumSize">
                             <size>
-                             <width>1000</width>
+                             <width>16777215</width>
                              <height>16777215</height>
                             </size>
                            </property>
@@ -5157,7 +5567,7 @@
                            </property>
                            <property name="maximumSize">
                             <size>
-                             <width>1000</width>
+                             <width>16777215</width>
                              <height>16777215</height>
                             </size>
                            </property>
@@ -5219,7 +5629,7 @@
                            </property>
                            <property name="maximumSize">
                             <size>
-                             <width>1000</width>
+                             <width>16777215</width>
                              <height>16777215</height>
                             </size>
                            </property>
@@ -5266,7 +5676,7 @@
                          </property>
                          <property name="maximumSize">
                           <size>
-                           <width>1000</width>
+                           <width>16777215</width>
                            <height>16777215</height>
                           </size>
                          </property>
@@ -5802,19 +6212,6 @@
                      </item>
                     </layout>
                    </item>
-                   <item>
-                    <spacer name="horizontalSpacer">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
                   </layout>
                  </item>
                  <item>
@@ -5824,8 +6221,8 @@
                    </property>
                    <property name="sizeHint" stdset="0">
                     <size>
-                     <width>20</width>
-                     <height>40</height>
+                     <width>1125</width>
+                     <height>13</height>
                     </size>
                    </property>
                   </spacer>
