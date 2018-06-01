@@ -1,0 +1,284 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>AttributeForm &#8212; Tilgjengelig For Alle 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for AttributeForm</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">operator</span>
+
+<div class="viewcode-block" id="AttributeForm"><a class="viewcode-back" href="../code.html#AttributeForm.AttributeForm">[docs]</a><span class="k">class</span> <span class="nc">AttributeForm</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Saves attributes and assosiated gui widgets&quot;&quot;&quot;</span>
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">comboBox</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineEdit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comboBoxText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+
+<span class="sd">        :param attribute: The name of the attribute in layer</span>
+<span class="sd">        :type attribute: str</span>
+
+<span class="sd">        :param comboBox: The associated comboBox</span>
+<span class="sd">        :type comboBox: QComboBox</span>
+
+<span class="sd">        :param lineEdit: The associated lineEdit</span>
+<span class="sd">        :type lineEdit: QLineEdit</span>
+
+<span class="sd">        :param comboBoxText: Alternative text for combobox</span>
+<span class="sd">        :type comboBoxText: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">attribute</span> <span class="o">=</span> <span class="n">attribute</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comboBox</span> <span class="o">=</span> <span class="n">comboBox</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lineEdit</span> <span class="o">=</span> <span class="n">lineEdit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alt_comboboxText</span> <span class="o">=</span> <span class="n">comboBoxText</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">opperatorDict</span> <span class="o">=</span> <span class="p">{</span><span class="sa">u</span><span class="s1">&#39;=&#39;</span> <span class="p">:</span> <span class="s1">&#39;PropertyIsEqualTo&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;&lt;&#39;</span> <span class="p">:</span> <span class="s1">&#39;PropertyIsLessThan&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;&gt;&#39;</span> <span class="p">:</span> <span class="s1">&#39;PropertyIsGreaterThan&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;&lt;=&#39;</span> <span class="p">:</span> <span class="s1">&#39;PropertyIsLessThanOrEqualTo&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;&gt;=&#39;</span> <span class="p">:</span> <span class="s1">&#39;PropertyIsGreaterThanOrEqualTo&#39;</span><span class="p">}</span>
+
+        <span class="c1">#attribute.opperator(), attribute.valueReference(), attribute.value()</span>
+
+<div class="viewcode-block" id="AttributeForm.opperator"><a class="viewcode-back" href="../code.html#AttributeForm.AttributeForm.opperator">[docs]</a>    <span class="k">def</span> <span class="nf">opperator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :returns: the opperator for attriubutt qury</span>
+<span class="sd">        :rtype: QString, None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comboBox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comboBox</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">opperatorDict</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">opperatorDict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBox</span><span class="o">.</span><span class="n">currentText</span><span class="p">()]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">opperatorDict</span><span class="p">[</span><span class="sa">u</span><span class="s1">&#39;=&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="AttributeForm.valueReference"><a class="viewcode-back" href="../code.html#AttributeForm.AttributeForm.valueReference">[docs]</a>    <span class="k">def</span> <span class="nf">valueReference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the objekt attribute</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: name of object attribute in database</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">attribute</span></div>
+
+<div class="viewcode-block" id="AttributeForm.value"><a class="viewcode-back" href="../code.html#AttributeForm.AttributeForm.value">[docs]</a>    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;returns the value constraint, if alternative combobox is set, return that value, if lineedit, ruturn value freom line edit, else return from combobox</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: the value constraint</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alt_comboboxText</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">alt_comboboxText</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBox</span><span class="o">.</span><span class="n">currentText</span><span class="p">()]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">lineEdit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">comboBox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">comboBox</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="AttributeForm.setComboBox"><a class="viewcode-back" href="../code.html#AttributeForm.AttributeForm.setComboBox">[docs]</a>    <span class="k">def</span> <span class="nf">setComboBox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comboBox</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Assigning comboBox</span>
+
+<span class="sd">        :param comboBox: combobox assisiated to attribute</span>
+<span class="sd">        :type comboBox: QComboBox</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">comboBox</span> <span class="o">=</span> <span class="n">comboBox</span></div>
+
+<div class="viewcode-block" id="AttributeForm.setLineEdit"><a class="viewcode-back" href="../code.html#AttributeForm.AttributeForm.setLineEdit">[docs]</a>    <span class="k">def</span> <span class="nf">setLineEdit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lineEdit</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Assigning lineEdit</span>
+
+<span class="sd">        :param lineEdit: Linedit assisiated to attribute</span>
+<span class="sd">        :type lineEdit: QLineEdit</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lineEdit</span> <span class="o">=</span> <span class="n">lineEdit</span></div>
+
+<div class="viewcode-block" id="AttributeForm.getComboBox"><a class="viewcode-back" href="../code.html#AttributeForm.AttributeForm.getComboBox">[docs]</a>    <span class="k">def</span> <span class="nf">getComboBox</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the assosiated combobox widget</span>
+
+<span class="sd">        :returns: returns the associated comboBox</span>
+<span class="sd">        :rtype: QComboBox</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">comboBox</span></div>
+
+<div class="viewcode-block" id="AttributeForm.getLineEdit"><a class="viewcode-back" href="../code.html#AttributeForm.AttributeForm.getLineEdit">[docs]</a>    <span class="k">def</span> <span class="nf">getLineEdit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the assosiated lineEdit widget if any</span>
+
+<span class="sd">        :returns: returns the associated lineEdit</span>
+<span class="sd">        :rtype: QLineEdit</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lineEdit</span></div>
+
+<div class="viewcode-block" id="AttributeForm.getLabel"><a class="viewcode-back" href="../code.html#AttributeForm.AttributeForm.getLabel">[docs]</a>    <span class="k">def</span> <span class="nf">getLabel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the assisiated label widget if any</span>
+<span class="sd">        :returns: returns the associated label</span>
+<span class="sd">        :rtype: QLabel</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span></div>
+
+
+<div class="viewcode-block" id="AttributeForm.getAttribute"><a class="viewcode-back" href="../code.html#AttributeForm.AttributeForm.getAttribute">[docs]</a>    <span class="k">def</span> <span class="nf">getAttribute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the assosiated attriubte name</span>
+
+<span class="sd">        :returns: returns the associated attribute name</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">attribute</span></div>
+
+<div class="viewcode-block" id="AttributeForm.getComboBoxCurrentText"><a class="viewcode-back" href="../code.html#AttributeForm.AttributeForm.getComboBoxCurrentText">[docs]</a>    <span class="k">def</span> <span class="nf">getComboBoxCurrentText</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the assosoated combobox text</span>
+
+<span class="sd">        :returns: returns the associated comboBox text, return None if no combobox is availeble</span>
+<span class="sd">        :rtype: QString</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comboBox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alt_comboboxText</span><span class="p">:</span> <span class="c1">#If AttributForm has alternative text, return alternative text</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">alt_comboboxText</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">comboBox</span><span class="o">.</span><span class="n">currentText</span><span class="p">()]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">comboBox</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="AttributeForm.getLineEditText"><a class="viewcode-back" href="../code.html#AttributeForm.AttributeForm.getLineEditText">[docs]</a>    <span class="k">def</span> <span class="nf">getLineEditText</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the lineEdit text</span>
+
+<span class="sd">        :returns: returns the lineEdit text, return None if no lineEdit is availeble</span>
+<span class="sd">        :rtype: QString</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lineEdit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lineEdit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="AttributeForm.setLineEditText"><a class="viewcode-back" href="../code.html#AttributeForm.AttributeForm.setLineEditText">[docs]</a>    <span class="k">def</span> <span class="nf">setLineEditText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sett text in AttributeForm lineEdit</span>
+
+<span class="sd">        :param string: String to set in lineEdit</span>
+<span class="sd">        :type string: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lineEdit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">string</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AttributeForm.valudeValid"><a class="viewcode-back" href="../code.html#AttributeForm.AttributeForm.valudeValid">[docs]</a>    <span class="k">def</span> <span class="nf">valudeValid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;checks if the attribute is valid and search ready</span>
+
+<span class="sd">        :returns: True if attrivute is valid, false if not</span>
+<span class="sd">        :rtype: boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lineEdit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">opperator</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;PropertyIsEqualTo&#39;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getLineEditText</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1">#opperator chosen, but no value</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;IsValid 1&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">opperator</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;PropertyIsEqualTo&#39;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getLineEditText</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="c1">#value chosen, bu no opperator</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;IsValid 2&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getLineEditText</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;len: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getLineEditText</span><span class="p">())))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;IsValid 3&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_number</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getLineEditText</span><span class="p">())</span> <span class="c1">#Valu not a number</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;attribute is valid&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="AttributeForm.reset"><a class="viewcode-back" href="../code.html#AttributeForm.AttributeForm.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Resets form to defult&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comboBox</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">comboBox</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lineEdit</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lineEdit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AttributeForm.is_number"><a class="viewcode-back" href="../code.html#AttributeForm.AttributeForm.is_number">[docs]</a>    <span class="k">def</span> <span class="nf">is_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sett text in AttributeForm lineEdit</span>
+
+<span class="sd">        :param s: string to be change for being a number</span>
+<span class="sd">        :type s: str</span>
+<span class="sd">        :returns: tru if s is number, false if s in not a number</span>
+<span class="sd">        :rtype: boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;s: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;type: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Kasper Skjeggestad.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

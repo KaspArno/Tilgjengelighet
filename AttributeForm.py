@@ -9,14 +9,17 @@ class AttributeForm(object):
 
         :param attribute: The name of the attribute in layer
         :type attribute: str
+
         :param comboBox: The associated comboBox
         :type comboBox: QComboBox
+
         :param lineEdit: The associated lineEdit
         :type lineEdit: QLineEdit
+
         :param comboBoxText: Alternative text for combobox
         :type comboBoxText: dict
-
         """
+
         self.attribute = attribute
         self.comboBox = comboBox
         self.lineEdit = lineEdit
@@ -28,9 +31,11 @@ class AttributeForm(object):
         #attribute.opperator(), attribute.valueReference(), attribute.value()
 
     def opperator(self):
-        """Returns the opperator for attriubutt qury
+        """
+        :returns: the opperator for attriubutt qury
         :rtype: QString, None
         """
+
         if self.comboBox is not None:
             if self.comboBox.currentText() in self.opperatorDict:
                 return self.opperatorDict[self.comboBox.currentText()]
@@ -40,9 +45,21 @@ class AttributeForm(object):
             return None
 
     def valueReference(self):
+        """Returns the objekt attribute
+        
+        :returns: name of object attribute in database
+        :rtype: str
+        """
+
         return self.attribute
 
     def value(self):
+        """returns the value constraint, if alternative combobox is set, return that value, if lineedit, ruturn value freom line edit, else return from combobox
+        
+        :returns: the value constraint
+        :rtype: str
+        """
+
         if self.alt_comboboxText is not None:
             return self.alt_comboboxText[self.comboBox.currentText()]
         elif self.lineEdit is not None:
@@ -55,47 +72,65 @@ class AttributeForm(object):
 
     def setComboBox(self, comboBox):
         """Assigning comboBox
-        :param comboNox:
+
+        :param comboBox: combobox assisiated to attribute
         :type comboBox: QComboBox
         """
+
         self.comboBox = comboBox
 
     def setLineEdit(self, lineEdit):
         """Assigning lineEdit
-        :param lineEdit:
+
+        :param lineEdit: Linedit assisiated to attribute
         :type lineEdit: QLineEdit
         """
+
         self.lineEdit = lineEdit
 
     def getComboBox(self):
-        """:returns: returns the associated comboBox
+        """ Returns the assosiated combobox widget
+
+        :returns: returns the associated comboBox
         :rtype: QComboBox
         """
+
         return self.comboBox
 
     def getLineEdit(self):
-        """:returns: returns the associated lineEdit
+        """Returns the assosiated lineEdit widget if any
+
+        :returns: returns the associated lineEdit
         :rtype: QLineEdit
         """
+
         return self.lineEdit
 
     def getLabel(self):
-        """:returns: returns the associated lineEdit
+        """Returns the assisiated label widget if any
+        :returns: returns the associated label
         :rtype: QLabel
         """
+
         return self.label
 
 
     def getAttribute(self):
-        """:returns: returns the associated attribute name
+        """Returns the assosiated attriubte name
+
+        :returns: returns the associated attribute name
         :rtype: str
         """
+
         return self.attribute
 
     def getComboBoxCurrentText(self):
-        """:returns: returns the associated comboBox text, return None if no combobox is availeble
-        :rtype: QString, None
+        """Returns the assosoated combobox text
+
+        :returns: returns the associated comboBox text, return None if no combobox is availeble
+        :rtype: QString
         """
+
         if self.comboBox is not None:
             if self.alt_comboboxText: #If AttributForm has alternative text, return alternative text
                 return self.alt_comboboxText[self.comboBox.currentText()]
@@ -103,23 +138,30 @@ class AttributeForm(object):
         return None
 
     def getLineEditText(self):
-        """:returns: returns the lineEdit comboBox text, return None if no lineEdit is availeble
+        """Returns the lineEdit text
+
+        :returns: returns the lineEdit text, return None if no lineEdit is availeble
         :rtype: QString
         """
+
         if self.lineEdit is not None:
             return self.lineEdit.text()
         return None
 
     def setLineEditText(self, string):
         """Sett text in AttributeForm lineEdit
-        :param string:
-        :type str:
+
+        :param string: String to set in lineEdit
+        :type string: str
         """
+
         if self.lineEdit is not None:
             self.lineEdit.setText(string)
 
     def valudeValid(self):
         """checks if the attribute is valid and search ready
+
+        :returns: True if attrivute is valid, false if not
         :rtype: boolean
         """
 
@@ -141,6 +183,7 @@ class AttributeForm(object):
 
     def reset(self):
         """Resets form to defult"""
+
         if self.comboBox:
             self.comboBox.setCurrentIndex(0)
         if self.lineEdit:
@@ -148,10 +191,13 @@ class AttributeForm(object):
 
     def is_number(self, s):
         """Sett text in AttributeForm lineEdit
-        :param s:
-        :type str:
+
+        :param s: string to be change for being a number
+        :type s: str
+        :returns: tru if s is number, false if s in not a number
         :rtype: boolean
         """
+
         print("s: {}".format(s))
         print("type: {}".format(type(s)))
         try:

@@ -615,6 +615,7 @@ class Tilgjengelighet:
 
     def get_temppath(self, filename):
         """Creating a temperarly path for a temperary file
+        
         :param filename: String name for file
         :type filename: str, QString
 
@@ -652,7 +653,7 @@ class Tilgjengelighet:
         :param attributeForms: A list of witch attributes to hide in GUI
         :type attributeForms: list<AttributeForm>
         :param condition: The condition to show GUI parts
-        :type condotion: boolean
+        :type condition: boolean
         :param extra: include if gui consists of more than attributes that needs to be showed/hidden
         :type extra: list<QtWidgets>
         """
@@ -838,11 +839,10 @@ class Tilgjengelighet:
         """creates FE based on input, made to take less space in other method create_filtherencoding
 
         :param opperator: opperator for FE
-        :param valueReference: name of attribute for FE
-        :param value: value for FE
-
         :type opperator: str
+        :param valueReference: name of attribute for FE
         :type valueReference: str
+        :param value: value for FE
         :type value: str
         """
 
@@ -852,10 +852,11 @@ class Tilgjengelighet:
 
     def create_filtherencoding(self, attributeList):
         """creates FE based on user choices
+
         :param attributeList: list of all attriubtes for filterencoding
         :type attributeList: list<AttributeForms>
 
-        :returns: Filter Encoding
+        :returns: FilterEncoding
         :rtype: str
         """
 
@@ -982,6 +983,7 @@ class Tilgjengelighet:
     ############################## Selection and info of Objects ################################################
     def selectedObjects(self, selFeatures):
         """changing number of selected objects in infowidget and settning current selected object
+
         :param selFeatures: Selected features of layer
          """
         self.selFeatures = selFeatures
@@ -1067,8 +1069,8 @@ class Tilgjengelighet:
 
     def show_message(self, msg_text, msg_title=None, msg_info=None, msg_details=None, msg_type=None):
         """Show the user a message
-        :param msg_test: the tekst to show the user
-        :type msg_tekt: str
+        :param msg_text: the tekst to show the user
+        :type msg_text: str
 
         :param msg_title: the title of the message box
         :type msg_title: str
@@ -1108,6 +1110,16 @@ class Tilgjengelighet:
 
 
     def savePath(self, saveType, saveExtension): #find savepath
+        """Find the save path
+
+        :param saveType: The type of file to be saved
+        :type saveType: str
+        :param saveExtension: File extention (e.g .xls .png)
+        :type saveExtension: str
+        :returns: direktory path and file namle
+        :rtype: (str,str)
+        """
+
         dirPath = self.settings.value("/Tilgjengelighet/savePath", ".", type=str)
         #Open file expoorer and save file
         (filename, filter) = QFileDialog.getSaveFileNameAndFilter(self.iface.mainWindow(),

@@ -1,18 +1,22 @@
 class SavedSearch(object):
+    """Class made to save the choises made by user on a previus search"""
 
     def __init__(self, search_name, layer, tabIndex_main, tabIndex_friluft, tabIndex_tettsted):
-        """Constructor.
+        """Constructor
 
         :param search_name: The name of the search made (layer name)
-        :param layer: The layer or result from search
-        :param tabIndex_main: Main tab index at search
-        :param tabIndex_friluft: friluft tab index at search
-        :param tabIndex_tettsted: tettsted tab index at search
+        :type search_name: str
 
-        :type searchname: str
+        :param layer: The layer or result from search
         :type layer: QgsVectorLayer
+
+        :param tabIndex_main: Main tab index at search
         :type tabIndex_main: int
+
+        :param tabIndex_friluft: friluft tab index at search
         :type tabIndex_friluft: int
+
+        :param tabIndex_tettsted: tettsted tab index at search
         :type tabIndex_tettsted: int
         """
 
@@ -27,12 +31,14 @@ class SavedSearch(object):
 
     def add_attribute(self, attribute, current_index, current_lineText):
         """Add attribute with current index for combobx and current text for lineText Attributes are stored in dictionarys as key, while value is list of combobox indes and lintEdtid text
+        
         :param attribute: one attribute from filter interface
-        :param current_index: index of combobx at search
-        :param current_lineText: text of lineEdit at search
-
         :type attribute: AttributeForm
-        :type current_intex: int
+
+        :param current_index: index of combobx at search
+        :type current_index: int
+
+        :param current_lineText: text of lineEdit at search
         :type current_lineText: str
         """
 
@@ -40,6 +46,11 @@ class SavedSearch(object):
 
 
     def get_attributes(self):
-        """Returns dictionary of attributes"""
+        """Returns dictionary of attributes
+        
+        :returns: dictionary of attributes
+        :rtype: list<AttributeForm>
+        """
+
         return self.attributes
 
