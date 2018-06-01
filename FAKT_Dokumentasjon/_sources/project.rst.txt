@@ -1,0 +1,28 @@
+Filtrering og Analyse av Kartverkets Tilgjengelighetsdatabase
+=============================================================
+
+Dette prosjektet er gjort i sammarbeid med Statens kartver som en del av min master avhandling.
+
+Tilleggsfunksjonen har som hensikt å gjøre det enklere å få tilgang til Kartverkets database for tilgjengelighet. Den er laget som en plugin til QGIS, slik at alle fylker har mulighet til å bruke den uten å betale for lisenser
+
+
+English:
+
+This project is made in association with the Norwegian Mapping Authority as a part of my master thesis.
+
+The application is ment to make it easyer to access the Norwegian Mapping Authority database for universal design. It is made within QGIS so all countys in Norway can get access to the application without paying any license.
+
+
+Innstalasjon
+------------
+
+Dersom tilleggsfunksjonen er tilgjengelig i plugin mangaer, kan du åpne pluginmanager of søke etter tilgjengleighet. Klikk på tilleggsfunksjonen og installer 
+
+Dersom tilleggsfunksjonen ikke er tilgjengleig i plugin manger, kan den lastes ned fra https://github.com/KaspArno/Tilgjengelighet. Unzip filen, og legge mappen i :/.qgis2/python/plugins. Sørg for at mappen heter Tilgjengelighet, og ikke git-Tilgjengelighet eller noe annet, og at alle filene og undermappene ligger i denne mappen, og ikke i noen undermapper. Du burde nå kunne finne tilleggsfunksjonen i plugin manager.
+
+
+English:
+
+If the plugin is availeble in plugin manager, then open plugin manager and search for tilgjengelighet. Click on the plugin and install. 
+
+If the plugin is not availeble in plugin manager, then you can download it from https://github.com/KaspArno/Tilgjengelighet. Download the file and unzip it in :/.qgis2/python/plugins. Make sure the folders name is Tilgjengelighet, and not git-Tilgjengleighet, ant that all files and dubfolders in in this filder. You should now be able to find it in plugin manager.
