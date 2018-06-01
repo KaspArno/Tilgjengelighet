@@ -514,7 +514,7 @@ class Tilgjengelighet:
     def assign_combobox_baderampe(self):
         """Assigning a AttributeForm object to each option in Baderampe"""
 
-        rampe = AttributeForm(u"rampe", self.dlg.comboBox_baderampe_rampe)
+        rampe = AttributeForm(u"rampe", self.dlg.comboBox_baderampe_rampe, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
         rampeBredde = AttributeForm(u"rampeBredde", self.dlg.comboBox_baderampe_rampeBredde, self.dlg.lineEdit_baderampe_rampeBredde)
         rampeStigning = AttributeForm(u"rampeStigning", self.dlg.comboBox_baderampe_rampeStigning, self.dlg.lineEdit_baderampe_rampeStigning)
         handlist = AttributeForm(u"håndlist", self.dlg.comboBox_baderampe_handliste)
@@ -541,13 +541,13 @@ class Tilgjengelighet:
     def assign_combobox_fiskeplass(self):
         """Assigning a AttributeForm object to each option in Baderampe"""
 
-        rampe = AttributeForm(u"rampe", self.dlg.comboBox_fiskeplass_rampe, label=self.dlg.label_fiskeplass_rampe)
+        rampe = AttributeForm(u"rampe", self.dlg.comboBox_fiskeplass_rampe, label=self.dlg.label_fiskeplass_rampe, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
         dekke = AttributeForm(u"dekke", self.dlg.comboBox_fiskeplass_dekke)
         plankeavstand =  AttributeForm(u"plankeavstand  ", self.dlg.comboBox_fiskeplass_plankeavstand, self.dlg.lineEdit_fiskeplass_plankeavstand,  label=self.dlg.label_fiskeplass_plankeavstand)
         dekkeTilstand = AttributeForm(u"dekkeTilstand", self.dlg.comboBox_fiskeplass_dekke_tilstand)
         diameter = AttributeForm(u"diameter", self.dlg.comboBox_fiskeplass_snusirkel, self.dlg.lineEdit_fiskeplass_snusirkel)
-        rekkverk = AttributeForm(u"rekkverk", self.dlg.comboBox_fiskeplass_rekkverk)
-        stoppkant = AttributeForm(u"stoppkant", self.dlg.comboBox_fiskeplass_stoppkant)
+        rekkverk = AttributeForm(u"rekkverk", self.dlg.comboBox_fiskeplass_rekkverk, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
+        stoppkant = AttributeForm(u"stoppkant", self.dlg.comboBox_fiskeplass_stoppkant, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
         stoppkantHoyde = AttributeForm(u"stoppkantHøyde", self.dlg.comboBox_fiskeplass_stoppkant_hoyde, self.dlg.lineEdit_fiskeplass_stoppkant_hoyde, label=self.dlg.label_fiskeplass_stoppkant_hoyde)
 
         rampeBredde = AttributeForm(u"rampeBredde", self.dlg.comboBox_fiskeplass_rampe_bredde, self.dlg.lineEdit_fiskeplass_rampe_bredde, label=self.dlg.label_fiskeplass_rampe_bredde)
