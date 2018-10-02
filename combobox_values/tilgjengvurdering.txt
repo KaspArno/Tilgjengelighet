@@ -1,4 +1,4 @@
-tilgjengelig
-vanskeligTilgjengelig
-ikkeTilgjengelig
-ikkeVurdert
+Tilgjengelig
+Delvistilgjengelig
+Ikke tilgjengelig
+Ikke vurdert

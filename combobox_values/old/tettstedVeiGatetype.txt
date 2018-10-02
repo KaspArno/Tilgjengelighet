@@ -1,0 +1,11 @@
+annet
+fortau
+gågate
+gågateOgTorg
+gangfelt
+gangvei
+gangveiOgSykkelvei
+gate
+sti
+sykkelvei
+torg

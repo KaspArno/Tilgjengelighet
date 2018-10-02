@@ -1,7 +1,7 @@
-asfalt
-betong
-brostein
-gress
-grus
-skogsbunn
-stein
+Asfalt
+Betong
+Brostein
+Gress
+Grus
+Skogsbunn
+Stein

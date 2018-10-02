@@ -1,0 +1,4 @@
+tilgjengelig
+vanskeligTilgjengelig
+ikkeTilgjengelig
+ikkeVurdert

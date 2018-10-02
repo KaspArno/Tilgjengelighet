@@ -1,4 +1,4 @@
-﻿mangler
-beggeSider
-venstreSide
-høyreSide
+﻿Mangler
+Begge sider
+Venstre side
+Høyre side

@@ -1,19 +1,19 @@
-﻿kultur
-legeHelsebygning
-offentligForvaltning
-hotell
-undervisning
-butikk
-beredskap
-transport
-idrett
-forbundStiftelserRådgivning
-omsorgsbolig
-barnehage
-aktivitetsOgDagsenter
-toalett
-religion
-annet
-annenBygning
-servering
-turistkontor
+﻿Kultur
+Lege/helsebygning
+Offentlig forvaltning
+Hotell
+Undervisning
+Butikk
+Beredskap
+Transport
+Idrett
+Forbund/Stiftelser/Rådgivning
+Omsorgsbolig
+Barnehage
+Aktivitets- og dagsenter
+Toalett
+Religion
+Annet
+Annen bygning
+Servering
+Turistkontor
