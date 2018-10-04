@@ -49,7 +49,7 @@ import resources_rc
 # Import the code for the dialog
 from Tilgjengelighet_dialog import TilgjengelighetDialog
 from tabledialog import TableDialog
-from infoWidgetDialog import infoWidgetDialog
+from infowidgetdialog import infoWidgetDialog
 
 from AttributeForm import AttributeForm #Storing user made attribute information
 from SavedSearch import SavedSearch #Save search choises for later use
@@ -142,7 +142,7 @@ class Tilgjengelighet:
         self.path_dorapner = self.plugin_dir + r"\combobox_values\dorapner.txt"
         self.path_kontrast = self.plugin_dir + r"\combobox_values\kontrast.txt"
         self.path_handlist = self.plugin_dir + r"\combobox_values\handlist.txt"
-        self.path_ledelinje = self.plugin_dir + r"\combobox_values\tettstedVeiLedelinje.txt"
+        self.path_ledelinje = self.plugin_dir + r"\combobox_values\ledelinje.txt"
 
         self.path_byggfunksjon = self.plugin_dir + r"\combobox_values\dortype.txt"
         self.path_gatetype = self.plugin_dir + r'\combobox_values\tettstedVeiGatetype.txt'
@@ -929,9 +929,7 @@ class Tilgjengelighet:
     def filtrer(self):
         """Makes FE and layer based on choises from user an current tab"""
 
-        print (u"NewFilterStart")
-
-        if not self.current_search_layer is None: #Remove selection for previus search layer
+        if self.current_search_layer is not None: #Remove selection for previus search layer
             self.current_search_layer.removeSelection()
 
         self.layer_name = self.dlg.lineEdit_search_name.text() #gives search layer a name
@@ -991,7 +989,11 @@ class Tilgjengelighet:
             self.dlg.close() #closing main window for easyer visualisation of results
 
         else:
-            self.show_message("Ingen objekter funnet", msg_title="layer not valid", msg_type=QMessageBox.Warning) #Messeage if layer is not valid/not objects was found
+            #self.show_message("Ingen objekter funnet", msg_title="layer not valid", msg_type=QMessageBox.Warning) #Messeage if layer is not valid/not objects was found
+            self.show_message("WFS client currently down", msg_title="WFS-Client down", msg_type=QMessageBox.Warning)
+            self.infoWidget.show()
+            self.show_tabell()
+            self.dlg.close()
 
 
         print(u"NewFilterEnd")
