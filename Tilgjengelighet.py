@@ -132,26 +132,30 @@ class Tilgjengelighet:
             u'Turvei' : u'FriluftTurvei', u'HC-Parkeringsplass' : u'FriluftHCparkering', 
             u'Parkeringsområde' : u'FriluftParkeringsområde', u'Friluftsområder' : u'FriluftFriluftsområde',
             u'Gapahuk' : u'FriluftGapahuk', u'Grill-/Bålplass' : u'FriluftGrillBålplass',
-            u'Sittegruppe' : u'FriluftSittegruppe', u'Toalett' : u'FriluftToalett'}
+            u'Sittegruppe' : u'FriluftSittegruppe', u'Toalett' : u'FriluftToalett',
+            u'Skiløype' : u'FriluftSkiløype'}
 
         #Path to combobox values
         self.path_tilgjenglighetsvurdering = self.plugin_dir + r"\combobox_values\tilgjengvurdering.txt"
         self.path_more_less = self.plugin_dir + r'\combobox_values\mer_mindre.txt'
         self.path_boolean = self.plugin_dir + r'\combobox_values\boolean.txt'
-        self.path_dortype = self.plugin_dir + r"\combobox_values\tettstedInngangByggningstype.txt"
+        self.path_dortype = self.plugin_dir + r"\combobox_values\dortype.txt"
         self.path_dorapner = self.plugin_dir + r"\combobox_values\dorapner.txt"
         self.path_kontrast = self.plugin_dir + r"\combobox_values\kontrast.txt"
         self.path_handlist = self.plugin_dir + r"\combobox_values\handlist.txt"
         self.path_ledelinje = self.plugin_dir + r"\combobox_values\ledelinje.txt"
 
-        self.path_byggfunksjon = self.plugin_dir + r"\combobox_values\dortype.txt"
+        self.path_byggfunksjon = self.plugin_dir + r"\combobox_values\tettstedInngangByggningstype.txt"
         self.path_gatetype = self.plugin_dir + r'\combobox_values\tettstedVeiGatetype.txt'
         self.path_dekke_tettsted = self.plugin_dir + r"\combobox_values\tettstedDekke.txt"
         self.path_dekketilstand = self.plugin_dir + r"\combobox_values\dekkeTilstand.txt"
 
-        self.path_dekke_friluft = self.plugin_dir + r'\combobox_values\dekkeTilstand.txt'
-
-
+        self.path_dekke_friluft = self.plugin_dir + r'\combobox_values\friluftDekke.txt'
+        self.path_spesialFotrutetype = self.plugin_dir + r'\combobox_values\spesialFotrutetype.txt'
+        self.path_belysning = self.plugin_dir + r'\combobox_values\belysning.txt'
+        self.path_frihoyde = self.plugin_dir + r'\combobox_values\frihoyde.txt'
+        self.path_plasstype = self.plugin_dir + r'\combobox_values\friluftPlasstype.txt'
+        self.path_byggtype = self.plugin_dir + r'\combobox_values\byggtype.txt'
 
         #Open Layers, background layers
         self._olLayerTypeRegistry = WebLayerTypeRegistry(self)
@@ -358,6 +362,15 @@ class Tilgjengelighet:
         #Create attributes object friluft (Needs futher methods for filling rest of friluft)
         self.assign_combobox_baderampe()
         self.assign_combobox_fiskeplass()
+        self.assign_combobox_turvei()
+        self.assign_combobox_hc_parkering_friluft()
+        self.assign_combobox_parkeringsomraade_friluft()
+        self.assign_combobox_friluftomrader()
+        self.assign_combobox_gapahuk()
+        self.assign_combobox_grillbalplass()
+        self.assign_combobox_sittegruppe()
+        self.assign_combobox_toalett()
+        self.assign_combobox_ski()
 
         #Dictionarys for all attributes in different object type. Key equals name of tab
         self.attributes_tettsted = {
@@ -365,7 +378,12 @@ class Tilgjengelighet:
             u'Parkeringsområde' : self.attributes_pomrade, u"Vei" : self.attributes_vei}
 
         self.attributes_friluft = {
-            u"Baderampe" : self.attributes_baderampe, u"Fiskeplass" : self.attributes_fiskeplass
+            u"Baderampe" : self.attributes_baderampe, u"Fiskeplass" : self.attributes_fiskeplass,
+            u"Turvei" : self.attributes_turvei, u"HC-Parkeringsplass" : self.attributes_hcparkering,
+            u"Parkeringsområde" : self.attributes_pomrade, u"Friluftsområder" : self.attributes_friluftsomrader,
+            u"Gapahuk" : self.attributes_gapahuk, u"Grill-/Bålplass" : self.attributes_balplass,
+            u"Sittegruppe" : self.attributes_sittegruppe, u"Toalett" : self.attributes_toalett,
+            u"Skiløype" : self.attributes_ski
         }
 
         
@@ -505,27 +523,27 @@ class Tilgjengelighet:
     def assign_combobox_parkeringsomraade(self):
         """Assigning a AttributeForm object to each option in parkeringsområde"""
 
-        self.overbygg_pomrade = AttributeForm("overbygg", self.dlg.comboBox_overbygg_pomrade, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
-        self.kapasitetPersonbiler = AttributeForm("kapasitetPersonbiler", self.dlg.comboBox_kapasitetPersonbiler, self.dlg.lineEdit_kapasitetPersonbiler)
-        self.kapasitetUU = AttributeForm("antallUU", self.dlg.comboBox_kapasitetUU, self.dlg.lineEdit_kapasitetUU)
-        self.dekke_pomrade = AttributeForm("dekke", self.dlg.comboBox_dekke_pomrade)
-        self.dekkeTilstand_pomrade = AttributeForm("dekkeTilstand", self.dlg.comboBox_dekkeTilstand_pomrade)
+        overbygg_pomrade = AttributeForm("overbygg", self.dlg.comboBox_overbygg_pomrade, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
+        kapasitetPersonbiler = AttributeForm("kapasitetPersonbiler", self.dlg.comboBox_kapasitetPersonbiler, self.dlg.lineEdit_kapasitetPersonbiler)
+        kapasitetUU = AttributeForm("antallUU", self.dlg.comboBox_kapasitetUU, self.dlg.lineEdit_kapasitetUU)
+        dekke_pomrade = AttributeForm("dekke", self.dlg.comboBox_dekke_pomrade)
+        dekkeTilstand_pomrade = AttributeForm("dekkeTilstand", self.dlg.comboBox_dekkeTilstand_pomrade)
 
-        self.manuell_rullestol_pomrade = AttributeForm("tilgjengvurderingRulleAuto", self.dlg.comboBox_manuell_rullestol_pomrade)
+        manuell_rullestol_pomrade = AttributeForm("tilgjengvurderingRulleAuto", self.dlg.comboBox_manuell_rullestol_pomrade)
 
-        self.attributes_pomrade = [self.overbygg_pomrade, self.kapasitetPersonbiler, self.kapasitetUU, self.dekke_pomrade, self.dekkeTilstand_pomrade, self.manuell_rullestol_pomrade]
-        self.attributes_pomrade_gui = [self.dekke_pomrade, self.dekkeTilstand_pomrade, self.manuell_rullestol_pomrade]
-        self.attributes_pomrade_mer_mindre = [self.kapasitetPersonbiler, self.kapasitetUU]
+        self.attributes_pomrade = [overbygg_pomrade, kapasitetPersonbiler, kapasitetUU, dekke_pomrade, dekkeTilstand_pomrade, manuell_rullestol_pomrade]
+        attributes_pomrade_gui = [dekke_pomrade, dekkeTilstand_pomrade, manuell_rullestol_pomrade]
+        attributes_pomrade_mer_mindre = [kapasitetPersonbiler, kapasitetUU]
 
         #fill combobox
-        for attributt in self.attributes_pomrade_mer_mindre:
+        for attributt in attributes_pomrade_mer_mindre:
             self.fill_combobox(attributt.getComboBox(), self.path_more_less)
 
-        self.fill_combobox(self.overbygg_pomrade.getComboBox(), self.path_boolean)
-        self.fill_combobox(self.dekke_pomrade.getComboBox(), self.path_dekke_tettsted)
-        self.fill_combobox(self.dekkeTilstand_pomrade.getComboBox(), self.path_dekketilstand)
+        self.fill_combobox(overbygg_pomrade.getComboBox(), self.path_boolean)
+        self.fill_combobox(dekke_pomrade.getComboBox(), self.path_dekke_tettsted)
+        self.fill_combobox(dekkeTilstand_pomrade.getComboBox(), self.path_dekketilstand)
         
-        self.fill_combobox(self.manuell_rullestol_pomrade.getComboBox(), self.path_tilgjenglighetsvurdering)
+        self.fill_combobox(manuell_rullestol_pomrade.getComboBox(), self.path_tilgjenglighetsvurdering)
 
 
     def assign_combobox_baderampe(self):
@@ -608,6 +626,290 @@ class Tilgjengelighet:
         self.hide_show_gui([stoppkantHoyde], self.dlg.comboBox_fiskeplass_stoppkant.currentText() == u"Ja")
         self.dlg.comboBox_fiskeplass_stoppkant.currentIndexChanged.connect(lambda: self.hide_show_gui([stoppkantHoyde], self.dlg.comboBox_fiskeplass_stoppkant.currentText() == u"Ja"))
 
+
+    def assign_combobox_turvei(self):
+        """Assigning a AttributeForm object to each option in Turvei"""
+
+        spesialFotrutetype = AttributeForm(u"SpesialFotrutetype", self.dlg.comboBox_turvei_spesialFotrutetype)
+        dekke = AttributeForm(u"dekke", self.dlg.comboBox_turvei_dekke)
+        dekkeTilstand = AttributeForm(u"dekkeTilstand", self.dlg.comboBox_turvei_dekkeTilstand)
+        bredde = AttributeForm(u"bredde", self.dlg.comboBox_turvei_bredde, self.dlg.lineEdit_turvei_bredde)
+        stigning = AttributeForm(u"stigning", self.dlg.comboBox_turvei_stigning, self.dlg.lineEdit_turvei_stigning)
+        tverfall = AttributeForm(u"tverfall", self.dlg.comboBox_turvei_tverfall, self.dlg.lineEdit_turvei_tverfall)
+        sperrebom = AttributeForm(u"sperrebom", self.dlg.comboBox_turvei_sperrebom)
+        ledelinje = AttributeForm(u"ledelinje", self.dlg.comboBox_turvei_ledelinje)
+        ledelinjeKontrakst = AttributeForm(u"ledelinjeKontrakst", self.dlg.comboBox_turvei_ledelinjeKontrast)
+        belysning = AttributeForm(u"belysning", self.dlg.comboBox_turvei_belysning)
+        frihoyde = AttributeForm(u"frihøyde", self.dlg.comboBox_turvei_frihoyde)
+
+        tilgjengvurderingRullestol = AttributeForm(u"tilgjengvurderingRulleAuto", self.dlg.comboBox_turvei_manuell_rullestol)
+        tilgjengvurderingElRullestol = AttributeForm(u"tilgjengvurderingElRullestol", self.dlg.comboBox_turvei_electrisk_rullestol)
+        tilgjengvurderingSyn = AttributeForm(u"tilgjengvurderingSyn", self.dlg.comboBox_turvei_syn)
+
+        self.attributes_turvei = [spesialFotrutetype, dekke, dekkeTilstand, bredde, stigning, tverfall, sperrebom, ledelinje, ledelinjeKontrakst, belysning, frihoyde]
+        attributes_mer_mindre = [bredde, stigning, tverfall]
+
+        #Fill combobox
+        for attributt in attributes_mer_mindre:
+            self.fill_combobox(attributt.getComboBox(), self.path_more_less)
+
+        self.fill_combobox(spesialFotrutetype.getComboBox(), self.path_spesialFotrutetype)
+        self.fill_combobox(dekke.getComboBox(), self.path_dekke_friluft)
+        self.fill_combobox(dekkeTilstand.getComboBox(), self.path_dekketilstand)
+        self.fill_combobox(sperrebom.getComboBox(), self.path_boolean)
+        self.fill_combobox(ledelinje.getComboBox(), self.path_ledelinje)
+        self.fill_combobox(ledelinjeKontrakst.getComboBox(), self.path_kontrast)
+        self.fill_combobox(belysning.getComboBox(), self.path_belysning)
+        self.fill_combobox(frihoyde.getComboBox(), self.path_frihoyde)
+
+        self.fill_combobox(tilgjengvurderingRullestol.getComboBox(), self.path_tilgjenglighetsvurdering)
+        self.fill_combobox(tilgjengvurderingElRullestol.getComboBox(), self.path_tilgjenglighetsvurdering)
+        self.fill_combobox(tilgjengvurderingSyn.getComboBox(), self.path_tilgjenglighetsvurdering)
+
+
+    def assign_combobox_hc_parkering_friluft(self):
+        """Assigning a AttributeForm object to each option in hc parkering friluft"""
+
+        skiltet = AttributeForm("skiltet", self.dlg.comboBox_hcpark_friluft_skiltet, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
+        merket = AttributeForm("merket", self.dlg.comboBox_hcpark_friluft_merket, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
+
+        bredde_hcp_merke = AttributeForm("bredde", self.dlg.comboBox_hcpark_friluft_bredde, self.dlg.lineEdit_hcpark_friluft_bredde, label=self.dlg.label_hcpark_friluft_bredde)
+        lengde_hcp_merke = AttributeForm("lengde", self.dlg.comboBox_hcpark_friluft_lengde, self.dlg.lineEdit_hcpark_friluft_lengde, label=self.dlg.label_hcpark_friluft_lengde)
+
+        manuell_rullestol_hcparkering = AttributeForm("tilgjengvurderingRulleAuto", self.dlg.comboBox_hcpark_friluft_manuell_rullestol)
+        elektrisk_rullestol_hcparkering = AttributeForm("tilgjengvurderingElRull", self.dlg.comboBox_hcpark_friluft_elektrisk_rullestol)
+
+        self.attributes_hcparkering = [skiltet, merket, bredde_hcp_merke, lengde_hcp_merke, manuell_rullestol_hcparkering, elektrisk_rullestol_hcparkering]
+        attributes_hcparkering_mer_mindre = [bredde_hcp_merke, lengde_hcp_merke]
+
+        #fill combobox
+        for attributt in attributes_hcparkering_mer_mindre:
+            self.fill_combobox(attributt.getComboBox(), self.path_more_less)
+
+        self.fill_combobox(skiltet.getComboBox(), self.path_boolean)
+        self.fill_combobox(merket.getComboBox(), self.path_boolean)
+        
+        self.fill_combobox(manuell_rullestol_hcparkering.getComboBox(), self.path_tilgjenglighetsvurdering)
+        self.fill_combobox(elektrisk_rullestol_hcparkering.getComboBox(), self.path_tilgjenglighetsvurdering)
+
+        #Set what to be hidden in form and conditions for showing parts
+        self.hide_show_gui([bredde_hcp_merke, lengde_hcp_merke], self.dlg.comboBox_merket.currentText() == "Ja")
+        self.dlg.comboBox_merket.currentIndexChanged.connect(lambda: self.hide_show_gui([bredde_hcp_merke, lengde_hcp_merke], self.dlg.comboBox_merket.currentText() == "Ja"))
+
+
+    def assign_combobox_parkeringsomraade_friluft(self):
+        """Assigning a AttributeForm object to each option in parkeringsområde_friluft"""
+
+        overbygg_pomrade = AttributeForm("overbygg", self.dlg.comboBox_pomrade_friluft_overbygg, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
+        kapasitetPersonbiler = AttributeForm("kapasitetPersonbiler", self.dlg.comboBox_pomrade_friluft_kapasitetPersonbiler, self.dlg.lineEdit_pomrade_friluft_kapasitetPersonbiler)
+        kapasitetUU = AttributeForm("antallUU", self.dlg.comboBox_pomrade_friluft_kapasitetUU, self.dlg.lineEdit_pomrade_friluft_kapasitetUU)
+        dekke_pomrade = AttributeForm("dekke", self.dlg.comboBox_pomrade_friluft_pomrade)
+        dekkeTilstand_pomrade = AttributeForm("dekkeTilstand", self.dlg.comboBox_pomrade_friluft_dekkeTilstand)
+
+        manuell_rullestol_pomrade = AttributeForm("tilgjengvurderingRulleAuto", self.dlg.comboBox_pomrade_friluft_manuell_rullestol)
+
+        self.attributes_pomrade = [overbygg_pomrade, kapasitetPersonbiler, kapasitetUU, dekke_pomrade, dekkeTilstand_pomrade, manuell_rullestol_pomrade]
+        attributes_pomrade_gui = [dekke_pomrade, dekkeTilstand_pomrade, manuell_rullestol_pomrade]
+        attributes_pomrade_mer_mindre = [kapasitetPersonbiler, kapasitetUU]
+
+        #fill combobox
+        for attributt in attributes_pomrade_mer_mindre:
+            self.fill_combobox(attributt.getComboBox(), self.path_more_less)
+
+        self.fill_combobox(overbygg_pomrade.getComboBox(), self.path_boolean)
+        self.fill_combobox(dekke_pomrade.getComboBox(), self.path_dekke_tettsted)
+        self.fill_combobox(dekkeTilstand_pomrade.getComboBox(), self.path_dekketilstand)
+        
+        self.fill_combobox(manuell_rullestol_pomrade.getComboBox(), self.path_tilgjenglighetsvurdering)
+
+
+    def assign_combobox_friluftomrader(self):
+        """Assign a AttributeForm object to each option in friluftsområder"""
+
+        navn = AttributeForm("navn", lineEdit=self.dlg.lineEdit_friluftsomrader_navn)
+        naturbasenummber = AttributeForm("navn", lineEdit=self.dlg.lineEdit_friluftsomrader_navn)
+
+        self.attributes_friluftsomrader = [navn, naturbasenummber]
+
+
+    def assign_combobox_gapahuk(self):
+        """Assigning a AttributeForm object to each option in gapahuk"""
+        
+        rampe = AttributeForm("rampe", self.dlg.comboBox_gapahuk_rampe, comboBoxText={"" : "", "Ja" : "1", "Nei" : "0"})
+        bredde = AttributeForm("breddeInngang", self.dlg.comboBox_gapahuk_bredde, self.dlg.lineEdit_gapahuk_bredde)
+        hoyde = AttributeForm("høydeInngang", self.dlg.comboBox_gapahuk_hoyde, self.dlg.lineEdit_gapahuk_hoyde)
+        terskel = AttributeForm(u'terskelH\xf8yde', self.dlg.comboBox_gapahuk_terskelhoyde, self.dlg.lineEdit_gapahuk_terskelhoyde)
+        kontrast = AttributeForm("kontrast", self.dlg.comboBox_gapahuk_kontrast)
+        snusirkel = AttributeForm("diameter", self.dlg.comboBox_gapahuk_snusirkel, self.dlg.lineEdit_gapahuk_snusirkel)
+        dekke = AttributeForm("dekke", self.dlg.comboBox_gapahuk_dekke)
+        dekkeTilstand = AttributeForm("dekkeTilstand", self.dlg.comboBox_gapahuk_dekke_tilstand)
+
+        rampe_stigning = AttributeForm("rampeStigning", self.dlg.comboBox_gapahuk_rmp_stigning, self.dlg.lineEdit_gapahuk_rmp_stigning, label=self.dlg.label_gapahuk_rmp_stigning)
+        rampe_bredde = AttributeForm("rampeBredde", self.dlg.comboBox_gapahuk_rmp_bredde, self.dlg.lineEdit_gapahuk_rmp_bredde, label=self.dlg.label_gapahuk_rmp_bredde)
+        handlist = AttributeForm(u'h\xe5ndlist', self.dlg.comboBox_handlist_handliste, label=self.dlg.label_gapahuk_handliste)
+        handlist1 = AttributeForm(u'håndlistHøydeØvre', self.dlg.comboBox_gapahuk_hand1, self.dlg.lineEdit_gapahuk_hand1, label=self.dlg.label_gapahuk_hand1)
+        handlist2 = AttributeForm(u'håndlistHøydeNedre', self.dlg.comboBox_gapahuk_hand2, self.dlg.lineEdit_gapahuk_hand2, label=self.dlg.label_gapahuk_hand2)
+        rmp_tilgjengelig = AttributeForm("rampeTilgjengelig", self.dlg.comboBox_gapahuk_rmp_tilgjengelig, label=self.dlg.label_gapahuk_rmp_tilgjengelig)
+
+        manuellRullestol = AttributeForm("tilgjengvurderingRulleAuto", self.dlg.comboBox_gapahuk_manuell_rullestol)
+        elektriskRullestol = AttributeForm("tilgjengvurderingElRull", self.dlg.comboBox_gapahuk_el_rullestol)
+        synshemmet = AttributeForm("tilgjengvurderingSyn", self.dlg.comboBox_gapahuk_syn)
+
+        self.attributes_gapahuk = [rampe, bredde, hoyde, terskel, kontrast, snusirkel, dekke, dekkeTilstand, rampe_stigning, rampe_bredde, handlist, handlist1, handlist2, rmp_tilgjengelig, manuellRullestol, elektriskRullestol, synshemmet]
+        attributes_mer_mindre = [bredde, hoyde, terskel, snusirkel, rampe_stigning, rampe_bredde, handlist1, handlist2]
+        attributes_rampe = [rampe_stigning, rampe_bredde, handlist, handlist1, handlist2, rmp_tilgjengelig]
+
+        #fill combobox
+        for attributt in attributes_mer_mindre:
+            self.fill_combobox(attributt.getComboBox(), self.path_more_less)
+
+        self.fill_combobox(rampe.getComboBox(), self.path_boolean)
+        self.fill_combobox(kontrast.getComboBox(), self.path_kontrast)
+        self.fill_combobox(dekke.getComboBox(), self.path_dekke_friluft)
+        self.fill_combobox(dekkeTilstand.getComboBox(), self.path_dekketilstand)
+
+        self.fill_combobox(handlist.getComboBox(), self.path_kontrast)
+        self.fill_combobox(rmp_tilgjengelig.getComboBox(), self.path_tilgjenglighetsvurdering)
+
+        self.fill_combobox(manuellRullestol.getComboBox(), self.path_tilgjenglighetsvurdering)
+        self.fill_combobox(elektriskRullestol.getComboBox(), self.path_tilgjenglighetsvurdering)
+        self.fill_combobox(synshemmet.getComboBox(), self.path_tilgjenglighetsvurdering)
+
+        #Set what to be hidden in form and conditions for showing parts
+        self.hide_show_gui(attributes_rampe, self.dlg.comboBox_gapahuk_rampe.currentText() == u"Ja", [self.dlg.label_gapahuk_rampe_title, self.dlg.line_gapahuk_title_line, self.dlg.line_gapahuk_divider])
+        self.dlg.comboBox_gapahuk_rampe.currentIndexChanged.connect(lambda: self.hide_show_gui(attributes_rampe, self.dlg.comboBox_gapahuk_rampe.currentText() == u"Ja", [self.dlg.label_gapahuk_rampe_title, self.dlg.line_gapahuk_title_line, self.dlg.line_gapahuk_divider]))
+
+
+    def assign_combobox_grillbalplass(self):
+        """Assigning an AttributeForm object to each option grill-/bålplass"""
+
+        plasstype = AttributeForm("plasstype", self.dlg.comboBox_balplass_plasstype)
+        dekke = AttributeForm("dekke", self.dlg.comboBox_balplass_dekke)
+        dekkeTilstand = AttributeForm("dekkeTilstand", self.dlg.comboBox_balplass_dekketilstand)
+        helning = AttributeForm("helning", self.dlg.comboBox_balplass_helning, self.dlg.lineEdit_balplass_helning)
+
+        manuellRullestol = AttributeForm("tilgjengvurderingRulleAuto", self.dlg.comboBox_balplass_manuell_rullestol)
+
+        self.attributes_balplass = [plasstype, dekke, dekkeTilstand, helning, manuellRullestol]
+
+        self.fill_combobox(plasstype.getComboBox(), self.path_plasstype)
+        self.fill_combobox(dekke.getComboBox(), self.path_dekke_friluft)
+        self.fill_combobox(dekkeTilstand.getComboBox(), self.path_dekketilstand)
+        self.fill_combobox(helning.getComboBox(), self.path_more_less)
+        self.fill_combobox(manuellRullestol.getComboBox(), self.path_tilgjenglighetsvurdering)
+
+
+    def assign_combobox_sittegruppe(self):
+        """Assigning an AttributeForm object to each option in Sittegruppe"""
+
+        dekke = AttributeForm("dekke", self.dlg.comboBox_sittegruppe_dekke)
+        dekkeTilstand = AttributeForm("dekkeTilstand", self.dlg.comboBox_sittegruppe_dekkeTilstand)
+        helning = AttributeForm("helning", self.dlg.comboBox_sittegruppe_helning, self.dlg.lineEdit_sittegruppe_helning)
+        bordhoyde = AttributeForm("høydeBord", self.dlg.comboBox_sittegruppe_hoyde, self.dlg.lineEdit_hoyde_sittegruppe)
+        bordutsikt = AttributeForm("utsikkBord", self.dlg.comboBox_sittegruppe_utsikt, self.dlg.lineEdit_sittegruppe_utsikt)
+
+        manuellRullestol = AttributeForm("tilgjengvurderingRulleAuto", self.dlg.comboBox_sittegruppe_manuell_rullestol)
+
+        self.attributes_sittegruppe = [dekke, dekkeTilstand, helning, bordhoyde, bordutsikt, manuellRullestol]
+        attributes_mer_mindre = [helning, bordhoyde, bordutsikt]
+
+        #fill combobox
+        for attributt in attributes_mer_mindre:
+            self.fill_combobox(attributt.getComboBox(), self.path_more_less)
+
+        self.fill_combobox(dekke.getComboBox(), self.path_dekke_friluft)
+        self.fill_combobox(dekkeTilstand.getComboBox(), self.path_dekketilstand)
+
+
+    def assign_combobox_toalett(self):
+        """Assigning an AttributeForm object to each option in Sittegruppe"""
+
+        byggtype = AttributeForm("byggtype", self.dlg.comboBox_toalett_byggtype)
+        rampe = AttributeForm("rampe", self.dlg.comboBox_toalett_rampe)
+        dortype = AttributeForm(u'dørtype', self.dlg.comboBox_toalett_dortype)
+        dorapner = AttributeForm(u'døråpner', self.dlg.comboBox_toalett_dorapner)
+        dorbredde = AttributeForm("breddeinngang", self.dlg.comboBox_toalett_bredde, self.dlg.lineEdit_toalett_bredde)
+        terskel = AttributeForm(u'terskelH\xf8yde', self.dlg.comboBox_toalett_terskel, self.dlg.lineEdit_toalett_terskel)
+        kontrast = AttributeForm("kontrastInngang", self.dlg.comboBox_toalett_kontrast)
+        belysning = AttributeForm("belysningInne", self.dlg.comboBox_toalett_belysning)
+        snusirkel = AttributeForm("diameter", self.dlg.comboBox_toalett_snusirkel, self.dlg.lineEdit_toalett_snusirkel)
+
+        rampe_stigning = AttributeForm("rampeStigning", self.dlg.comboBox_toalett_rmp_stigning, self.dlg.lineEdit_toalett_rmp_stigning, label=self.dlg.label_lineEdit_toalett_rmp_stigning)
+        rampe_bredde = AttributeForm("rampeBredde", self.dlg.comboBox_toalett_rmp_bredde, self.dlg.lineEdit_toalett_rmp_bredde, label=self.dlg.label_toalett_rmp_bredde)
+        handlist = AttributeForm(u'h\xe5ndlist', self.dlg.comboBox_toalett_handliste, label=self.dlg.label_toalett_handliste)
+        handlist1 = AttributeForm(u'håndlistHøydeØvre', self.dlg.comboBox_toalett_hand1, self.dlg.lineEdit_toalett_hand1, label=self.dlg.label_toalett_hand1)
+        handlist2 = AttributeForm(u'håndlistHøydeNedre', self.dlg.comboBox_toalett_hand2, self.dlg.lineEdit_toalett_hand2, label=self.dlg.label_toalett_hand2)
+        rmp_tilgjengelig = AttributeForm("rampeTilgjengelig", self.dlg.comboBox_toalett_rmp_tilgjengelig, label=self.dlg.label_toalett_rmp_tilgjengelig)
+
+        omkledning = AttributeForm("omkledningTilgjengelig", self.dlg.comboBox_toalett_omkledning)
+        sesrvant = AttributeForm("servantTilgjengelig", self.dlg.comboBox_toalett_servant)
+        wc = AttributeForm("wcTilgjengelig", self.dlg.comboBox_toalett_wc)
+        manuellRullestol = AttributeForm("tilgjengvurderingRulleAuto", self.dlg.comboBox_toalett_manuell_rullestol)
+        elektriskRullestol = AttributeForm("tilgjengvurderingElRull", self.dlg.comboBox_toalett_el_rullestol)
+        synshemmet = AttributeForm("tilgjengvurderingSyn", self.dlg.comboBox_toalett_syn)
+
+        self.attributes_toalett = [byggtype, rampe, dortype, dorapner, dorbredde, terskel, kontrast, belysning, snusirkel, rampe_stigning, rampe_bredde, handlist, handlist1, handlist2, rmp_tilgjengelig, omkledning, sesrvant, wc, manuellRullestol, elektriskRullestol, synshemmet]
+        attributes_mer_mindre = [dorbredde, terskel, snusirkel, rampe_stigning, rampe_bredde, handlist1, handlist2]
+        attributes_rampe = [rampe_stigning, rampe_bredde, handlist, handlist1, handlist2, rmp_tilgjengelig]
+
+        #fill combobox
+        for attributt in attributes_mer_mindre:
+            self.fill_combobox(attributt.getComboBox(), self.path_more_less)
+
+        self.fill_combobox(byggtype.getComboBox(), self.path_byggtype)
+        self.fill_combobox(rampe.getComboBox(), self.path_boolean)
+        self.fill_combobox(dortype.getComboBox(), self.path_dortype)
+        self.fill_combobox(dorapner.getComboBox(), self.path_dorapner)
+        self.fill_combobox(kontrast.getComboBox(), self.path_kontrast)
+        self.fill_combobox(belysning.getComboBox(), self.path_belysning)
+        
+        self.fill_combobox(handlist.getComboBox(), self.path_handlist)
+        self.fill_combobox(rmp_tilgjengelig.getComboBox(), self.path_tilgjenglighetsvurdering)
+
+        self.fill_combobox(omkledning.getComboBox(), self.path_tilgjenglighetsvurdering)
+        self.fill_combobox(sesrvant.getComboBox(), self.path_tilgjenglighetsvurdering)
+        self.fill_combobox(wc.getComboBox(), self.path_tilgjenglighetsvurdering)
+        self.fill_combobox(manuellRullestol.getComboBox(), self.path_tilgjenglighetsvurdering)
+        self.fill_combobox(elektriskRullestol.getComboBox(), self.path_tilgjenglighetsvurdering)
+        self.fill_combobox(synshemmet.getComboBox(), self.path_tilgjenglighetsvurdering)
+
+        #Set what to be hidden in form and conditions for showing parts
+        self.hide_show_gui(attributes_rampe, self.dlg.comboBox_toalett_rampe.currentText() == u"Ja", [self.dlg.label_toalett_rampe_title, self.dlg.line_toalett_rampe, self.dlg.line_toalett_dividing])
+        self.dlg.comboBox_toalett_rampe.currentIndexChanged.connect(lambda: self.hide_show_gui(attributes_rampe, self.dlg.comboBox_toalett_rampe.currentText() == u"Ja", [self.dlg.label_toalett_rampe_title, self.dlg.line_toalett_rampe, self.dlg.line_toalett_dividing]))
+        #self.dlg.comboBox_rampe.currentIndexChanged.connect(self.hide_show_rampe)
+
+
+    def assign_combobox_ski(self):
+        """Assigning an AttributeForm object to each option in Skiløype"""
+
+        hcpark = AttributeForm("avstandHC", self.dlg.comboBox_ski_hcpark, self.dlg.lineEdit_ski_hcpark)
+        sperrebom = AttributeForm("sperrebom", self.dlg.comboBox_ski_sperrebom)
+        sperrebom_tilgjengelig = AttributeForm("sperrebomTilgjenglig", self.dlg.comboBox_ski_sperrebom_tilgjengelig)
+        dobbelspor = AttributeForm("dobbelSpor", self.dlg.comboBox_ski_dobbelspor)
+        belysning = AttributeForm("belysning", self.dlg.comboBox_ski_belysning)
+        bredde = AttributeForm("bredde", self.dlg.comboBox_ski_bredde, self.dlg.lineEdit_ski_bredde)
+        stigning = AttributeForm("stigning", self.dlg.comboBox_ski_stigning, self.dlg.lineEdit_ski_stigning)
+        tverfall = AttributeForm("tverfall", self.dlg.comboBox_ski_tverfall, self.dlg.lineEdit_ski_tverfall)
+        frihoyde = AttributeForm("friHøyde", self.dlg.comboBox_ski_frihoyde)
+
+        manuellRullestol = AttributeForm("tilgjengvurderingRullMan", self.dlg.comboBox_ski_manuell_rullestol)
+        synshemmed = AttributeForm("tilgjengvurderingSyn", self.dlg.comboBox_ski_synshemmed)
+
+        self.attributes_ski = [hcpark, sperrebom, sperrebom_tilgjengelig, dobbelspor, belysning, bredde, stigning, tverfall, frihoyde, manuellRullestol, synshemmed]
+        attributes_mer_mindre = [hcpark, bredde, stigning, tverfall]
+
+        #fill combobox
+        for attributt in attributes_mer_mindre:
+            self.fill_combobox(attributt.getComboBox(), self.path_more_less)
+
+        self.fill_combobox(sperrebom.getComboBox(), self.path_boolean)
+        self.fill_combobox(sperrebom_tilgjengelig.getComboBox(), self.path_boolean)
+        self.fill_combobox(dobbelspor.getComboBox(), self.path_boolean)
+        self.fill_combobox(belysning.getComboBox(), self.path_belysning)
+        self.fill_combobox(frihoyde.getComboBox(), self.path_frihoyde)
+
+        self.fill_combobox(manuellRullestol.getComboBox(), self.path_tilgjenglighetsvurdering)
+        self.fill_combobox(synshemmed.getComboBox(), self.path_tilgjenglighetsvurdering)
 
 
 
