@@ -23,5 +23,14 @@
         <file>icons/Select_point_1.gif</file>
         <file>icons/Select_polygon.gif</file>
         <file>icons/black-ms-excel-16.png</file>
+        <file>icons/bade.svg</file>
+        <file>icons/fiskeplass.png</file>
+        <file>icons/turvei.svg</file>
+        <file>icons/friluftsomrade.gif</file>
+        <file>icons/gapahuk.png</file>
+        <file>icons/balplass.svg</file>
+        <file>icons/sittegruppe.png</file>
+        <file>icons/wc.png</file>
+        <file>icons/ski.png</file>
     </qresource>
 </RCC>
