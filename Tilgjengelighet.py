@@ -1198,7 +1198,8 @@ class Tilgjengelighet:
         """Shows or hide tableWidget"""
 
         if self.infoWidget.pushButton_tabell.isChecked(): #If pushbutton tabell is check, open attributetable, if not, close attributetable
-            self.iface.showAttributeTable(self.iface.activeLayer())
+            #self.iface.showAttributeTable(self.iface.activeLayer())
+            self.iface.mainWindow().findChild( QAction, 'mActionOpenTable' ).trigger()
         else:
             attrTables = [d for d in QApplication.instance().allWidgets() if d.objectName() == u'QgsAttributeTableDialog' or d.objectName() == u'AttributeTable']
             for x in attrTables:

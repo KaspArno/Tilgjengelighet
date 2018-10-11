@@ -8328,7 +8328,7 @@
               <enum>QTabWidget::Rounded</enum>
              </property>
              <property name="currentIndex">
-              <number>3</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="tab">
               <attribute name="icon">
@@ -8543,6 +8543,11 @@
                              <width>50</width>
                              <height>0</height>
                             </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
                            </property>
                           </widget>
                          </item>
