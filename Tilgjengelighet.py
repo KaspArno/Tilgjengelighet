@@ -114,6 +114,7 @@ class Tilgjengelighet:
 
         #Settnings
         self.settings.setValue("/Qgis/dockAttributeTable", True) #Get attribute table at bottom of screen
+        self.settings.setValue("/Qgis/attributeTableBehaviour", "1") #Show Selected Features
 
         #Layer and attributes
         self.current_search_layer = None #The last searched layer
@@ -539,7 +540,7 @@ class Tilgjengelighet:
         kapasitetPersonbiler = AttributeForm("kapasitetPersonbiler", self.dlg.comboBox_kapasitetPersonbiler, self.dlg.lineEdit_kapasitetPersonbiler)
         kapasitetUU = AttributeForm("antallUU", self.dlg.comboBox_kapasitetUU, self.dlg.lineEdit_kapasitetUU)
         dekke_pomrade = AttributeForm("dekke", self.dlg.comboBox_dekke_pomrade)
-        dekkeTilstand_pomrade = AttributeForm("dekkeTilstand", self.dlg.comboBox_dekkeTilstand_pomrade)
+        dekkeTilstand_pomrade = AttributeForm("dekkeTilstand", self.dlg.comboBox_dekkeTilstand_pomrade, label=self.dlg.label_dekkeTilstand_pomrade)
 
         manuell_rullestol_pomrade = AttributeForm("tilgjengvurderingRulleAuto", self.dlg.comboBox_manuell_rullestol_pomrade)
 
@@ -556,6 +557,10 @@ class Tilgjengelighet:
         self.fill_combobox(dekkeTilstand_pomrade.getComboBox(), self.path_dekketilstand)
         
         self.fill_combobox(manuell_rullestol_pomrade.getComboBox(), self.path_tilgjenglighetsvurdering)
+
+        #Hide gui
+        self.hide_show_gui([dekkeTilstand_pomrade], self.dlg.comboBox_dekke_pomrade.currentText() != self.unspecified)
+        self.dlg.comboBox_dekke_pomrade.currentIndexChanged.connect(lambda: self.hide_show_gui([dekkeTilstand_pomrade], self.dlg.comboBox_dekke_pomrade.currentText() != self.unspecified))
 
 
     def assign_combobox_baderampe(self):
@@ -1278,7 +1283,7 @@ class Tilgjengelighet:
         """Makes FE and layer based on choises from user an current tab"""
 
         if self.current_search_layer is not None: #Remove selection for previus search layer
-            self.current_search_layer.removeSelection()
+            self.current_search_layer.removeSelection() #Need more adjustment, what to do if layer is deleted
 
         self.layer_name = self.dlg.lineEdit_search_name.text() #gives search layer a name
 
@@ -1294,7 +1299,7 @@ class Tilgjengelighet:
             infoWidget_title = self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()) #gets infowidget title based on freaturetype tab in tettsted
 
         #Create url
-        url = u"http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet{0}?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::4258&typeNames=app:{1}&".format(tilgjDB, featuretype)
+        url = u"http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet_{0}?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::4258&typeNames=app:{1}&".format(tilgjDB, featuretype)
         #print("url: {}".format(url))
         #Create FE
         filter_encoding = self.create_filtherencoding(self.current_attributes)#= "FILTER=<fes:Filter><fes:PropertyIsEqualTo><fes:ValueReference>app:kommune</fes:ValueReference><fes:Literal>0301</fes:Literal></fes:PropertyIsEqualTo></fes:Filter>"
@@ -1337,11 +1342,11 @@ class Tilgjengelighet:
             self.dlg.close() #closing main window for easyer visualisation of results
 
         else:
-            #self.show_message("Ingen objekter funnet", msg_title="layer not valid", msg_type=QMessageBox.Warning) #Messeage if layer is not valid/not objects was found
-            self.show_message("WFS client currently down", msg_title="WFS-Client down", msg_type=QMessageBox.Warning)
-            self.infoWidget.show()
-            self.show_tabell()
-            self.dlg.close()
+            self.show_message("Ingen objekter funnet", msg_title="layer not valid", msg_type=QMessageBox.Warning) #Messeage if layer is not valid/not objects was found
+            #self.show_message("WFS client currently down", msg_title="WFS-Client down", msg_type=QMessageBox.Warning)
+            #self.infoWidget.show()
+            #self.show_tabell()
+            #self.dlg.close()
 
 
         print(u"NewFilterEnd")
