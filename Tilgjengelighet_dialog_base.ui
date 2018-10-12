@@ -86,7 +86,7 @@
           </font>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <property name="iconSize">
           <size>
@@ -114,7 +114,7 @@
               </font>
              </property>
              <property name="currentIndex">
-              <number>3</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="tab_7">
               <attribute name="icon">
@@ -218,7 +218,7 @@
                          </property>
                          <property name="minimumSize">
                           <size>
-                           <width>40</width>
+                           <width>70</width>
                            <height>0</height>
                           </size>
                          </property>
@@ -292,7 +292,7 @@
                          </property>
                          <property name="minimumSize">
                           <size>
-                           <width>40</width>
+                           <width>70</width>
                            <height>0</height>
                           </size>
                          </property>
@@ -381,7 +381,7 @@
                         </font>
                        </property>
                        <property name="text">
-                        <string>Håndliste Høyde 1</string>
+                        <string>Håndliste Høyde Øvre (cm)</string>
                        </property>
                        <property name="margin">
                         <number>10</number>
@@ -418,9 +418,14 @@
                          </property>
                          <property name="minimumSize">
                           <size>
-                           <width>40</width>
+                           <width>70</width>
                            <height>0</height>
                           </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>12</pointsize>
+                          </font>
                          </property>
                         </widget>
                        </item>
@@ -450,7 +455,7 @@
                         </font>
                        </property>
                        <property name="text">
-                        <string>Håndliste Høyde 2</string>
+                        <string>Håndliste Høyde Nedre (cm)</string>
                        </property>
                        <property name="margin">
                         <number>10</number>
@@ -487,7 +492,7 @@
                          </property>
                          <property name="minimumSize">
                           <size>
-                           <width>40</width>
+                           <width>70</width>
                            <height>0</height>
                           </size>
                          </property>
@@ -8328,7 +8333,7 @@
               <enum>QTabWidget::Rounded</enum>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="tab">
               <attribute name="icon">
@@ -8917,7 +8922,7 @@
                         </widget>
                        </item>
                        <item>
-                        <widget class="QComboBox" name="comboBox_ledelinje">
+                        <widget class="QComboBox" name="comboBox_vei_ledelinje">
                          <property name="enabled">
                           <bool>true</bool>
                          </property>
@@ -8939,7 +8944,7 @@
                      <item>
                       <layout class="QHBoxLayout" name="horizontalLayout_172">
                        <item>
-                        <widget class="QLabel" name="label_8">
+                        <widget class="QLabel" name="label_vei_ledelinjeKontrast">
                          <property name="minimumSize">
                           <size>
                            <width>220</width>
@@ -8963,10 +8968,13 @@
                          <property name="margin">
                           <number>10</number>
                          </property>
+                         <property name="indent">
+                          <number>30</number>
+                         </property>
                         </widget>
                        </item>
                        <item>
-                        <widget class="QComboBox" name="comboBox_ledelinjeKontrast">
+                        <widget class="QComboBox" name="comboBox_vei_ledelinjeKontrast">
                          <property name="enabled">
                           <bool>true</bool>
                          </property>
@@ -11929,6 +11937,9 @@
          <property name="text">
           <string>reset</string>
          </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
        <item>
@@ -11966,6 +11977,9 @@
            </property>
            <property name="text">
             <string>Filtrer</string>
+           </property>
+           <property name="default">
+            <bool>true</bool>
            </property>
           </widget>
          </item>

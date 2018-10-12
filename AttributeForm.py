@@ -42,7 +42,7 @@ class AttributeForm(object):
             else:
                 return self.opperatorDict[u'=']
         else:
-            return None
+            return self.opperatorDict[u'=']
 
     def valueReference(self):
         """Returns the objekt attribute
