@@ -433,7 +433,7 @@ class Tilgjengelighet:
         self.fill_combobox(self.dortype.getComboBox(), self.path_dortype)
         self.fill_combobox(self.dorapner.getComboBox(), self.path_dorapner)
         self.fill_combobox(self.kontrast.getComboBox(), self.path_kontrast)
-        self.fill_combobox(self.handlist.getComboBox(), self.path_kontrast)
+        self.fill_combobox(self.handlist.getComboBox(), self.path_handlist)
 
         self.fill_combobox(self.rmp_tilgjengelig.getComboBox(), self.path_tilgjenglighetsvurdering)
         self.fill_combobox(self.manuellRullestol.getComboBox(), self.path_tilgjenglighetsvurdering)
@@ -461,7 +461,7 @@ class Tilgjengelighet:
         ledelinjeKontrast = AttributeForm("ledelinjeKontrast", self.dlg.comboBox_vei_ledelinjeKontrast, label=self.dlg.label_vei_ledelinjeKontrast)
         lyssignal = AttributeForm("lyssignal", self.dlg.comboBox_lyssignal)
         lydsignal = AttributeForm("lydsignal", self.dlg.comboBox_lydsignal)
-        moteplass = AttributeForm("moteplass", self.dlg.comboBox_moteplass)
+        moteplass = AttributeForm(u"møteplass", self.dlg.comboBox_moteplass)
 
         manuell_rullestol_vei = AttributeForm("tilgjengvurderingRulleAuto", self.dlg.comboBox_manuell_rullestol_vei)
         electrisk_rullestol_vei = AttributeForm("tilgjengvurderingElRull", self.dlg.comboBox_electrisk_rullestol_vei)
@@ -664,7 +664,7 @@ class Tilgjengelighet:
         ledelinje = AttributeForm(u"ledelinje", self.dlg.comboBox_turvei_ledelinje)
         ledelinjeKontrakst = AttributeForm(u"ledelinjeKontrast", self.dlg.comboBox_turvei_ledelinjeKontrast, label=self.dlg.label_turvei_ledelinjeKontrast)
         belysning = AttributeForm(u"belysning", self.dlg.comboBox_turvei_belysning)
-        frihoyde = AttributeForm(u"frihøyde", self.dlg.comboBox_turvei_frihoyde)
+        frihoyde = AttributeForm(u"friHøyde", self.dlg.comboBox_turvei_frihoyde)
         moteplass = AttributeForm(u"møteHvileplass", self.dlg.comboBox_turvei_moteplass)
 
         tilgjengvurderingRullestol = AttributeForm(u"tilgjengvurderingRulleAuto", self.dlg.comboBox_turvei_manuell_rullestol)
@@ -718,9 +718,8 @@ class Tilgjengelighet:
         lengde_hcp_merke = AttributeForm("lengde", self.dlg.comboBox_hcpark_friluft_lengde, self.dlg.lineEdit_hcpark_friluft_lengde, label=self.dlg.label_hcpark_friluft_lengde)
 
         manuell_rullestol_hcparkering = AttributeForm("tilgjengvurderingRulleAuto", self.dlg.comboBox_hcpark_friluft_manuell_rullestol)
-        elektrisk_rullestol_hcparkering = AttributeForm("tilgjengvurderingElRullestol", self.dlg.comboBox_hcpark_friluft_elektrisk_rullestol)
 
-        self.attributes_hcparkering_friluft = [avstand_fasilitet, skiltet, merket, bredde_hcp_merke, lengde_hcp_merke, manuell_rullestol_hcparkering, elektrisk_rullestol_hcparkering]
+        self.attributes_hcparkering_friluft = [avstand_fasilitet, skiltet, merket, bredde_hcp_merke, lengde_hcp_merke, manuell_rullestol_hcparkering]
         attributes_hcparkering_mer_mindre = [avstand_fasilitet, bredde_hcp_merke, lengde_hcp_merke]
 
         #fill combobox
@@ -731,7 +730,6 @@ class Tilgjengelighet:
         self.fill_combobox(merket.getComboBox(), self.path_boolean)
         
         self.fill_combobox(manuell_rullestol_hcparkering.getComboBox(), self.path_tilgjenglighetsvurdering)
-        self.fill_combobox(elektrisk_rullestol_hcparkering.getComboBox(), self.path_tilgjenglighetsvurdering)
 
         #Set what to be hidden in form and conditions for showing parts
         self.hide_show_gui([bredde_hcp_merke, lengde_hcp_merke], self.dlg.comboBox_hcpark_friluft_merket.currentText() == "Ja")
@@ -770,7 +768,7 @@ class Tilgjengelighet:
         """Assign a AttributeForm object to each option in friluftsområder"""
 
         navn = AttributeForm("navn", lineEdit=self.dlg.lineEdit_friluftsomrader_navn)
-        naturbasenummber = AttributeForm("navn", lineEdit=self.dlg.lineEdit_friluftsomrader_navn)
+        naturbasenummber = AttributeForm("naturbaseId", lineEdit=self.dlg.lineEdit_friluftsomrader_naturbasenummer)
 
         self.attributes_friluftsomrader = [navn, naturbasenummber]
 
@@ -789,7 +787,7 @@ class Tilgjengelighet:
 
         rampe_stigning = AttributeForm("rampeStigning", self.dlg.comboBox_gapahuk_rmp_stigning, self.dlg.lineEdit_gapahuk_rmp_stigning, label=self.dlg.label_gapahuk_rmp_stigning)
         rampe_bredde = AttributeForm("rampeBredde", self.dlg.comboBox_gapahuk_rmp_bredde, self.dlg.lineEdit_gapahuk_rmp_bredde, label=self.dlg.label_gapahuk_rmp_bredde)
-        handlist = AttributeForm(u'h\xe5ndlist', self.dlg.comboBox_handlist_handliste, label=self.dlg.label_gapahuk_handliste)
+        handlist = AttributeForm(u'håndlist', self.dlg.comboBox_handlist_handliste, label=self.dlg.label_gapahuk_handliste)
         handlist1 = AttributeForm(u'håndlistHøydeØvre', self.dlg.comboBox_gapahuk_hand1, self.dlg.lineEdit_gapahuk_hand1, label=self.dlg.label_gapahuk_hand1)
         handlist2 = AttributeForm(u'håndlistHøydeNedre', self.dlg.comboBox_gapahuk_hand2, self.dlg.lineEdit_gapahuk_hand2, label=self.dlg.label_gapahuk_hand2)
         rmp_tilgjengelig = AttributeForm("rampeTilgjengelig", self.dlg.comboBox_gapahuk_rmp_tilgjengelig, label=self.dlg.label_gapahuk_rmp_tilgjengelig)
@@ -811,7 +809,7 @@ class Tilgjengelighet:
         self.fill_combobox(dekke.getComboBox(), self.path_dekke_friluft)
         self.fill_combobox(dekkeTilstand.getComboBox(), self.path_dekketilstand)
 
-        self.fill_combobox(handlist.getComboBox(), self.path_kontrast)
+        self.fill_combobox(handlist.getComboBox(), self.path_handlist)
         self.fill_combobox(rmp_tilgjengelig.getComboBox(), self.path_tilgjenglighetsvurdering)
 
         self.fill_combobox(manuellRullestol.getComboBox(), self.path_tilgjenglighetsvurdering)
@@ -915,7 +913,7 @@ class Tilgjengelighet:
         self.fill_combobox(dortype.getComboBox(), self.path_dortype)
         self.fill_combobox(dorapner.getComboBox(), self.path_dorapner)
         self.fill_combobox(kontrast.getComboBox(), self.path_kontrast)
-        self.fill_combobox(belysning.getComboBox(), self.path_belysning)
+        self.fill_combobox(belysning.getComboBox(), self.path_boolean)
         
         self.fill_combobox(handlist.getComboBox(), self.path_handlist)
         self.fill_combobox(rmp_tilgjengelig.getComboBox(), self.path_tilgjenglighetsvurdering)
@@ -1022,6 +1020,22 @@ class Tilgjengelighet:
         return out_string
 
 
+    def nanInt(self, number):
+        """Transforme strign number to int, if not a number, return None
+
+        :param number: Number to transform to int
+
+        :returns: int version of string
+        :rtype: int, None
+        """
+
+        try:
+            return int(number)
+        except TypeError:
+            return None
+        return None
+
+
     def hide_show_gui(self, attributeForms, condition, extra = None):
         """Shows parts of GUI if conditions are meat, hids it if not
 
@@ -1126,7 +1140,8 @@ class Tilgjengelighet:
             try:
                 pre_search = self.search_history[activeLayer.name()] #Get previus search
                 for key, value in pre_search.attributes.iteritems(): #key: AttributeForm, value[0]: combobox index, value[1]; lineEdit text
-                    key.getComboBox().setCurrentIndex(int(value[0])) #Set combobx to given index
+                    if key.getComboBox():
+                        key.getComboBox().setCurrentIndex(int(value[0])) #Set combobx to given index
                     if value[1]: #if attribute has lineEdit and text
                         key.getLineEdit().setText(value[1]) #Fill lineEdit with given text
                 self.dlg.tabWidget_main.setCurrentIndex(pre_search.tabIndex_main) #set main tab to given index
@@ -1193,10 +1208,10 @@ class Tilgjengelighet:
 
         self.search_history[self.layer_name] = SavedSearch(self.layer_name, self.current_search_layer, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #saves search tab index, layer name and layer referense
         for attribute in self.current_attributes: #Stores the choises made in current form
-            self.search_history[self.layer_name].add_attribute(attribute, int(attribute.getComboBox().currentIndex()), attribute.getLineEditText()) #Attributes are stored as key in dictionary, index and tex are stored as value
+            self.search_history[self.layer_name].add_attribute(attribute, self.nanInt(attribute.getComboBoxIndex()), attribute.getLineEditText()) #Attributes are stored as key in dictionary, index and tex are stored as value
 
-        self.search_history[self.layer_name].add_attribute(self.fylker, int(self.fylker.getComboBox().currentIndex()), None) #stores the choises of fylke and kommune
-        self.search_history[self.layer_name].add_attribute(self.kommuner, int(self.kommuner.getComboBox().currentIndex()), None)
+        self.search_history[self.layer_name].add_attribute(self.fylker, self.nanInt(self.fylker.getComboBoxIndex()), None) #stores the choises of fylke and kommune
+        self.search_history[self.layer_name].add_attribute(self.kommuner, self.nanInt(self.kommuner.getComboBoxIndex()), None)
 
 
     def show_tabell(self):
@@ -1265,12 +1280,13 @@ class Tilgjengelighet:
             constraint.append(query)
         
         for attribute in attributeList: #Itterate all attributes in search
-            if attribute.getComboBoxCurrentText() != self.unspecified: #Combobox  value defined
+            if (attribute.getComboBox() is not None and attribute.getComboBoxCurrentText() != self.unspecified and attribute.getComboBox().isVisible()) or (attribute.getComboBox() is None and attribute.getLineEditText() is not self.unspecified): #Combobox  value defined, or lineEdit text defined
                 valueReference = attribute.valueReference() #Get valueReference
                 value = attribute.value() #Get FE value
+                value = value.replace(" ", "%20") #make the space in value url encoded (Need url endcoded spaces)
                 opperator = attribute.opperator() #Get FE opperator
                 constraint.append(self.create_filter(opperator, valueReference, value)) #Add contraint to list of constraints
-                print("valueReference: {0}\nvalue: {1}\nopperator: {2}".format(valueReference, value, opperator))
+                #print("valueReference: {0}\nvalue: {1}\nopperator: {2}".format(valueReference, value, opperator))
 
         query = ""
         filterString = ""

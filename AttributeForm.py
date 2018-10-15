@@ -97,6 +97,17 @@ class AttributeForm(object):
 
         return self.comboBox
 
+    def getComboBoxIndex(self):
+        """ Returns the current index of combobox, retuns None if no combox
+
+        :returns: returns the associated combobox index
+        :rtype: int, None
+        """
+
+        if self.comboBox:
+            return self.comboBox.currentIndex()
+        return None
+
     def getLineEdit(self):
         """Returns the assosiated lineEdit widget if any
 
