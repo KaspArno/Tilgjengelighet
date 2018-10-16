@@ -22,6 +22,7 @@ class SavedSearch(object):
 
         self.search_name = search_name #Name of layer
         self.layer = layer #Layer
+        self.layer_id = self.layer.id()
         #self.lineEdit_seach = lineEdit_seach
         self.tabIndex_main = tabIndex_main #Main tab index
         self.tabIndex_friluft = tabIndex_friluft #Friluft tab index
@@ -54,3 +55,21 @@ class SavedSearch(object):
 
         return self.attributes
 
+    def get_layer(self):
+        """Returns layer
+        
+        :returns: layer
+        :rtype:  QgsMapLayer
+        """
+
+        return self.layer
+
+
+    def get_id(self):
+        """Returns layer id
+        
+        :returns: layer.id()
+        :rtype:  String
+        """
+
+        return self.layer_id

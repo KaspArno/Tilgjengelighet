@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>242</width>
-    <height>590</height>
+    <width>294</width>
+    <height>707</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -451,6 +451,9 @@
              <string>Tabell</string>
             </property>
             <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
              <bool>true</bool>
             </property>
            </widget>

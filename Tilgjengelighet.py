@@ -298,11 +298,15 @@ class Tilgjengelighet:
 
         ### info window ###
         self.infoWidget = infoWidgetDialog(self.iface.mainWindow())
-        self.infoWidget.pushButton_filtrer.clicked.connect(lambda x: self.dlg.show()) #open main window
+        #self.infoWidget.pushButton_filtrer.clicked.connect(lambda x: self.dlg.show()) #open main window
         self.infoWidget.pushButton_filtrer.clicked.connect(self.get_previus_search_activeLayer) #setting main window to match search for active layer
         self.infoWidget.pushButton_next.clicked.connect(self.infoWidget_next) #itterate the selected objekts
         self.infoWidget.pushButton_prev.clicked.connect(self.infoWidget_prev)
         self.infoWidget.pushButton_tabell.clicked.connect(self.show_tabell) #open tableWiddget
+
+        self.iface.addDockWidget( Qt.RightDockWidgetArea , self.infoWidget)
+        self.infoWidget.close()
+
 
         # Set tools an icons
         self.selectPolygon = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Select_polygon.gif"),
@@ -1148,10 +1152,13 @@ class Tilgjengelighet:
                 self.dlg.tabWidget_friluft.setCurrentIndex(pre_search.tabIndex_friluft) #Set friluft tab to given index
                 self.dlg.tabWidget_tettsted.setCurrentIndex(pre_search.tabIndex_tettsted) #Set tettsted tab to given index
                 self.dlg.lineEdit_search_name.setText(self.layer_name) #Sett search name to given text
+                self.change_search_name
                 self.dlg.show() #Open filtrer window
 
             except KeyError:
                 raise
+        else:
+            self.dlg.show()
 
 
 
@@ -1305,8 +1312,8 @@ class Tilgjengelighet:
     def filtrer(self):
         """Makes FE and layer based on choises from user an current tab"""
 
-        if self.current_search_layer is not None: #Remove selection for previus search layer
-            self.current_search_layer.removeSelection() #Need more adjustment, what to do if layer is deleted
+        #if self.current_search_layer is not None: #Remove selection for previus search layer
+        #    self.current_search_layer.removeSelection() #Need more adjustment, what to do if layer is deleted
 
         self.layer_name = self.dlg.lineEdit_search_name.text() #gives search layer a name
         print("Main tab: {}".format(self.dlg.tabWidget_main.currentIndex()))
@@ -1336,12 +1343,15 @@ class Tilgjengelighet:
 
         if new_layer.isValid(): #If new layer is valid/contains objekcts, add to canvas
             existing_layers = self.iface.legendInterface().layers()
-            try:
-                for lyr in existing_layers: #Removing layers with same name
-                    if lyr.name() == new_layer.name():
-                        QgsMapLayerRegistry.instance().removeMapLayers( [lyr.id()] )
-            except Exception as e:
-                print(str(e))
+            for name in self.search_history:
+                if name == new_layer.name():
+                    layer_id = self.search_history[name].get_id()
+                    if layer_id in QgsMapLayerRegistry.instance().mapLayers():
+                        self.search_history[name].get_layer().removeSelection()
+                        QgsMapLayerRegistry.instance().removeMapLayers([layer_id])
+                    del self.search_history[name]
+                    break
+
             QgsMapLayerRegistry.instance().addMapLayer(new_layer) #Add new layer
 
             self.current_search_layer = new_layer #Sett current layer
@@ -1611,7 +1621,10 @@ class Tilgjengelighet:
                 QMessageBox.warning(self.iface.mainWindow(), "No fields selected", "Please select at least one field.")
 
         dirPath, filename = self.savePath("Excel", ".xls")
-       
+        
+        if dirPath == None: #User chose cancel
+            return
+
         try:
             from xytools.providers import excel
         except:
@@ -1712,7 +1725,8 @@ class Tilgjengelighet:
 
         if layer.isValid():
             if len(self._ol_layers) > 0:
-                QgsMapLayerRegistry.instance().removeMapLayers( [self._ol_layers[0].id()] )
+                if self._ol_layers[0].id() in QgsMapLayerRegistry.instance().mapLayers():
+                    QgsMapLayerRegistry.instance().removeMapLayers( [self._ol_layers[0].id()] )
                 self._ol_layers.remove(self._ol_layers[0])
             coordRefSys = layerType.coordRefSys(self.canvasCrs())
             self.setMapCrs(coordRefSys)
