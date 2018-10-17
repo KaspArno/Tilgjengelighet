@@ -162,7 +162,9 @@ class Tilgjengelighet:
 
         #Open Layers, background layers
         self._olLayerTypeRegistry = WebLayerTypeRegistry(self)
-        self._ol_layers = []
+        self._ol_layer = None
+        self._ol_layer_id = None
+        #self._ol_layers = {}
 
 
     # noinspection PyMethodMayBeStatic
@@ -298,13 +300,15 @@ class Tilgjengelighet:
 
         ### info window ###
         self.infoWidget = infoWidgetDialog(self.iface.mainWindow())
+        self.infoWidget.setAllowedAreas(Qt.LeftDockWidgetArea)
+        self.infoWidget.setFloating(False)
         #self.infoWidget.pushButton_filtrer.clicked.connect(lambda x: self.dlg.show()) #open main window
         self.infoWidget.pushButton_filtrer.clicked.connect(self.get_previus_search_activeLayer) #setting main window to match search for active layer
         self.infoWidget.pushButton_next.clicked.connect(self.infoWidget_next) #itterate the selected objekts
         self.infoWidget.pushButton_prev.clicked.connect(self.infoWidget_prev)
         self.infoWidget.pushButton_tabell.clicked.connect(self.show_tabell) #open tableWiddget
 
-        self.iface.addDockWidget( Qt.RightDockWidgetArea , self.infoWidget)
+        self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget)
         self.infoWidget.close()
 
 
@@ -1330,8 +1334,21 @@ class Tilgjengelighet:
             self.current_attributes = self.attributes_tettsted[self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex())] #gets attributes based on freaturetype tab in tettsted
             infoWidget_title = self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()) #gets infowidget title based on freaturetype tab in tettsted
 
+        #srsName = "urn:ogc:def:crs:EPSG::3034" #Denne er like dårlig som de andre som begynner med 30
+        #srsName = "urn:ogc:def:crs:EPSG::3575" # Denne gjør at ingen objecter blir funnet
+        srsName = "urn:ogc:def:crs:EPSG::3857" #This seams to work!! :D
+        #srsName = "EPSG:900913" #måtte velge koodssystem selv, fikk feilmelding når bakgrunskart ble valgt
+        #srsName = "urn:ogc:def:crs:EPSG::4326" #Lik den orginale
+        #srsName ="urn:ogc:def:crs:EPSG::3047" #Lik den forrige
+        #srsName = "urn:ogc:def:crs:EPSG::3045" #Lik den forrige
+        #srsName = "urn:ogc:def:crs:EPSG::3044" #Enda værre, punktene ute i vann, zoomer ut stopper ikke å laste
+        #srsName = "urn:ogc:def:crs:EPSG::3035" #Veldig feil, punktene stemte ikke overens med bakgrunskartet
+        #srsName = "urn:ogc:def:crs:EPSG::25835" #Samme som den andre
+        #srsName = "urn:ogc:def:crs:EPSG::25833" #Mer eller mindre det samme som den forige
+        #srsName = "urn:ogc:def:crs:EPSG::25832" #Næremre, men ikke helt
+        #srsName = "urn:ogc:def:crs:EPSG::4258" #Den jeg alltid har brukt
         #Create url
-        url = u"http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet_{0}?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::4258&typeNames=app:{1}&".format(tilgjDB, featuretype)
+        url = u"http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet_{0}?service=WFS&request=GetFeature&version=2.0.0&srsName={2}&typeNames=app:{1}&".format(tilgjDB, featuretype, srsName)
         #print("url: {}".format(url))
         #Create FE
         filter_encoding = self.create_filtherencoding(self.current_attributes)#= "FILTER=<fes:Filter><fes:PropertyIsEqualTo><fes:ValueReference>app:kommune</fes:ValueReference><fes:Literal>0301</fes:Literal></fes:PropertyIsEqualTo></fes:Filter>"
@@ -1724,14 +1741,18 @@ class Tilgjengelighet:
             layer.setLayerType(layerType)
 
         if layer.isValid():
-            if len(self._ol_layers) > 0:
-                if self._ol_layers[0].id() in QgsMapLayerRegistry.instance().mapLayers():
-                    QgsMapLayerRegistry.instance().removeMapLayers( [self._ol_layers[0].id()] )
-                self._ol_layers.remove(self._ol_layers[0])
+            #if len(self._ol_layers) > 0:
+            if self._ol_layer_id in QgsMapLayerRegistry.instance().mapLayers():
+                QgsMapLayerRegistry.instance().removeMapLayers( [self._ol_layer_id] )
+                # if self._ol_layers[0].id() in QgsMapLayerRegistry.instance().mapLayers():
+                #     QgsMapLayerRegistry.instance().removeMapLayers( [self._ol_layers[0].id()] )
+                # self._ol_layers.remove(self._ol_layers[0])
             coordRefSys = layerType.coordRefSys(self.canvasCrs())
             self.setMapCrs(coordRefSys)
             QgsMapLayerRegistry.instance().addMapLayer(layer, False)
-            self._ol_layers += [layer]
+            #self._ol_layers += [layer]
+            self._ol_layer = layer
+            self._ol_layer_id = layer.id()
 
             # last added layer is new reference
             self.setReferenceLayer(layer)
@@ -1788,16 +1809,16 @@ class Tilgjengelighet:
             extMap = coordTrans.transform(extMap, QgsCoordinateTransform.ForwardTransform)
             if QGis.QGIS_VERSION_INT >= 20300:
                 mapCanvas.setDestinationCrs(coordRefSys)
-                #pass
+                pass
             elif QGis.QGIS_VERSION_INT >= 10900:
                 mapCanvas.mapRenderer().setDestinationCrs(coordRefSys)
-                #pass
+                pass
             else:
                 mapCanvas.mapRenderer().setDestinationSrs(coordRefSys)
-                #pass
+                pass
             mapCanvas.freeze(False)
             mapCanvas.setMapUnits(coordRefSys.mapUnits())
-            mapCanvas.setExtent(extMap)
+            #mapCanvas.setExtent(extMap)
 
             
 
