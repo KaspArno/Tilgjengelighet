@@ -114,7 +114,7 @@ class Tilgjengelighet:
 
         #Settnings
         self.settings.setValue("/Qgis/dockAttributeTable", True) #Get attribute table at bottom of screen
-        self.settings.setValue("/Qgis/attributeTableBehaviour", "1") #Show Selected Features
+        #self.settings.setValue("/Qgis/attributeTableBehaviour", "1") #Show Selected Features
 
         #Layer and attributes
         self.current_search_layer = None #The last searched layer
@@ -122,6 +122,7 @@ class Tilgjengelighet:
         self.search_history = {} #history of all search
         self.rubberHighlight = None #Marking the object currently visulised in infoWidget
         self.unspecified = u"" #unspecified attributes
+        self.infoWidget = None
 
        #Lists of feature types for tettested and friluft, key equeals name of tabs
         self.feature_type_tettsted = {
@@ -291,54 +292,14 @@ class Tilgjengelighet:
 
         ### table window ###
         ## NB: Table window changed to attribute table
-        self.dock = TableDialog(self.iface.mainWindow())
-        self.dock.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows) #select entire row in table
-        self.dock.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers) #Making table unediteble
+        # self.dock = TableDialog(self.iface.mainWindow())
+        # self.dock.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows) #select entire row in table
+        # self.dock.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers) #Making table unediteble
         
-        self.iface.addDockWidget( Qt.BottomDockWidgetArea , self.dock ) #adding seartch result Widget
-        self.dock.close() #Start pløugin without this dialog
+        # self.iface.addDockWidget( Qt.BottomDockWidgetArea , self.dock ) #adding seartch result Widget
+        # self.dock.close() #Start pløugin without this dialog
 
-        ### info window ###
-        self.infoWidget = infoWidgetDialog(self.iface.mainWindow())
-        self.infoWidget.setAllowedAreas(Qt.LeftDockWidgetArea)
-        self.infoWidget.setFloating(False)
-        #self.infoWidget.pushButton_filtrer.clicked.connect(lambda x: self.dlg.show()) #open main window
-        self.infoWidget.pushButton_filtrer.clicked.connect(self.get_previus_search_activeLayer) #setting main window to match search for active layer
-        self.infoWidget.pushButton_next.clicked.connect(self.infoWidget_next) #itterate the selected objekts
-        self.infoWidget.pushButton_prev.clicked.connect(self.infoWidget_prev)
-        self.infoWidget.pushButton_tabell.clicked.connect(self.show_tabell) #open tableWiddget
-
-        self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget)
-        self.infoWidget.close()
-
-
-        # Set tools an icons
-        self.selectPolygon = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Select_polygon.gif"),
-                                       QCoreApplication.translate("MyPlugin", "Polygon"),
-                                       self.iface.mainWindow()) #Change therese icons
-        self.selectPoint = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Select_point_1.gif"),
-                                       QCoreApplication.translate("MyPlugin", u"Punkt/Frihånd"),
-                                       self.iface.mainWindow()) #Change therese icons
-        self.selectPolygon.triggered.connect(lambda x: self.iface.actionSelectPolygon().trigger()) #select objects by polygon
-        self.selectPoint.triggered.connect(lambda x: self.iface.actionSelectFreehand().trigger()) #select objects by freehand
-
-        self.infoWidget.toolButton_velgikart.addAction(self.selectPolygon)
-        self.infoWidget.toolButton_velgikart.addAction(self.selectPoint)
-
-        self.exportExcel = QAction(QIcon(":/plugins/Tilgjengelighet/icons/black-ms-excel-16.png"),
-                                       QCoreApplication.translate("MyPlugin", "Excel"),
-                                       self.iface.mainWindow()) #Change therese icons
-        self.exportImage = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Export_map.gif"),
-                                       QCoreApplication.translate("MyPlugin", "Bilde"),
-                                       self.iface.mainWindow()) #Change therese icons
-        self.exportExcel.triggered.connect(self.excelSave) #export tp excel
-        self.exportImage.triggered.connect(self.imageSave) #ecport image
-
-        self.infoWidget.toolButton_eksporter.addAction(self.exportExcel)
-        self.infoWidget.toolButton_eksporter.addAction(self.exportImage)
-
-        self.iface.addDockWidget( Qt.BottomDockWidgetArea , self.infoWidget ) #adding seartch result Widget
-        self.infoWidget.close() #Start plugin with infoWidget dialog closed
+        
 
 
         ### Export window ###
@@ -399,6 +360,50 @@ class Tilgjengelighet:
 
         
         self.openLayer_background_init() #Activate open layers
+
+
+    def create_infoWidget(self):
+        ### info window ###
+        self.infoWidget = infoWidgetDialog(self.iface.mainWindow())
+        self.iface.addDockWidget( Qt.LeftDockWidgetArea , self.infoWidget)
+
+        self.infoWidget.setAllowedAreas(Qt.LeftDockWidgetArea)
+        self.infoWidget.setFloating(False)
+        self.infoWidget.setFeatures(QDockWidget.DockWidgetClosable | QDockWidget.DockWidgetMovable)
+        #self.infoWidget.pushButton_filtrer.clicked.connect(lambda x: self.dlg.show()) #open main window
+        self.infoWidget.pushButton_filtrer.clicked.connect(self.get_previus_search_activeLayer) #setting main window to match search for active layer
+        self.infoWidget.pushButton_next.clicked.connect(self.infoWidget_next) #itterate the selected objekts
+        self.infoWidget.pushButton_prev.clicked.connect(self.infoWidget_prev)
+        self.infoWidget.pushButton_tabell.clicked.connect(self.show_tabell) #open tableWiddget
+
+
+        # Set tools an icons
+        self.selectPolygon = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Select_polygon.gif"),
+                                       QCoreApplication.translate("MyPlugin", "Polygon"),
+                                       self.iface.mainWindow()) #Change therese icons
+        self.selectPoint = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Select_point_1.gif"),
+                                       QCoreApplication.translate("MyPlugin", u"Punkt/Frihånd"),
+                                       self.iface.mainWindow()) #Change therese icons
+        self.selectPolygon.triggered.connect(lambda x: self.iface.actionSelectPolygon().trigger()) #select objects by polygon
+        self.selectPoint.triggered.connect(lambda x: self.iface.actionSelectFreehand().trigger()) #select objects by freehand
+
+        self.infoWidget.toolButton_velgikart.addAction(self.selectPolygon)
+        self.infoWidget.toolButton_velgikart.addAction(self.selectPoint)
+
+        self.exportExcel = QAction(QIcon(":/plugins/Tilgjengelighet/icons/black-ms-excel-16.png"),
+                                       QCoreApplication.translate("MyPlugin", "Excel"),
+                                       self.iface.mainWindow()) #Change therese icons
+        self.exportImage = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Export_map.gif"),
+                                       QCoreApplication.translate("MyPlugin", "Bilde"),
+                                       self.iface.mainWindow()) #Change therese icons
+        self.exportExcel.triggered.connect(self.excelSave) #export tp excel
+        self.exportImage.triggered.connect(self.imageSave) #ecport image
+
+        self.infoWidget.toolButton_eksporter.addAction(self.exportExcel)
+        self.infoWidget.toolButton_eksporter.addAction(self.exportImage)
+
+        #self.addOLmenu()
+        self.infoWidget.toolButton_map.setMenu(self._olMenu)
         
 
     ############################# Assign widget to attributeform and fill comboboxes #################################
@@ -1379,6 +1384,8 @@ class Tilgjengelighet:
             self.canvas.zoomOut()
 
             #inititate new infowidget
+            if self.infoWidget is None:
+                self.create_infoWidget()
             self.fill_infoWidget(self.current_attributes)
             self.infoWidget.label_typeSok.setText(infoWidget_title)
             self.infoWidget.show()
@@ -1473,7 +1480,6 @@ class Tilgjengelighet:
     
         self.infoWidget.label_object_number.setText("{0}/{1}".format(self.cur_sel_obj+1, self.number_of_objects)) #Show current object, and number of objects selected
     
-        
         if len(self.selection) > 0:
             for i in range(0, len(self.current_attributes)):
                 try:
@@ -1491,7 +1497,24 @@ class Tilgjengelighet:
                     pass
         else: #No objects chocen, set value to "-"
             for i in range(0, len(self.current_attributes)):
-                self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
+                request = QgsFeatureRequest().setFilterFid(i)
+                iterator = self.current_search_layer.getFeatures(QgsFeatureRequest().setFilterFid(i))
+                feature = next(iterator)
+                #feature = self.current_search_layer.getFeatures(request).next()
+                attributes = feature.attributes()
+                idx = self.current_search_layer.fieldNameIndex(self.current_attributes[i].getAttribute())
+                value = attributes[idx]
+                try:
+                    if isinstance(value, (int, float, long)):
+                        self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(value)) #make value str
+                    elif isinstance(value, (QPyNullVariant)): #No value
+                        self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
+                    else:
+                        self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(value)
+                except Exception as e:
+                    self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-") #No value
+            #for i in range(0, len(self.current_attributes)):
+            #    self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
 
 
     def show_message(self, msg_text, msg_title=None, msg_info=None, msg_details=None, msg_type=None):
@@ -1724,11 +1747,7 @@ class Tilgjengelighet:
                 layer.addMenuEntry(groupMenu, self.iface.mainWindow())
             self._olMenu.addMenu(groupMenu)
 
-        #self.addOLmenu()
-        self.infoWidget.toolButton_map.setMenu(self._olMenu)
 
-
-    
     def addLayer(self, layerType):
         """The folowing code has been taken out from OpenLayers Plugin writen by Sourcepole"""
         if layerType.hasGdalTMS():
