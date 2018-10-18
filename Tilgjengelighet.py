@@ -117,7 +117,7 @@ class Tilgjengelighet:
         #self.settings.setValue("/Qgis/attributeTableBehaviour", "1") #Show Selected Features
 
         #Layer and attributes
-        self.current_search_layer = None #The last searched layer
+        self.current_layer = None #The last searched layer
         self.current_attributes = None #The attributes for current search layer
         self.search_history = {} #history of all search
         self.rubberHighlight = None #Marking the object currently visulised in infoWidget
@@ -284,8 +284,7 @@ class Tilgjengelighet:
         self.dlg.tabWidget_main.currentChanged.connect(self.change_search_name) #change search name based on tab
         self.dlg.tabWidget_friluft.currentChanged.connect(self.change_search_name)
         self.dlg.tabWidget_tettsted.currentChanged.connect(self.change_search_name)
-        self.change_search_name() #Initiate a search name
-
+        
         #Connect pushbuttons
         self.dlg.pushButton_filtrer.clicked.connect(self.filtrer) #Connect pushbytton filtrer action
         self.dlg.pushButton_reset.clicked.connect(self.reset) #resett all choses made by user
@@ -358,7 +357,8 @@ class Tilgjengelighet:
             u"Skiløype" : self.attributes_ski
         }
 
-        
+        self.change_search_name() #Initiate a search name
+
         self.openLayer_background_init() #Activate open layers
 
 
@@ -376,6 +376,9 @@ class Tilgjengelighet:
         self.infoWidget.pushButton_prev.clicked.connect(self.infoWidget_prev)
         self.infoWidget.pushButton_tabell.clicked.connect(self.show_tabell) #open tableWiddget
 
+        #TEST
+        #pixmap_red = QPixmap(self.plugin_dir + "\symboler\rullestol-red.png")
+        #self.infoWidget.pushButton_filtrer.clicked.connect(lambda: self.infoWidget.label_icon.setPixmap(pixmap_red))
 
         # Set tools an icons
         self.selectPolygon = QAction(QIcon(":/plugins/Tilgjengelighet/icons/Select_polygon.gif"),
@@ -527,10 +530,9 @@ class Tilgjengelighet:
         lengde_hcp_merke = AttributeForm("lengde", self.dlg.comboBox_lengde_hcp_merke, self.dlg.lineEdit_lengde_hcp_merke, label=self.dlg.label_lengde_hcp_merke)
 
         manuell_rullestol_hcparkering = AttributeForm("tilgjengvurderingRulleAuto", self.dlg.comboBox_manuell_rullestol_hcparkering)
-        elektrisk_rullestol_hcparkering = AttributeForm("tilgjengvurderingElRull", self.dlg.comboBox_elektrisk_rullestol_hcparkering)
 
-        self.attributes_hcparkering_tettsted = [avstandServicebygg, overbygg, skiltet, merket, bredde_hcp_merke, lengde_hcp_merke, manuell_rullestol_hcparkering, elektrisk_rullestol_hcparkering, gatelangsparkering]
-        attributes_hcparkering_gui = [manuell_rullestol_hcparkering, elektrisk_rullestol_hcparkering]
+        self.attributes_hcparkering_tettsted = [avstandServicebygg, overbygg, skiltet, merket, bredde_hcp_merke, lengde_hcp_merke, gatelangsparkering, manuell_rullestol_hcparkering]
+        attributes_hcparkering_gui = [manuell_rullestol_hcparkering]
         attributes_hcparkering_mer_mindre = [avstandServicebygg, bredde_hcp_merke, lengde_hcp_merke]
 
         #fill combobox
@@ -543,7 +545,6 @@ class Tilgjengelighet:
         self.fill_combobox(gatelangsparkering.getComboBox(), self.path_boolean)
         
         self.fill_combobox(manuell_rullestol_hcparkering.getComboBox(), self.path_tilgjenglighetsvurdering)
-        self.fill_combobox(elektrisk_rullestol_hcparkering.getComboBox(), self.path_tilgjenglighetsvurdering)
 
         #Set what to be hidden in form and conditions for showing parts
         self.hide_show_gui([bredde_hcp_merke, lengde_hcp_merke], self.dlg.comboBox_merket.currentText() == "Ja")
@@ -1207,7 +1208,7 @@ class Tilgjengelighet:
         """Changes the name of search based on current tab and fyle and kommune"""
 
         self.dlg.lineEdit_search_name.setText(self.dlg.tabWidget_main.tabText(self.dlg.tabWidget_main.currentIndex()))
-        if self.dlg.tabWidget_main.currentIndex() == 0: #If main tab is in friluft
+        if self.dlg.tabWidget_main.tabText(self.dlg.tabWidget_main.currentIndex()) == "Friluft": #If main tab is in friluft
             self.dlg.lineEdit_search_name.setText(self.dlg.lineEdit_search_name.text() + " " + self.dlg.tabWidget_friluft.tabText(self.dlg.tabWidget_friluft.currentIndex()))
         else: #if main tab is in tettsted
             self.dlg.lineEdit_search_name.setText(self.dlg.lineEdit_search_name.text() + " " + self.dlg.tabWidget_tettsted.tabText(self.dlg.tabWidget_tettsted.currentIndex()))
@@ -1222,7 +1223,7 @@ class Tilgjengelighet:
     def save_search(self):
         """"Saves the search to search history so it can set choises in GUI bac to preveus desisions"""
 
-        self.search_history[self.layer_name] = SavedSearch(self.layer_name, self.current_search_layer, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #saves search tab index, layer name and layer referense
+        self.search_history[self.layer_name] = SavedSearch(self.layer_name, self.current_layer, self.dlg.tabWidget_main.currentIndex(), self.dlg.tabWidget_friluft.currentIndex(), self.dlg.tabWidget_tettsted.currentIndex()) #saves search tab index, layer name and layer referense
         for attribute in self.current_attributes: #Stores the choises made in current form
             self.search_history[self.layer_name].add_attribute(attribute, self.nanInt(attribute.getComboBoxIndex()), attribute.getLineEditText()) #Attributes are stored as key in dictionary, index and tex are stored as value
 
@@ -1321,8 +1322,8 @@ class Tilgjengelighet:
     def filtrer(self):
         """Makes FE and layer based on choises from user an current tab"""
 
-        #if self.current_search_layer is not None: #Remove selection for previus search layer
-        #    self.current_search_layer.removeSelection() #Need more adjustment, what to do if layer is deleted
+        #if self.current_layer is not None: #Remove selection for previus search layer
+        #    self.current_layer.removeSelection() #Need more adjustment, what to do if layer is deleted
 
         self.layer_name = self.dlg.lineEdit_search_name.text() #gives search layer a name
         print("Main tab: {}".format(self.dlg.tabWidget_main.currentIndex()))
@@ -1360,8 +1361,8 @@ class Tilgjengelighet:
         #print("FE: {}".format(filter_encoding))
         #Create new layer
         new_layer = QgsVectorLayer(url + filter_encoding, self.layer_name, "ogr")
-        print(u"url: {}".format(url))
-        print(u"FE: {}".format(filter_encoding))
+        #print(u"url: {}".format(url))
+        #print(u"FE: {}".format(filter_encoding))
 
         if new_layer.isValid(): #If new layer is valid/contains objekcts, add to canvas
             existing_layers = self.iface.legendInterface().layers()
@@ -1376,11 +1377,28 @@ class Tilgjengelighet:
 
             QgsMapLayerRegistry.instance().addMapLayer(new_layer) #Add new layer
 
-            self.current_search_layer = new_layer #Sett current layer
-            self.current_search_layer.selectionChanged.connect(self.selectedObjects) #Filling infoWidget when objects are selected
-            
+            self.current_layer = new_layer #Sett current layer
+            self.current_id = new_layer.id()
+            self.save_search() #Store search attributes
+            self.current_layer.selectionChanged.connect(self.selectedObjects) #Filling infoWidget when objects are selected
+            self.feature_ids = [f.id() for f in self.current_layer.getFeatures()]
+
+
             #Zoom to layer
-            self.canvas.setExtent(self.current_search_layer.extent())
+            canvasCrs = self.canvasCrs()
+            if canvasCrs != self.current_layer.crs(): #If the crs of the canvas differ from the layer, the zoom vil be wrong
+                coordTrans = QgsCoordinateTransform(canvasCrs, self.current_layer.crs())
+                extMap = self.canvas.extent()
+                extMap = coordTrans.transform(extMap, QgsCoordinateTransform.ForwardTransform)
+                if QGis.QGIS_VERSION_INT >= 20300:
+                    self.canvas.setDestinationCrs(self.current_layer.crs())
+                elif QGis.QGIS_VERSION_INT >= 10900:
+                    self.canvas.mapRenderer().setDestinationCrs(self.current_layer.crs())
+                else:
+                    self.canvas.mapRenderer().setDestinationSrs(self.current_layer.crs())
+                self.canvas.freeze(False)
+                self.canvas.setMapUnits(self.current_layer.crs().mapUnits())
+            self.canvas.setExtent(self.current_layer.extent())
             self.canvas.zoomOut()
 
             #inititate new infowidget
@@ -1388,6 +1406,7 @@ class Tilgjengelighet:
                 self.create_infoWidget()
             self.fill_infoWidget(self.current_attributes)
             self.infoWidget.label_typeSok.setText(infoWidget_title)
+            self.selectedObjects()
             self.infoWidget.show()
 
             #Close old atribute table
@@ -1415,20 +1434,33 @@ class Tilgjengelighet:
 
     ############################## Selection and info of Objects ################################################
     
-    def selectedObjects(self, selFeatures):
+    def selectedObjects(self):
         """changing number of selected objects in infowidget and settning current selected object
 
         :param selFeatures: Selected features of layer
          """
-        self.selFeatures = selFeatures
-        self.number_of_objects = len(selFeatures) #number of objects selected
-        self.cur_sel_obj = 0 #Current selected object
-        self.selection = self.current_search_layer.selectedFeatures() #Set selected features
+
+        if self.current_id in QgsMapLayerRegistry.instance().mapLayers():
+            self.selection = self.current_layer.selectedFeatures() #Set selected features
+            #self.number_of_objects = len(selFeatures) #number of objects selected
+            self.cur_sel_obj = 1 #Current selected object
+
+            if len(self.selection) > 0:
+                self.number_of_objects = len(self.selection)
+            else:
+                self.number_of_objects = len(self.feature_ids)
 
 
-        self.obj_info() #Fill infowidget with info on current selected object
+            self.obj_info() #Fill infowidget with info on current selected object
 
-        self.highlightSelected() #highligt current selected object viewd in infowidget
+            self.highlightSelected() #highligt current selected object viewd in infowidget
+
+
+    def no_object_selected(self):
+        self.number_of_objects = len(self.feature_ids)
+        self.current_viewed_object = 0
+
+        self.obj_info()
 
 
     def highlightSelected(self):
@@ -1436,75 +1468,66 @@ class Tilgjengelighet:
 
         if self.rubberHighlight is not None:
             self.canvas.scene().removeItem(self.rubberHighlight) #remove previus rubberband
+            self.canvas.refresh()
 
-        if len(self.selection) > 0: #objects selected is more than 0
-            self.rubberHighlight = QgsRubberBand(self.canvas,QGis.Polygon) #create new rubberband
-            self.rubberHighlight.setBorderColor(QColor(255,0,0)) #Set birder color for new rubberband (red)
-            self.rubberHighlight.setFillColor(QColor(255,0,0,255)) #set fill color for new rubberband (red)
-            #self.rubberHighlight.setLineStyle(Qt.PenStyle(Qt.DotLine))
-            self.rubberHighlight.setWidth(4) #Set widht of new rubberband
-            self.rubberHighlight.setToGeometry(self.selection[self.cur_sel_obj].geometry(), self.current_search_layer) #set geometry of rubberband equal to current selected object
-            self.rubberHighlight.show() #Show rubberband
+        #if len(self.selection) > 0: #objects selected is more than 0
+        self.rubberHighlight = QgsRubberBand(self.canvas,QGis.Polygon) #create new rubberband
+        self.rubberHighlight.setBorderColor(QColor(255,0,0)) #Set birder color for new rubberband (red)
+        self.rubberHighlight.setFillColor(QColor(255,0,0,255)) #set fill color for new rubberband (red)
+        #self.rubberHighlight.setLineStyle(Qt.PenStyle(Qt.DotLine))
+        self.rubberHighlight.setWidth(4) #Set widht of new rubberband
+        if len(self.selection) > 0:
+            self.rubberHighlight.setToGeometry(self.selection[self.cur_sel_obj-1].geometry(), self.current_layer) #set geometry of rubberband equal to current selected object
+        else:
+            iterator = self.current_layer.getFeatures(QgsFeatureRequest().setFilterFid(self.feature_ids[self.cur_sel_obj-1]))
+            feature = next(iterator)
+            self.rubberHighlight.setToGeometry(feature.geometry(), self.current_layer)
+        self.rubberHighlight.show() #Show rubberband
 
     def infoWidget_next(self):
         """shows next object in infoWidget"""
-        try:
-            self.cur_sel_obj+=1
-            if self.cur_sel_obj >= self.number_of_objects: #when exiding objects, go back to first
-                self.cur_sel_obj = 0
-            self.obj_info() #Fill infowidget with new info
-            self.highlightSelected() #set new rubberband to highlight new object
-        except AttributeError as e:
-            pass
-        except Exception as e:
-            raise e
+
+        if self.current_id in QgsMapLayerRegistry.instance().mapLayers():
+            try:
+                self.cur_sel_obj+=1
+                if self.cur_sel_obj > self.number_of_objects: #when exiding objects, go back to first
+                    self.cur_sel_obj = 1
+                self.obj_info() #Fill infowidget with new info
+                self.highlightSelected() #set new rubberband to highlight new object
+            except AttributeError as e:
+                pass
         
 
     def infoWidget_prev(self):
         """shows previus object in infoWidget"""
-    
-        try:
-            self.cur_sel_obj-=1
-            if self.cur_sel_obj < 0: #when exiding objects, go to last
-                self.cur_sel_obj = self.number_of_objects-1
-            self.obj_info() #Fill infowidget with new info
-            self.highlightSelected() #set new rubberband to highlight new object
-        except AttributeError as e:
-            pass
-        except Exception as e:
-            raise e
+
+        if self.current_id in QgsMapLayerRegistry.instance().mapLayers():    
+            try:
+                self.cur_sel_obj-=1
+                if self.cur_sel_obj <= 0: #when exiding objects, go to last
+                    self.cur_sel_obj = self.number_of_objects
+                self.obj_info() #Fill infowidget with new info
+                self.highlightSelected() #set new rubberband to highlight new object
+            except AttributeError as e:
+                pass
 
 
     def obj_info(self):
         """Fills infowidget with info of current object"""
-    
-        self.infoWidget.label_object_number.setText("{0}/{1}".format(self.cur_sel_obj+1, self.number_of_objects)) #Show current object, and number of objects selected
-    
-        if len(self.selection) > 0:
-            for i in range(0, len(self.current_attributes)):
-                try:
-                    value = self.selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())] #Get attribute value of current selected objects for 
-                    try: #insert valu to infowidget
-                        if isinstance(value, (int, float, long)):
-                            self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(value)) #make value str
-                        elif isinstance(value, (QPyNullVariant)): #No value
-                            self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
-                        else:
-                            self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(value)
-                    except Exception as e:
-                        self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-") #No value
-                except KeyError as e: #attribute not in layer do to no value in any objects
-                    pass
-        else: #No objects chocen, set value to "-"
-            for i in range(0, len(self.current_attributes)):
-                request = QgsFeatureRequest().setFilterFid(i)
-                iterator = self.current_search_layer.getFeatures(QgsFeatureRequest().setFilterFid(i))
-                feature = next(iterator)
-                #feature = self.current_search_layer.getFeatures(request).next()
-                attributes = feature.attributes()
-                idx = self.current_search_layer.fieldNameIndex(self.current_attributes[i].getAttribute())
-                value = attributes[idx]
-                try:
+
+        self.infoWidget.label_object_number.setText("{0}/{1}".format(self.cur_sel_obj, self.number_of_objects)) #Show current object, and number of objects selected
+
+        for i in range(0, len(self.current_attributes)):
+            try:
+                if len(self.selection) > 0:
+                    value = self.selection[self.cur_sel_obj-1][self.to_unicode(self.current_attributes[i].getAttribute())] #Get attribute value of current selected objects for 
+                else:
+                    iterator = self.current_layer.getFeatures(QgsFeatureRequest().setFilterFid(self.feature_ids[self.cur_sel_obj-1]))
+                    feature = next(iterator)
+                    attributes = feature.attributes()
+                    idx = self.current_layer.fieldNameIndex(self.current_attributes[i].getAttribute())
+                    value = attributes[idx]
+                try: #insert valu to infowidget
                     if isinstance(value, (int, float, long)):
                         self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(value)) #make value str
                     elif isinstance(value, (QPyNullVariant)): #No value
@@ -1513,8 +1536,76 @@ class Tilgjengelighet:
                         self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(value)
                 except Exception as e:
                     self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-") #No value
+            except KeyError as e: #attribute not in layer do to no value in any objects
+                pass
+
+
+    
+        # self.infoWidget.label_object_number.setText("{0}/{1}".format(self.cur_sel_obj+1, self.number_of_objects)) #Show current object, and number of objects selected
+    
+        # if len(self.selection) > 0:
+        #     for i in range(0, len(self.current_attributes)):
+        #         try:
+        #             value = self.selection[self.cur_sel_obj][self.to_unicode(self.current_attributes[i].getAttribute())] #Get attribute value of current selected objects for 
+        #             try: #insert valu to infowidget
+        #                 if isinstance(value, (int, float, long)):
+        #                     self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(value)) #make value str
+        #                 elif isinstance(value, (QPyNullVariant)): #No value
+        #                     self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
+        #                 else:
+        #                     self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(value)
+        #             except Exception as e:
+        #                 self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-") #No value
+        #         except KeyError as e: #attribute not in layer do to no value in any objects
+        #             pass
+        # else: #No objects chocen, set value to "-"
+        #     print("Print features in current_layer")
+        #     print(', '.join(str(f.id()) for f in self.current_layer.getFeatures()))
+        #     for i in range(0, len(self.current_attributes)):
+        #         request = QgsFeatureRequest().setFilterFid(i)
+        #         iterator = self.current_layer.getFeatures(QgsFeatureRequest().setFilterFid(i))
+        #         try:
+        #             feature = next(iterator)
+        #         except StopIteration:
+        #             print('No feature with id {} found in dataset').format(i)
+        #             raise
+            # for i in range(0, len(self.current_attributes)):
+            #     request = QgsFeatureRequest().setFilterFid(i)
+            #     iterator = self.current_layer.getFeatures(QgsFeatureRequest().setFilterFid(i))
+            #     feature = next(iterator)
+            #     #feature = self.current_layer.getFeatures(request).next()
+            #     attributes = feature.attributes()
+            #     idx = self.current_layer.fieldNameIndex(self.current_attributes[i].getAttribute())
+            #     value = attributes[idx]
+            #     try:
+            #         if isinstance(value, (int, float, long)):
+            #             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(str(value)) #make value str
+            #         elif isinstance(value, (QPyNullVariant)): #No value
+            #             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
+            #         else:
+            #             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText(value)
+            #     except Exception as e:
+            #         self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-") #No value
             #for i in range(0, len(self.current_attributes)):
             #    self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-")
+
+    def canvasReleaseEvent(self, event):
+        #Unfinished, the goal of this is to provide info of an object by clicking in the canvas. does however get the same effect with freehand selection
+        
+        layer = self.current_layer
+        features = QgsMapToolIdentify(self.canvas).identify(event.x(), event.y(), [layer], QgsMapToolIdentify.TopDownStopAtFirst)
+        if len(features) > 0:
+            #here you get the selected feature
+            feature = features[0].mFeature
+            #And here you get the attribute's value
+            feature_name = feature['gml_id']
+
+        x = event.pos().x()
+        y = event.pos().y()
+
+        point = self.canvas.getCoordinateTransform().toMapCoordinates(x, y)
+
+        print("gml_id: {}".format(feature_name))
 
 
     def show_message(self, msg_text, msg_title=None, msg_info=None, msg_details=None, msg_type=None):
@@ -1640,7 +1731,7 @@ class Tilgjengelighet:
         """obtaind from xytools, Saves features to excel format
         @author: Richard Duivenvoorde
         """
-        if self.current_search_layer == None: 
+        if self.current_layer == None: 
             QMessageBox.warning(self.iface.mainWindow(), "Finner ingen lag å eksportere")
             if self.iface.activeLayer():
                 self.currentLayerChanged(self.iface.activeLayer())
@@ -1648,7 +1739,7 @@ class Tilgjengelighet:
                 QMessageBox.warning(self.iface.mainWindow(), "No active layer", "Please make an vector layer active before saving it to excel file.")
                 return
 
-        fieldNames = utils.fieldNames(self.current_search_layer)
+        fieldNames = utils.fieldNames(self.current_layer)
         dlg = FieldChooserDialog(fieldNames)
 
         names = []
@@ -1673,19 +1764,19 @@ class Tilgjengelighet:
         xlw = excel.Writer(filename)
         #self.layer = self.iface.activeLayer()
         selection = None
-        if self.current_search_layer.selectedFeatureCount() > 0:
+        if self.current_layer.selectedFeatureCount() > 0:
             if QMessageBox.question(self.iface.mainWindow(), 
                 "Eksporter Til Excel", 
                 ("You have a selection in this layer. Only export this selection?\n" "Click Yes to export selection only, click No to export all rows."), 
                 QMessageBox.No, QMessageBox.Yes) == QMessageBox.Yes:
-                    selection = self.current_search_layer.selectedFeaturesIds()
+                    selection = self.current_layer.selectedFeaturesIds()
         feature = QgsFeature();
 
         xlw.writeAttributeRow(0, names)
 
         rowNr = 1
         if QGis.QGIS_VERSION_INT < 10900:
-            prov = self.current_search_layer.dataProvider()
+            prov = self.current_layer.dataProvider()
             prov.select(prov.attributeIndexes())
             while prov.nextFeature(feature):
                 # attribute values, either for all or only for selection
@@ -1697,7 +1788,7 @@ class Tilgjengelighet:
                     xlw.writeAttributeRow(rowNr, values)
                     rowNr += 1
         else:
-            prov = self.current_search_layer.getFeatures()
+            prov = self.current_layer.getFeatures()
             while prov.nextFeature(feature):
                 # attribute values, either for all or only for selection
                 if selection == None or feature.id() in selection:

@@ -96,7 +96,7 @@
          </property>
          <widget class="QWidget" name="tab_5">
           <attribute name="icon">
-           <iconset>
+           <iconset resource="resources.qrc">
             <normaloff>:/plugins/Tilgjengelighet/icons/friluft.png</normaloff>:/plugins/Tilgjengelighet/icons/friluft.png</iconset>
           </attribute>
           <attribute name="title">
@@ -118,8 +118,8 @@
              </property>
              <widget class="QWidget" name="tab_7">
               <attribute name="icon">
-               <iconset>
-                <normaloff>:/plugins/Tilgjengelighet/icons/bade.svg</normaloff>:/plugins/Tilgjengelighet/icons/bade.svg</iconset>
+               <iconset resource="resources.qrc">
+                <normaloff>:/plugins/Tilgjengelighet/symboler/badeplass.png</normaloff>:/plugins/Tilgjengelighet/symboler/badeplass.png</iconset>
               </attribute>
               <attribute name="title">
                <string>Baderampe</string>
@@ -721,8 +721,8 @@
              </widget>
              <widget class="QWidget" name="tab_8">
               <attribute name="icon">
-               <iconset>
-                <normaloff>:/plugins/Tilgjengelighet/icons/fiskeplass.png</normaloff>:/plugins/Tilgjengelighet/icons/fiskeplass.png</iconset>
+               <iconset resource="resources.qrc">
+                <normaloff>:/plugins/Tilgjengelighet/symboler/fiskeplass.png</normaloff>:/plugins/Tilgjengelighet/symboler/fiskeplass.png</iconset>
               </attribute>
               <attribute name="title">
                <string>Fiskeplass</string>
@@ -1886,7 +1886,7 @@
              </widget>
              <widget class="QWidget" name="tab_9">
               <attribute name="icon">
-               <iconset>
+               <iconset resource="resources.qrc">
                 <normaloff>:/plugins/Tilgjengelighet/icons/turvei.svg</normaloff>:/plugins/Tilgjengelighet/icons/turvei.svg</iconset>
               </attribute>
               <attribute name="title">
@@ -2937,8 +2937,8 @@
              </widget>
              <widget class="QWidget" name="tab_10">
               <attribute name="icon">
-               <iconset>
-                <normaloff>:/plugins/Tilgjengelighet/icons/hcpark.png</normaloff>:/plugins/Tilgjengelighet/icons/hcpark.png</iconset>
+               <iconset resource="resources.qrc">
+                <normaloff>:/plugins/Tilgjengelighet/symboler/parkering.png</normaloff>:/plugins/Tilgjengelighet/symboler/parkering.png</iconset>
               </attribute>
               <attribute name="title">
                <string>HC-Parkeringsplass</string>
@@ -3453,8 +3453,8 @@
              </widget>
              <widget class="QWidget" name="tab_11">
               <attribute name="icon">
-               <iconset>
-                <normaloff>:/plugins/Tilgjengelighet/icons/pomrade.png</normaloff>:/plugins/Tilgjengelighet/icons/pomrade.png</iconset>
+               <iconset resource="resources.qrc">
+                <normaloff>:/plugins/Tilgjengelighet/symboler/parkering.png</normaloff>:/plugins/Tilgjengelighet/symboler/parkering.png</iconset>
               </attribute>
               <attribute name="title">
                <string>Parkeringsområde</string>
@@ -3877,7 +3877,7 @@
              </widget>
              <widget class="QWidget" name="tab_16">
               <attribute name="icon">
-               <iconset>
+               <iconset resource="resources.qrc">
                 <normaloff>:/plugins/Tilgjengelighet/icons/friluftsomrade.gif</normaloff>:/plugins/Tilgjengelighet/icons/friluftsomrade.gif</iconset>
               </attribute>
               <attribute name="title">
@@ -4013,8 +4013,8 @@
              </widget>
              <widget class="QWidget" name="tab_12">
               <attribute name="icon">
-               <iconset>
-                <normaloff>:/plugins/Tilgjengelighet/icons/gapahuk.png</normaloff>:/plugins/Tilgjengelighet/icons/gapahuk.png</iconset>
+               <iconset resource="resources.qrc">
+                <normaloff>:/plugins/Tilgjengelighet/symboler/gapahuk.png</normaloff>:/plugins/Tilgjengelighet/symboler/gapahuk.png</iconset>
               </attribute>
               <attribute name="title">
                <string>Gapahuk</string>
@@ -5270,8 +5270,8 @@
              </widget>
              <widget class="QWidget" name="tab_13">
               <attribute name="icon">
-               <iconset>
-                <normaloff>:/plugins/Tilgjengelighet/icons/balplass.svg</normaloff>:/plugins/Tilgjengelighet/icons/balplass.svg</iconset>
+               <iconset resource="resources.qrc">
+                <normaloff>:/plugins/Tilgjengelighet/symboler/balplass.png</normaloff>:/plugins/Tilgjengelighet/symboler/balplass.png</iconset>
               </attribute>
               <attribute name="title">
                <string>Grill-/Bålplass</string>
@@ -5683,8 +5683,8 @@
              </widget>
              <widget class="QWidget" name="tab_14">
               <attribute name="icon">
-               <iconset>
-                <normaloff>:/plugins/Tilgjengelighet/icons/sittegruppe.png</normaloff>:/plugins/Tilgjengelighet/icons/sittegruppe.png</iconset>
+               <iconset resource="resources.qrc">
+                <normaloff>:/plugins/Tilgjengelighet/symboler/sittebenk.png</normaloff>:/plugins/Tilgjengelighet/symboler/sittebenk.png</iconset>
               </attribute>
               <attribute name="title">
                <string>Sittegruppe</string>
@@ -6174,8 +6174,8 @@
              </widget>
              <widget class="QWidget" name="tab_15">
               <attribute name="icon">
-               <iconset>
-                <normaloff>:/plugins/Tilgjengelighet/icons/wc.png</normaloff>:/plugins/Tilgjengelighet/icons/wc.png</iconset>
+               <iconset resource="resources.qrc">
+                <normaloff>:/plugins/Tilgjengelighet/symboler/toalett.png</normaloff>:/plugins/Tilgjengelighet/symboler/toalett.png</iconset>
               </attribute>
               <attribute name="title">
                <string>Toalett</string>
@@ -7590,7 +7590,7 @@
              </widget>
              <widget class="QWidget" name="tab_17">
               <attribute name="icon">
-               <iconset>
+               <iconset resource="resources.qrc">
                 <normaloff>:/plugins/Tilgjengelighet/icons/ski.png</normaloff>:/plugins/Tilgjengelighet/icons/ski.png</iconset>
               </attribute>
               <attribute name="title">
@@ -8263,7 +8263,7 @@
          </widget>
          <widget class="QWidget" name="tab_6">
           <attribute name="icon">
-           <iconset>
+           <iconset resource="resources.qrc">
             <normaloff>:/plugins/Tilgjengelighet/icons/tettsted.png</normaloff>:/plugins/Tilgjengelighet/icons/tettsted.png</iconset>
           </attribute>
           <attribute name="title">
@@ -8288,7 +8288,7 @@
              </property>
              <widget class="QWidget" name="tab">
               <attribute name="icon">
-               <iconset>
+               <iconset resource="resources.qrc">
                 <normaloff>:/plugins/Tilgjengelighet/icons/vei.png</normaloff>:/plugins/Tilgjengelighet/icons/vei.png</iconset>
               </attribute>
               <attribute name="title">
@@ -9317,7 +9317,7 @@
              </widget>
              <widget class="QWidget" name="tab_2">
               <attribute name="icon">
-               <iconset>
+               <iconset resource="resources.qrc">
                 <normaloff>:/plugins/Tilgjengelighet/icons/inngang.png</normaloff>:/plugins/Tilgjengelighet/icons/inngang.png</iconset>
               </attribute>
               <attribute name="title">
@@ -10690,8 +10690,8 @@
              </widget>
              <widget class="QWidget" name="tab_3">
               <attribute name="icon">
-               <iconset>
-                <normaloff>:/plugins/Tilgjengelighet/icons/hcpark.png</normaloff>:/plugins/Tilgjengelighet/icons/hcpark.png</iconset>
+               <iconset resource="resources.qrc">
+                <normaloff>:/plugins/Tilgjengelighet/symboler/parkering.png</normaloff>:/plugins/Tilgjengelighet/symboler/parkering.png</iconset>
               </attribute>
               <attribute name="title">
                <string>HC-Parkering</string>
@@ -11312,55 +11312,6 @@
                       </layout>
                      </item>
                      <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_26">
-                       <item>
-                        <widget class="QLabel" name="label_78">
-                         <property name="minimumSize">
-                          <size>
-                           <width>220</width>
-                           <height>40</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>200</width>
-                           <height>16777215</height>
-                          </size>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>12</pointsize>
-                          </font>
-                         </property>
-                         <property name="text">
-                          <string>Elektrisk Rullestol</string>
-                         </property>
-                         <property name="margin">
-                          <number>10</number>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QComboBox" name="comboBox_elektrisk_rullestol_hcparkering">
-                         <property name="enabled">
-                          <bool>true</bool>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>140</width>
-                           <height>0</height>
-                          </size>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>12</pointsize>
-                          </font>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
-                     <item>
                       <spacer name="verticalSpacer_4">
                        <property name="orientation">
                         <enum>Qt::Vertical</enum>
@@ -11384,7 +11335,7 @@
              </widget>
              <widget class="QWidget" name="tab_4">
               <attribute name="icon">
-               <iconset>
+               <iconset resource="resources.qrc">
                 <normaloff>:/plugins/Tilgjengelighet/icons/pomrade.png</normaloff>:/plugins/Tilgjengelighet/icons/pomrade.png</iconset>
               </attribute>
               <attribute name="title">

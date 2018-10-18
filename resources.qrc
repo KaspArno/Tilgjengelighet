@@ -32,5 +32,55 @@
         <file>icons/sittegruppe.png</file>
         <file>icons/wc.png</file>
         <file>icons/ski.png</file>
+        <file>symboler/badeplass.png</file>
+        <file>symboler/badeplass-blue.png</file>
+        <file>symboler/badeplass-green.png</file>
+        <file>symboler/badeplass-red.png</file>
+        <file>symboler/badeplass-yellow.png</file>
+        <file>symboler/balplass.png</file>
+        <file>symboler/balplass-blue.png</file>
+        <file>symboler/balplass-green.png</file>
+        <file>symboler/balplass-red.png</file>
+        <file>symboler/balplass-yellow.png</file>
+        <file>symboler/fiskeplass.png</file>
+        <file>symboler/fiskeplass-blue.png</file>
+        <file>symboler/fiskeplass-green.png</file>
+        <file>symboler/fiskeplass-red.png</file>
+        <file>symboler/fiskeplass-yellow.png</file>
+        <file>symboler/gapahuk.png</file>
+        <file>symboler/gapahuk-blue.png</file>
+        <file>symboler/gapahuk-green.png</file>
+        <file>symboler/gapahuk-red.png</file>
+        <file>symboler/gapahuk-yellow.png</file>
+        <file>symboler/parkering.png</file>
+        <file>symboler/parkering-blue.png</file>
+        <file>symboler/parkering-green.png</file>
+        <file>symboler/parkering-red.png</file>
+        <file>symboler/parkering-yellow.png</file>
+        <file>symboler/rullestol.png</file>
+        <file>symboler/rullestol-blue.png</file>
+        <file>symboler/rullestol-green.png</file>
+        <file>symboler/rullestol-red.png</file>
+        <file>symboler/rullestol-yellow.png</file>
+        <file>symboler/rullestol-el.png</file>
+        <file>symboler/rullestol-el-blue.png</file>
+        <file>symboler/rullestol-el-green.png</file>
+        <file>symboler/rullestol-el-red.png</file>
+        <file>symboler/rullestol-el-yellow.png</file>
+        <file>symboler/sittebenk.png</file>
+        <file>symboler/sittebenk-blue.png</file>
+        <file>symboler/sittebenk-green.png</file>
+        <file>symboler/sittebenk-red.png</file>
+        <file>symboler/sittebenk-yellow.png</file>
+        <file>symboler/syn.gif</file>
+        <file>symboler/syn-blue.png</file>
+        <file>symboler/syn-green.png</file>
+        <file>symboler/syn-red.png</file>
+        <file>symboler/syn-yellow.png</file>
+        <file>symboler/toalett.png</file>
+        <file>symboler/toalett-blue.png</file>
+        <file>symboler/toalett-green.png</file>
+        <file>symboler/toalett-red.png</file>
+        <file>symboler/toalett-yellow.png</file>
     </qresource>
 </RCC>
