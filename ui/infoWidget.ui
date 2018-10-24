@@ -40,17 +40,11 @@
           </item>
           <item>
            <widget class="QToolButton" name="toolButton_map">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
             <property name="text">
              <string>Bakgrunns Kart</string>
             </property>
             <property name="popupMode">
-             <enum>QToolButton::MenuButtonPopup</enum>
+             <enum>QToolButton::InstantPopup</enum>
             </property>
            </widget>
           </item>

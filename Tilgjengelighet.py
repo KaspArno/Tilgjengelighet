@@ -954,16 +954,16 @@ class Tilgjengelighet:
     def assign_combobox_ski(self):
         """Assigning an AttributeForm object to each option in Skiløype"""
 
-        hcpark = AttributeForm("avstandHC", self.dlg.comboBox_ski_hcpark, self.dlg.lineEdit_ski_hcpark)
-        dobbelspor = AttributeForm("dobbelSpor", self.dlg.comboBox_ski_dobbelspor)
-        belysning = AttributeForm("belysning", self.dlg.comboBox_ski_belysning)
-        bredde = AttributeForm("bredde", self.dlg.comboBox_ski_bredde, self.dlg.lineEdit_ski_bredde)
-        stigning = AttributeForm("stigning", self.dlg.comboBox_ski_stigning, self.dlg.lineEdit_ski_stigning)
-        tverfall = AttributeForm("tverfall", self.dlg.comboBox_ski_tverfall, self.dlg.lineEdit_ski_tverfall)
-        frihoyde = AttributeForm("friHøyde", self.dlg.comboBox_ski_frihoyde)
+        hcpark = AttributeForm(u"avstandHC", self.dlg.comboBox_ski_hcpark, self.dlg.lineEdit_ski_hcpark)
+        dobbelspor = AttributeForm(u"dobbelSpor", self.dlg.comboBox_ski_dobbelspor)
+        belysning = AttributeForm(u"belysning", self.dlg.comboBox_ski_belysning)
+        bredde = AttributeForm(u"bredde", self.dlg.comboBox_ski_bredde, self.dlg.lineEdit_ski_bredde)
+        stigning = AttributeForm(u"stigning", self.dlg.comboBox_ski_stigning, self.dlg.lineEdit_ski_stigning)
+        tverfall = AttributeForm(u"tverrfall", self.dlg.comboBox_ski_tverfall, self.dlg.lineEdit_ski_tverfall)
+        frihoyde = AttributeForm(u"friHøyde", self.dlg.comboBox_ski_frihoyde)
 
-        manuellRullestol = AttributeForm("tilgjengvurderingRullMan", self.dlg.comboBox_ski_manuell_rullestol)
-        synshemmed = AttributeForm("tilgjengvurderingSyn", self.dlg.comboBox_ski_synshemmed)
+        manuellRullestol = AttributeForm(u"tilgjengvurderingRulleMan", self.dlg.comboBox_ski_manuell_rullestol)
+        synshemmed = AttributeForm(u"tilgjengvurderingSyn", self.dlg.comboBox_ski_synshemmed)
 
         self.attributes_ski = [hcpark, dobbelspor, belysning, bredde, stigning, tverfall, frihoyde, manuellRullestol, synshemmed]
         attributes_mer_mindre = [hcpark, bredde, stigning, tverfall]
@@ -1162,7 +1162,7 @@ class Tilgjengelighet:
                 self.dlg.tabWidget_friluft.setCurrentIndex(pre_search.tabIndex_friluft) #Set friluft tab to given index
                 self.dlg.tabWidget_tettsted.setCurrentIndex(pre_search.tabIndex_tettsted) #Set tettsted tab to given index
                 self.dlg.lineEdit_search_name.setText(self.layer_name) #Sett search name to given text
-                self.change_search_name
+                self.change_search_name()
                 self.dlg.show() #Open filtrer window
 
             except KeyError:
@@ -1731,13 +1731,14 @@ class Tilgjengelighet:
         """obtaind from xytools, Saves features to excel format
         @author: Richard Duivenvoorde
         """
-        if self.current_layer == None: 
-            QMessageBox.warning(self.iface.mainWindow(), "Finner ingen lag å eksportere")
-            if self.iface.activeLayer():
-                self.currentLayerChanged(self.iface.activeLayer())
-            else:   
-                QMessageBox.warning(self.iface.mainWindow(), "No active layer", "Please make an vector layer active before saving it to excel file.")
-                return
+        if self.current_layer == None or self.current_id not in QgsMapLayerRegistry.instance().mapLayers(): 
+            QMessageBox.warning(self.iface.mainWindow(), u"Finner ingen lag å eksportere", u"Fant ingen lag til å exsportere til xls")
+            return
+            #if self.iface.activeLayer():
+            #    self.currentLayerChanged(self.iface.activeLayer())
+            #else:   
+            #    QMessageBox.warning(self.iface.mainWindow(), "No active layer", "Please make an vector layer active before saving it to excel file.")
+            #    return
 
         fieldNames = utils.fieldNames(self.current_layer)
         dlg = FieldChooserDialog(fieldNames)
@@ -1749,7 +1750,7 @@ class Tilgjengelighet:
                 return
             names = dlg.getSelectedFields()
             if len(names) == 0:
-                QMessageBox.warning(self.iface.mainWindow(), "No fields selected", "Please select at least one field.")
+                QMessageBox.warning(self.iface.mainWindow(), "Ingen felt valgt", "Vennligst velg minst ett felt.")#"No fields selected", "Please select at least one field.")
 
         dirPath, filename = self.savePath("Excel", ".xls")
         
@@ -1767,7 +1768,7 @@ class Tilgjengelighet:
         if self.current_layer.selectedFeatureCount() > 0:
             if QMessageBox.question(self.iface.mainWindow(), 
                 "Eksporter Til Excel", 
-                ("You have a selection in this layer. Only export this selection?\n" "Click Yes to export selection only, click No to export all rows."), 
+                (u"Du har et utvalg i dette laget. Bare eksporter dette utvalget?\n" u"Klikk Ja for å eksportere bare utvalg, klikk Nei for å eksportere alle rader."),#("You have a selection in this layer. Only export this selection?\n" "Click Yes to export selection only, click No to export all rows."), 
                 QMessageBox.No, QMessageBox.Yes) == QMessageBox.Yes:
                     selection = self.current_layer.selectedFeaturesIds()
         feature = QgsFeature();
@@ -1798,7 +1799,7 @@ class Tilgjengelighet:
                     xlw.writeAttributeRow(rowNr, values)
                     rowNr += 1
         xlw.saveFile()
-        QMessageBox.information(self.iface.mainWindow(), "Success", "Successfully saved as xls file")
+        QMessageBox.information(self.iface.mainWindow(), u"Vellykket", u"Vellykket lagret som xls-fil") #"Success", "Successfully saved as xls file")
 
   ########################### Open Lyaers Plugin ##########################################
     def openLayer_background_init(self):
