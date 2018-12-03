@@ -10,7 +10,7 @@
 name=Kartverket Tilgjengelighet
 qgisMinimumVersion=2.0
 description=Visualize and analyze accessibility for people with disabilities
-version=0.2.0
+version=0.2.1
 author=Kasper Skjeggestad
 email=kasper.skjeggestad@gmail.com
 
