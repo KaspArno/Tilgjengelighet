@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1509</width>
-    <height>890</height>
+    <height>919</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -86,7 +86,7 @@
           </font>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <property name="iconSize">
           <size>
@@ -96,7 +96,7 @@
          </property>
          <widget class="QWidget" name="tab_5">
           <attribute name="icon">
-           <iconset resource="resources.qrc">
+           <iconset>
             <normaloff>:/plugins/Tilgjengelighet/icons/friluft.png</normaloff>:/plugins/Tilgjengelighet/icons/friluft.png</iconset>
           </attribute>
           <attribute name="title">
@@ -114,11 +114,11 @@
               </font>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>8</number>
              </property>
              <widget class="QWidget" name="tab_7">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/symboler/badeplass.png</normaloff>:/plugins/Tilgjengelighet/symboler/badeplass.png</iconset>
               </attribute>
               <attribute name="title">
@@ -135,8 +135,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>1425</width>
-                    <height>600</height>
+                    <width>1437</width>
+                    <height>675</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_16">
@@ -763,7 +763,7 @@
              </widget>
              <widget class="QWidget" name="tab_8">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/symboler/fiskeplass.png</normaloff>:/plugins/Tilgjengelighet/symboler/fiskeplass.png</iconset>
               </attribute>
               <attribute name="title">
@@ -782,8 +782,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>1286</width>
-                      <height>598</height>
+                      <width>1435</width>
+                      <height>673</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -2013,7 +2013,7 @@
              </widget>
              <widget class="QWidget" name="tab_9">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/icons/turvei.jpg</normaloff>:/plugins/Tilgjengelighet/icons/turvei.jpg</iconset>
               </attribute>
               <attribute name="title">
@@ -2030,8 +2030,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>1267</width>
-                    <height>919</height>
+                    <width>1420</width>
+                    <height>899</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_32">
@@ -3161,7 +3161,7 @@
              </widget>
              <widget class="QWidget" name="tab_10">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/icons/hc_parkering_2.png</normaloff>:/plugins/Tilgjengelighet/icons/hc_parkering_2.png</iconset>
               </attribute>
               <attribute name="title">
@@ -3180,8 +3180,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>1286</width>
-                      <height>598</height>
+                      <width>1435</width>
+                      <height>673</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_29">
@@ -3714,7 +3714,7 @@
              </widget>
              <widget class="QWidget" name="tab_11">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/symboler/parkering.png</normaloff>:/plugins/Tilgjengelighet/symboler/parkering.png</iconset>
               </attribute>
               <attribute name="title">
@@ -3733,8 +3733,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>1286</width>
-                      <height>598</height>
+                      <width>1435</width>
+                      <height>673</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_31">
@@ -4175,7 +4175,7 @@
              </widget>
              <widget class="QWidget" name="tab_16">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/icons/friluftsomrade.gif</normaloff>:/plugins/Tilgjengelighet/icons/friluftsomrade.gif</iconset>
               </attribute>
               <attribute name="title">
@@ -4194,8 +4194,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>1286</width>
-                      <height>598</height>
+                      <width>1435</width>
+                      <height>673</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_35">
@@ -4336,7 +4336,7 @@
              </widget>
              <widget class="QWidget" name="tab_12">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/symboler/gapahuk.png</normaloff>:/plugins/Tilgjengelighet/symboler/gapahuk.png</iconset>
               </attribute>
               <attribute name="title">
@@ -4353,8 +4353,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>1288</width>
-                    <height>600</height>
+                    <width>1437</width>
+                    <height>675</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_38">
@@ -5648,7 +5648,7 @@
              </widget>
              <widget class="QWidget" name="tab_13">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/symboler/balplass.png</normaloff>:/plugins/Tilgjengelighet/symboler/balplass.png</iconset>
               </attribute>
               <attribute name="title">
@@ -5665,8 +5665,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>1288</width>
-                    <height>600</height>
+                    <width>1437</width>
+                    <height>675</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_42">
@@ -6104,7 +6104,7 @@
              </widget>
              <widget class="QWidget" name="tab_18">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/icons/sittegruppe.png</normaloff>:/plugins/Tilgjengelighet/icons/sittegruppe.png</iconset>
               </attribute>
               <attribute name="title">
@@ -6121,8 +6121,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>1288</width>
-                    <height>600</height>
+                    <width>1437</width>
+                    <height>675</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_78">
@@ -6146,7 +6146,7 @@
                           </font>
                          </property>
                          <property name="text">
-                          <string>Grill-/Bålplass</string>
+                          <string>Sittegruppe</string>
                          </property>
                          <property name="margin">
                           <number>10</number>
@@ -6370,6 +6370,313 @@
                             </widget>
                            </item>
                           </layout>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_269">
+                         <item>
+                          <widget class="QLabel" name="label_139">
+                           <property name="minimumSize">
+                            <size>
+                             <width>285</width>
+                             <height>50</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>200</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Høyde Benk</string>
+                           </property>
+                           <property name="margin">
+                            <number>10</number>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <layout class="QHBoxLayout" name="horizontalLayout_270">
+                           <item>
+                            <widget class="QComboBox" name="comboBox_sittegruppe_hoyde_benk">
+                             <property name="enabled">
+                              <bool>true</bool>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>55</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>12</pointsize>
+                              </font>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLineEdit" name="lineEdit_sittegruppe_hoyde_benk">
+                             <property name="enabled">
+                              <bool>true</bool>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>45</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>12</pointsize>
+                              </font>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_272">
+                         <item>
+                          <widget class="QLabel" name="label_141">
+                           <property name="minimumSize">
+                            <size>
+                             <width>285</width>
+                             <height>50</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>200</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Armlene</string>
+                           </property>
+                           <property name="margin">
+                            <number>10</number>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QComboBox" name="comboBox_sittegruppe_armlene">
+                           <property name="enabled">
+                            <bool>true</bool>
+                           </property>
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>105</width>
+                             <height>0</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_273">
+                         <item>
+                          <widget class="QLabel" name="label_142">
+                           <property name="minimumSize">
+                            <size>
+                             <width>285</width>
+                             <height>50</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>200</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Ryggstøtte</string>
+                           </property>
+                           <property name="margin">
+                            <number>10</number>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QComboBox" name="comboBox_sittegruppe_ryggstotte">
+                           <property name="enabled">
+                            <bool>true</bool>
+                           </property>
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>105</width>
+                             <height>0</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_276">
+                         <item>
+                          <widget class="QLabel" name="label_145">
+                           <property name="minimumSize">
+                            <size>
+                             <width>285</width>
+                             <height>50</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>200</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Adkomst Kant</string>
+                           </property>
+                           <property name="margin">
+                            <number>10</number>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <layout class="QHBoxLayout" name="horizontalLayout_277">
+                           <item>
+                            <widget class="QComboBox" name="comboBox_sittegruppe_adkomst_kant">
+                             <property name="enabled">
+                              <bool>true</bool>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>55</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>12</pointsize>
+                              </font>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLineEdit" name="lineEdit_sittegruppe_adkomst_kant">
+                             <property name="enabled">
+                              <bool>true</bool>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>45</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>12</pointsize>
+                              </font>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_275">
+                         <item>
+                          <widget class="QLabel" name="label_144">
+                           <property name="minimumSize">
+                            <size>
+                             <width>285</width>
+                             <height>50</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>200</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Adkomst Tilgjengelig</string>
+                           </property>
+                           <property name="margin">
+                            <number>10</number>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QComboBox" name="comboBox_sittegruppe_adkomst_tilgjengleig">
+                           <property name="enabled">
+                            <bool>true</bool>
+                           </property>
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>105</width>
+                             <height>0</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                          </widget>
                          </item>
                         </layout>
                        </item>
@@ -6632,7 +6939,7 @@
              </widget>
              <widget class="QWidget" name="tab_15">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/symboler/toalett.png</normaloff>:/plugins/Tilgjengelighet/symboler/toalett.png</iconset>
               </attribute>
               <attribute name="title">
@@ -6649,8 +6956,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>1269</width>
-                    <height>624</height>
+                    <width>1437</width>
+                    <height>675</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_50">
@@ -8145,7 +8452,7 @@
              </widget>
              <widget class="QWidget" name="tab_17">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/icons/skiloype.jpg</normaloff>:/plugins/Tilgjengelighet/icons/skiloype.jpg</iconset>
               </attribute>
               <attribute name="title">
@@ -8162,8 +8469,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>1288</width>
-                    <height>600</height>
+                    <width>1437</width>
+                    <height>675</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_57">
@@ -8867,7 +9174,7 @@
          </widget>
          <widget class="QWidget" name="tab_6">
           <attribute name="icon">
-           <iconset resource="resources.qrc">
+           <iconset>
             <normaloff>:/plugins/Tilgjengelighet/icons/tettsted.png</normaloff>:/plugins/Tilgjengelighet/icons/tettsted.png</iconset>
           </attribute>
           <attribute name="title">
@@ -8888,11 +9195,11 @@
               <enum>QTabWidget::Rounded</enum>
              </property>
              <property name="currentIndex">
-              <number>3</number>
+              <number>4</number>
              </property>
              <widget class="QWidget" name="tab">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/icons/vei.jpg</normaloff>:/plugins/Tilgjengelighet/icons/vei.jpg</iconset>
               </attribute>
               <attribute name="title">
@@ -8911,8 +9218,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>1265</width>
-                      <height>860</height>
+                      <width>1418</width>
+                      <height>841</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -10006,7 +10313,7 @@
              </widget>
              <widget class="QWidget" name="tab_2">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/icons/inngang.jpg</normaloff>:/plugins/Tilgjengelighet/icons/inngang.jpg</iconset>
               </attribute>
               <attribute name="title">
@@ -10025,8 +10332,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>1269</width>
-                      <height>683</height>
+                      <width>1435</width>
+                      <height>673</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -11452,7 +11759,7 @@
              </widget>
              <widget class="QWidget" name="tab_3">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/icons/hc_parkering.png</normaloff>:/plugins/Tilgjengelighet/icons/hc_parkering.png</iconset>
               </attribute>
               <attribute name="title">
@@ -11471,8 +11778,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>1286</width>
-                      <height>598</height>
+                      <width>838</width>
+                      <height>493</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -12146,7 +12453,7 @@
              </widget>
              <widget class="QWidget" name="tab_4">
               <attribute name="icon">
-               <iconset resource="resources.qrc">
+               <iconset>
                 <normaloff>:/plugins/Tilgjengelighet/symboler/parkering.png</normaloff>:/plugins/Tilgjengelighet/symboler/parkering.png</iconset>
               </attribute>
               <attribute name="title">
@@ -12165,8 +12472,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>1286</width>
-                      <height>598</height>
+                      <width>1435</width>
+                      <height>673</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -12684,6 +12991,837 @@
                   </widget>
                  </item>
                 </layout>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tab_14">
+              <attribute name="title">
+               <string>Sittegruppe</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_46">
+               <item>
+                <widget class="QScrollArea" name="scrollArea_18">
+                 <property name="widgetResizable">
+                  <bool>true</bool>
+                 </property>
+                 <widget class="QWidget" name="scrollAreaWidgetContents_19">
+                  <property name="geometry">
+                   <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>1437</width>
+                    <height>675</height>
+                   </rect>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_81">
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_137">
+                     <item>
+                      <layout class="QVBoxLayout" name="verticalLayout_82">
+                       <item>
+                        <widget class="QLabel" name="label_111">
+                         <property name="minimumSize">
+                          <size>
+                           <width>220</width>
+                           <height>50</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>12</pointsize>
+                           <weight>75</weight>
+                           <bold>true</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>Sittegruppe</string>
+                         </property>
+                         <property name="margin">
+                          <number>10</number>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="Line" name="line_52">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_274">
+                         <item>
+                          <widget class="QLabel" name="label_143">
+                           <property name="minimumSize">
+                            <size>
+                             <width>285</width>
+                             <height>50</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>200</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Helning</string>
+                           </property>
+                           <property name="margin">
+                            <number>10</number>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <layout class="QHBoxLayout" name="horizontalLayout_278">
+                           <item>
+                            <widget class="QComboBox" name="comboBox_sittegruppe_helning_tettsted">
+                             <property name="enabled">
+                              <bool>true</bool>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>55</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>12</pointsize>
+                              </font>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLineEdit" name="lineEdit_sittegruppe_helning_tettsted">
+                             <property name="enabled">
+                              <bool>true</bool>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>45</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>12</pointsize>
+                              </font>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_279">
+                         <item>
+                          <widget class="QLabel" name="label_146">
+                           <property name="minimumSize">
+                            <size>
+                             <width>285</width>
+                             <height>50</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>200</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Høyde Bord</string>
+                           </property>
+                           <property name="margin">
+                            <number>10</number>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <layout class="QHBoxLayout" name="horizontalLayout_280">
+                           <item>
+                            <widget class="QComboBox" name="comboBox_sittegruppe_hoyde_tettsted">
+                             <property name="enabled">
+                              <bool>true</bool>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>55</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>12</pointsize>
+                              </font>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLineEdit" name="lineEdit_hoyde_sittegruppe_tettsted">
+                             <property name="enabled">
+                              <bool>true</bool>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>45</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>12</pointsize>
+                              </font>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_281">
+                         <item>
+                          <widget class="QLabel" name="label_147">
+                           <property name="minimumSize">
+                            <size>
+                             <width>285</width>
+                             <height>50</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>200</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Utsikt Bord</string>
+                           </property>
+                           <property name="margin">
+                            <number>10</number>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <layout class="QHBoxLayout" name="horizontalLayout_282">
+                           <item>
+                            <widget class="QComboBox" name="comboBox_sittegruppe_utsikt_tettsted">
+                             <property name="enabled">
+                              <bool>true</bool>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>55</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>12</pointsize>
+                              </font>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLineEdit" name="lineEdit_sittegruppe_utsikt_tettsted">
+                             <property name="enabled">
+                              <bool>true</bool>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>45</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>12</pointsize>
+                              </font>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_283">
+                         <item>
+                          <widget class="QLabel" name="label_148">
+                           <property name="minimumSize">
+                            <size>
+                             <width>285</width>
+                             <height>50</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>200</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Høyde Benk</string>
+                           </property>
+                           <property name="margin">
+                            <number>10</number>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <layout class="QHBoxLayout" name="horizontalLayout_284">
+                           <item>
+                            <widget class="QComboBox" name="comboBox_sittegruppe_hoyde_benk_tettsted">
+                             <property name="enabled">
+                              <bool>true</bool>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>55</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>12</pointsize>
+                              </font>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLineEdit" name="lineEdit_sittegruppe_hoyde_benk_tettsted">
+                             <property name="enabled">
+                              <bool>true</bool>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>45</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>12</pointsize>
+                              </font>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_285">
+                         <item>
+                          <widget class="QLabel" name="label_149">
+                           <property name="minimumSize">
+                            <size>
+                             <width>285</width>
+                             <height>50</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>200</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Armlene</string>
+                           </property>
+                           <property name="margin">
+                            <number>10</number>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QComboBox" name="comboBox_sittegruppe_armlene_tettsted">
+                           <property name="enabled">
+                            <bool>true</bool>
+                           </property>
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>105</width>
+                             <height>0</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_286">
+                         <item>
+                          <widget class="QLabel" name="label_150">
+                           <property name="minimumSize">
+                            <size>
+                             <width>285</width>
+                             <height>50</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>200</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Ryggstøtte</string>
+                           </property>
+                           <property name="margin">
+                            <number>10</number>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QComboBox" name="comboBox_sittegruppe_ryggstotte_tettsted">
+                           <property name="enabled">
+                            <bool>true</bool>
+                           </property>
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>105</width>
+                             <height>0</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_287">
+                         <item>
+                          <widget class="QLabel" name="label_151">
+                           <property name="minimumSize">
+                            <size>
+                             <width>285</width>
+                             <height>50</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>200</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Adkomst Kant</string>
+                           </property>
+                           <property name="margin">
+                            <number>10</number>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <layout class="QHBoxLayout" name="horizontalLayout_288">
+                           <item>
+                            <widget class="QComboBox" name="comboBox_sittegruppe_adkomst_kant_tettsted">
+                             <property name="enabled">
+                              <bool>true</bool>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>55</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>12</pointsize>
+                              </font>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLineEdit" name="lineEdit_sittegruppe_adkomst_kant_tettsted">
+                             <property name="enabled">
+                              <bool>true</bool>
+                             </property>
+                             <property name="minimumSize">
+                              <size>
+                               <width>45</width>
+                               <height>0</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>12</pointsize>
+                              </font>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_289">
+                         <item>
+                          <widget class="QLabel" name="label_152">
+                           <property name="minimumSize">
+                            <size>
+                             <width>285</width>
+                             <height>50</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>200</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Adkomst Tilgjengelig</string>
+                           </property>
+                           <property name="margin">
+                            <number>10</number>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QComboBox" name="comboBox_sittegruppe_adkomst_tilgjengleig_tettsted">
+                           <property name="enabled">
+                            <bool>true</bool>
+                           </property>
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>105</width>
+                             <height>0</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_290">
+                         <item>
+                          <widget class="QLabel" name="label_153">
+                           <property name="minimumSize">
+                            <size>
+                             <width>285</width>
+                             <height>50</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>200</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Dekke</string>
+                           </property>
+                           <property name="margin">
+                            <number>10</number>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QComboBox" name="comboBox_sittegruppe_dekke_tettsted">
+                           <property name="enabled">
+                            <bool>true</bool>
+                           </property>
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>105</width>
+                             <height>0</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_291">
+                         <item>
+                          <widget class="QLabel" name="label_sittegruppe_dekkeTilstand_tettsted">
+                           <property name="minimumSize">
+                            <size>
+                             <width>285</width>
+                             <height>50</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>200</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Dekketilstand</string>
+                           </property>
+                           <property name="margin">
+                            <number>10</number>
+                           </property>
+                           <property name="indent">
+                            <number>30</number>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QComboBox" name="comboBox_sittegruppe_dekkeTilstand_tettsted">
+                           <property name="enabled">
+                            <bool>true</bool>
+                           </property>
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>105</width>
+                             <height>0</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <spacer name="verticalSpacer_34">
+                         <property name="orientation">
+                          <enum>Qt::Vertical</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>20</width>
+                           <height>40</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <widget class="Line" name="line_53">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QVBoxLayout" name="verticalLayout_83">
+                       <item>
+                        <widget class="QLabel" name="label_154">
+                         <property name="minimumSize">
+                          <size>
+                           <width>220</width>
+                           <height>50</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>12</pointsize>
+                           <weight>75</weight>
+                           <bold>true</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>Tilgjengelighetsvurdering</string>
+                         </property>
+                         <property name="margin">
+                          <number>10</number>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="Line" name="line_54">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_292">
+                         <item>
+                          <widget class="QLabel" name="label_155">
+                           <property name="minimumSize">
+                            <size>
+                             <width>285</width>
+                             <height>50</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>200</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>Manuell Rullestol</string>
+                           </property>
+                           <property name="margin">
+                            <number>10</number>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QComboBox" name="comboBox_sittegruppe_manuell_rullestol_tettsted">
+                           <property name="enabled">
+                            <bool>true</bool>
+                           </property>
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="minimumSize">
+                            <size>
+                             <width>105</width>
+                             <height>0</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>12</pointsize>
+                            </font>
+                           </property>
+                           <property name="layoutDirection">
+                            <enum>Qt::LeftToRight</enum>
+                           </property>
+                           <property name="autoFillBackground">
+                            <bool>false</bool>
+                           </property>
+                           <property name="duplicatesEnabled">
+                            <bool>false</bool>
+                           </property>
+                           <property name="frame">
+                            <bool>true</bool>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <spacer name="verticalSpacer_38">
+                         <property name="orientation">
+                          <enum>Qt::Vertical</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>20</width>
+                           <height>40</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </widget>
+                </widget>
                </item>
               </layout>
              </widget>
