@@ -419,6 +419,8 @@ class Tilgjengelighet:
         self.ank_stigning = AttributeForm("stigningAdkomstvei", self.dlg.comboBox_ank_stigning, self.dlg.lineEdit_ank_stigning)
         self.byggningstype = AttributeForm("byggningsfunksjon", self.dlg.comboBox_byggningstype)
         self.rampe = AttributeForm("rampe", self.dlg.comboBox_rampe)
+        self.trapp_inngang = AttributeForm("trapp", self.dlg.comboBox_ingang_trapp)
+        #self.trapp_kontrast_inngang = AttributeForm("trapp", self.dlg.comboBox_ingang_trapp)
         self.dortype = AttributeForm(u'dørtype', self.dlg.comboBox_dortype)
         self.dorapner = AttributeForm(u'døråpner', self.dlg.comboBox_dorapner)
         self.man_hoyde = AttributeForm(u'manøverknappHøyde', self.dlg.comboBox_man_hoyde, self.dlg.lineEdit_man_hoyde)
@@ -435,7 +437,7 @@ class Tilgjengelighet:
         self.elektriskRullestol = AttributeForm("tilgjengvurderingElRull", self.dlg.comboBox_el_rullestol)
         self.synshemmet = AttributeForm("tilgjengvurderingSyn", self.dlg.comboBox_syn)
 
-        self.attributes_inngang = [self.avstandHC, self.ank_stigning, self.byggningstype, self.rampe, self.dortype, self.dorapner, self.man_hoyde, self.dorbredde, self.terskel, self.kontrast, self.rampe_stigning, self.rampe_bredde, self.handlist, self.handlist1, self.handlist2, self.rmp_tilgjengelig, self.manuellRullestol, self.elektriskRullestol, self.synshemmet]
+        self.attributes_inngang = [self.avstandHC, self.ank_stigning, self.byggningstype, self.rampe, self.trapp_inngang, self.dortype, self.dorapner, self.man_hoyde, self.dorbredde, self.terskel, self.kontrast, self.rampe_stigning, self.rampe_bredde, self.handlist, self.handlist1, self.handlist2, self.rmp_tilgjengelig, self.manuellRullestol, self.elektriskRullestol, self.synshemmet]
         self.attributes_inngang_gui = [self.byggningstype, self.dortype, self.dorapner, self.kontrast, self.handlist, self.rmp_tilgjengelig, self.manuellRullestol, self.elektriskRullestol, self.synshemmet]
         self.attributes_inngang_mer_mindre = [self.avstandHC, self.ank_stigning, self.man_hoyde, self.dorbredde, self.terskel, self.rampe_stigning, self.rampe_bredde, self.handlist1, self.handlist2]
         self.attributes_rampe = [self.rampe_stigning, self.rampe_bredde, self.handlist, self.handlist1, self.handlist2, self.rmp_tilgjengelig]
@@ -446,6 +448,7 @@ class Tilgjengelighet:
             self.fill_combobox(attributt.getComboBox(), self.path_more_less)
 
         self.fill_combobox(self.rampe.getComboBox(), self.path_boolean)
+        self.fill_combobox(self.trapp_inngang.getComboBox(), self.path_boolean)
         self.fill_combobox(self.byggningstype.getComboBox(), self.path_byggfunksjon)
         self.fill_combobox(self.dortype.getComboBox(), self.path_dortype)
         self.fill_combobox(self.dorapner.getComboBox(), self.path_dorapner)
@@ -469,6 +472,8 @@ class Tilgjengelighet:
         gatetype = AttributeForm("gatetype", self.dlg.comboBox_gatetype)
         nedsenkning1 = AttributeForm("nedsenk1", self.dlg.comboBox_nedsenkning1, self.dlg.lineEdit_nedsenkning1, label=self.dlg.label_nedsenkning1)
         nedsenkning2 = AttributeForm("nedsenk2", self.dlg.comboBox_nedsenkning2, self.dlg.lineEdit_nedsenkning2, label=self.dlg.label_nedsenkning2)
+        trapp_vei = AttributeForm("trapp", self.dlg.comboBox_tettsted_vei_trapp)
+        #self.trapp_kontrast_inngang = AttributeForm("trapp", self.dlg.comboBox_ingang_trapp)
         dekke_vei_tettsted = AttributeForm("dekke", self.dlg.comboBox_dekke_vei_tettsted)
         dekkeTilstand_vei_tettsted = AttributeForm("dekkeTilstand", self.dlg.comboBox_dekkeTilstand_vei_tettsted)
         bredde = AttributeForm("bredde", self.dlg.comboBox_bredde, self.dlg.lineEdit_bredde)
@@ -484,7 +489,7 @@ class Tilgjengelighet:
         electrisk_rullestol_vei = AttributeForm("tilgjengvurderingElRull", self.dlg.comboBox_electrisk_rullestol_vei)
         syn_vei = AttributeForm("tilgjengvurderingSyn", self.dlg.comboBox_syn_vei)
 
-        self.attributes_vei = [gatetype, nedsenkning1, nedsenkning2, dekke_vei_tettsted, dekkeTilstand_vei_tettsted, bredde, stigning, tverfall, ledelinje, ledelinjeKontrast, manuell_rullestol_vei, electrisk_rullestol_vei, syn_vei, lyssignal, lydsignal, moteplass]
+        self.attributes_vei = [gatetype, nedsenkning1, nedsenkning2, trapp_vei, dekke_vei_tettsted, dekkeTilstand_vei_tettsted, bredde, stigning, tverfall, ledelinje, ledelinjeKontrast, manuell_rullestol_vei, electrisk_rullestol_vei, syn_vei, lyssignal, lydsignal, moteplass]
         attributes_vei_gui = [gatetype, dekke_vei_tettsted, dekkeTilstand_vei_tettsted, ledelinje, ledelinjeKontrast, manuell_rullestol_vei, electrisk_rullestol_vei, syn_vei]
         attributes_vei_mer_mindre = [nedsenkning1,nedsenkning2,bredde,stigning,tverfall]
         attributes_nedsenkning = [nedsenkning1, nedsenkning2]
@@ -501,6 +506,7 @@ class Tilgjengelighet:
         self.fill_combobox(lyssignal.getComboBox(), self.path_boolean)
         self.fill_combobox(lydsignal.getComboBox(), self.path_boolean)
         self.fill_combobox(moteplass.getComboBox(), self.path_boolean)
+        self.fill_combobox(trapp_vei.getComboBox(), self.path_boolean)
         
         self.fill_combobox(manuell_rullestol_vei.getComboBox(), self.path_tilgjenglighetsvurdering)
         self.fill_combobox(electrisk_rullestol_vei.getComboBox(), self.path_tilgjenglighetsvurdering)
@@ -942,6 +948,8 @@ class Tilgjengelighet:
 
         byggtype = AttributeForm("byggtype", self.dlg.comboBox_toalett_byggtype)
         rampe = AttributeForm("rampe", self.dlg.comboBox_toalett_rampe)
+        trapp_toalett = AttributeForm("trapp", self.dlg.comboBox_toalett_trapp)
+        #self.trapp_kontrast_inngang = AttributeForm("trapp", self.dlg.comboBox_ingang_trapp)
         dortype = AttributeForm(u'dørtype', self.dlg.comboBox_toalett_dortype)
         dorapner = AttributeForm(u'døråpner', self.dlg.comboBox_toalett_dorapner)
         dorbredde = AttributeForm("breddeInngang", self.dlg.comboBox_toalett_bredde, self.dlg.lineEdit_toalett_bredde)
@@ -964,7 +972,7 @@ class Tilgjengelighet:
         elektriskRullestol = AttributeForm("tilgjengvurderingElRullestol", self.dlg.comboBox_toalett_el_rullestol)
         synshemmet = AttributeForm("tilgjengvurderingSyn", self.dlg.comboBox_toalett_syn)
 
-        self.attributes_toalett = [byggtype, rampe, dortype, dorapner, dorbredde, terskel, kontrast, belysning, snusirkel, rampe_stigning, rampe_bredde, handlist, handlist1, handlist2, rmp_tilgjengelig, omkledning, sesrvant, wc, manuellRullestol, elektriskRullestol, synshemmet]
+        self.attributes_toalett = [byggtype, rampe, trapp_toalett, dortype, dorapner, dorbredde, terskel, kontrast, belysning, snusirkel, rampe_stigning, rampe_bredde, handlist, handlist1, handlist2, rmp_tilgjengelig, omkledning, sesrvant, wc, manuellRullestol, elektriskRullestol, synshemmet]
         attributes_mer_mindre = [dorbredde, terskel, snusirkel, rampe_stigning, rampe_bredde, handlist1, handlist2]
         attributes_rampe = [rampe_stigning, rampe_bredde, handlist, handlist1, handlist2, rmp_tilgjengelig]
 
@@ -978,6 +986,7 @@ class Tilgjengelighet:
         self.fill_combobox(dorapner.getComboBox(), self.path_dorapner)
         self.fill_combobox(kontrast.getComboBox(), self.path_kontrast)
         self.fill_combobox(belysning.getComboBox(), self.path_boolean)
+        self.fill_combobox(trapp_toalett.getComboBox(), self.path_boolean)
         
         self.fill_combobox(handlist.getComboBox(), self.path_handlist)
         self.fill_combobox(rmp_tilgjengelig.getComboBox(), self.path_tilgjenglighetsvurdering)
@@ -1478,8 +1487,8 @@ class Tilgjengelighet:
             #self.show_tabell()
             #self.dlg.close()
 
-
-        print(u"NewFilterEnd")
+        print(u"URL: {0}\n FE: {1}".format(url, filter_encoding))
+        print(u"FilterEnd")
 
 
     ############################## Selection and info of Objects ################################################
