@@ -135,8 +135,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>1377</width>
-                    <height>927</height>
+                    <width>838</width>
+                    <height>435</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_16">
@@ -782,8 +782,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>1375</width>
-                      <height>925</height>
+                      <width>1256</width>
+                      <height>551</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_24">
@@ -2030,8 +2030,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>1377</width>
-                    <height>927</height>
+                    <width>838</width>
+                    <height>899</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_32">
@@ -3180,8 +3180,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>1375</width>
-                      <height>925</height>
+                      <width>838</width>
+                      <height>327</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_29">
@@ -3733,8 +3733,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>1375</width>
-                      <height>925</height>
+                      <width>838</width>
+                      <height>319</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_31">
@@ -4194,8 +4194,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>1375</width>
-                      <height>925</height>
+                      <width>379</width>
+                      <height>201</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_35">
@@ -4353,8 +4353,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>1377</width>
-                    <height>927</height>
+                    <width>1256</width>
+                    <height>551</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_38">
@@ -5665,8 +5665,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>1377</width>
-                    <height>927</height>
+                    <width>838</width>
+                    <height>319</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_42">
@@ -6121,8 +6121,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>1377</width>
-                    <height>927</height>
+                    <width>838</width>
+                    <height>667</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_78">
@@ -6956,8 +6956,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>1377</width>
-                    <height>927</height>
+                    <width>1343</width>
+                    <height>745</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_50">
@@ -8591,8 +8591,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>1377</width>
-                    <height>927</height>
+                    <width>838</width>
+                    <height>493</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_57">
@@ -9340,7 +9340,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>1358</width>
+                      <width>838</width>
                       <height>957</height>
                      </rect>
                     </property>
@@ -11824,6 +11824,77 @@
                           </layout>
                          </item>
                          <item>
+                          <layout class="QHBoxLayout" name="horizontalLayout_271">
+                           <item>
+                            <widget class="QLabel" name="label_rampe_lengde_inngang">
+                             <property name="minimumSize">
+                              <size>
+                               <width>285</width>
+                               <height>50</height>
+                              </size>
+                             </property>
+                             <property name="maximumSize">
+                              <size>
+                               <width>200</width>
+                               <height>16777215</height>
+                              </size>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>12</pointsize>
+                              </font>
+                             </property>
+                             <property name="text">
+                              <string>Rampe Lengde</string>
+                             </property>
+                             <property name="margin">
+                              <number>10</number>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_3">
+                             <item>
+                              <widget class="QComboBox" name="comboBox_rampe_lengde_inngang">
+                               <property name="enabled">
+                                <bool>true</bool>
+                               </property>
+                               <property name="minimumSize">
+                                <size>
+                                 <width>55</width>
+                                 <height>0</height>
+                                </size>
+                               </property>
+                               <property name="font">
+                                <font>
+                                 <pointsize>12</pointsize>
+                                </font>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QLineEdit" name="lineEdit_rampe_lengde_inngang">
+                               <property name="enabled">
+                                <bool>true</bool>
+                               </property>
+                               <property name="minimumSize">
+                                <size>
+                                 <width>45</width>
+                                 <height>0</height>
+                                </size>
+                               </property>
+                               <property name="font">
+                                <font>
+                                 <pointsize>12</pointsize>
+                                </font>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </item>
+                          </layout>
+                         </item>
+                         <item>
                           <layout class="QHBoxLayout" name="horizontalLayout_124">
                            <item>
                             <widget class="QLabel" name="label_rmp_tilgjengelig">
@@ -12144,8 +12215,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>1332</width>
-                      <height>659</height>
+                      <width>838</width>
+                      <height>493</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -12838,8 +12909,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>1332</width>
-                      <height>659</height>
+                      <width>838</width>
+                      <height>377</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -13375,7 +13446,7 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>1317</width>
+                    <width>838</width>
                     <height>667</height>
                    </rect>
                   </property>

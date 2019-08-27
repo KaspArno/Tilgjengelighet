@@ -437,10 +437,12 @@ class Tilgjengelighet:
         self.elektriskRullestol = AttributeForm("tilgjengvurderingElRull", self.dlg.comboBox_el_rullestol)
         self.synshemmet = AttributeForm("tilgjengvurderingSyn", self.dlg.comboBox_syn)
 
-        self.attributes_inngang = [self.avstandHC, self.ank_stigning, self.byggningstype, self.rampe, self.trapp_inngang, self.dortype, self.dorapner, self.man_hoyde, self.dorbredde, self.terskel, self.kontrast, self.rampe_stigning, self.rampe_bredde, self.handlist, self.handlist1, self.handlist2, self.rmp_tilgjengelig, self.manuellRullestol, self.elektriskRullestol, self.synshemmet]
+        rampelengde = AttributeForm("rampeLengde", self.dlg.comboBox_rampe_lengde_inngang, self.dlg.lineEdit_rampe_lengde_inngang, label=self.dlg.label_rampe_lengde_inngang)
+
+        self.attributes_inngang = [self.avstandHC, self.ank_stigning, self.byggningstype, self.rampe, self.trapp_inngang, self.dortype, self.dorapner, self.man_hoyde, self.dorbredde, self.terskel, self.kontrast, self.rampe_stigning, self.rampe_bredde, self.handlist, self.handlist1, self.handlist2, self.rmp_tilgjengelig, self.manuellRullestol, self.elektriskRullestol, self.synshemmet, rampelengde]
         self.attributes_inngang_gui = [self.byggningstype, self.dortype, self.dorapner, self.kontrast, self.handlist, self.rmp_tilgjengelig, self.manuellRullestol, self.elektriskRullestol, self.synshemmet]
-        self.attributes_inngang_mer_mindre = [self.avstandHC, self.ank_stigning, self.man_hoyde, self.dorbredde, self.terskel, self.rampe_stigning, self.rampe_bredde, self.handlist1, self.handlist2]
-        self.attributes_rampe = [self.rampe_stigning, self.rampe_bredde, self.handlist, self.handlist1, self.handlist2, self.rmp_tilgjengelig]
+        self.attributes_inngang_mer_mindre = [self.avstandHC, self.ank_stigning, self.man_hoyde, self.dorbredde, self.terskel, self.rampe_stigning, self.rampe_bredde, self.handlist1, self.handlist2, rampelengde]
+        self.attributes_rampe = [self.rampe_stigning, self.rampe_bredde, self.handlist, self.handlist1, self.handlist2, rampelengde, self.rmp_tilgjengelig]
 
         #fill combobox
         path = ":/plugins/Tilgjengelighet/" #Mey not need this
