@@ -1156,6 +1156,7 @@ class Tilgjengelighet:
         """
 
         for i in range(0, len(attributes)):
+            print("fill_infoWidget loop 1: {}".format(i))
             self.infoWidget.gridLayout.itemAtPosition(i, 0).widget().setText(attributes[i].getAttribute()) #Sets attribute name
             self.infoWidget.gridLayout.itemAtPosition(i, 1).widget().setText("-") #Set sign for no value
 
