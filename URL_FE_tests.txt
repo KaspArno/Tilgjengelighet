@@ -1,6 +1,14 @@
 http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet_tettsted?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::3857&typeNames=app:TettstedInngangBygg&
 
+http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet_tettsted?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::3857&typeNames=app:TettstedVei&
+
+http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet_tettsted?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::3857&typeNames=app:TettstedHCparkering&
+
+http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet_friluft?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::3857&typeNames=app:FriluftToalett&
+
 http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet_tettsted?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::3857&typeNames=app:TettstedInngangBygg&resultType=Hits&
+
+http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet_friluft?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::3857&typeNames=app:FriluftBaderampe&
 
 FILTER=<fes:Filter><fes:PropertyIsEqualTo><fes:ValueReference>app:kommune</fes:ValueReference><fes:Literal>0301</fes:Literal></fes:PropertyIsEqualTo></fes:Filter>
 
@@ -73,3 +81,19 @@ Plane text -> URL encoded
 space : %20
 
 " : %22
+
+
+
+
+http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet_tettsted?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::3857&typeNames=app:TettstedInngangBygg&resultType=Hits&FILTER=%3Cfes:Filter%20xmlns:app=%22http://skjema.geonorge.no/SOSI/produktspesifikasjon/TilgjengelighetTettsted/1.2%22%3E%3Cfes:PropertyIsGreaterThan%3E%3Cfes:ValueReference%3Eapp:rampe/app:Rampe/app:rampeLengde%3C/fes:ValueReference%3E%3Cfes:Literal%3E800%3C/fes:Literal%3E%3C/fes:PropertyIsGreaterThan%3E%3C/fes:Filter%3E
+
+http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet_tettsted?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::3857&typeNames=app:TettstedInngangBygg&resultType=Hits&FILTER=%3Cfes:Filter%20xmlns:app=%22http://skjema.geonorge.no/SOSI/produktspesifikasjon/TilgjengelighetTettsted/1.2%22%3E%3Cfes:PropertyIsGreaterThan%3E%3Cfes:ValueReference%3Eapp:rampe/app:Rampe/app:rampeLengde%3C/fes:ValueReference%3E%3Cfes:Literal%3E800%3C/fes:Literal%3E%3C/fes:PropertyIsGreaterThan%3E%3C/fes:Filter%3E
+
+
+
+QGIS:
+http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet_tettsted?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::3857&typeNames=app:TettstedInngangBygg&FILTER=%3Cfes:Filter%20xmlns:app=%22http://skjema.geonorge.no/SOSI/produktspesifikasjon/TilgjengelighetTettsted/1.2%22%3E%3CAnd%3E%3Cfes:PropertyIsEqualTo%3E%3Cfes:ValueReference%3Eapp:rampe%3C/fes:ValueReference%3E%3Cfes:Literal%3EJa%3C/fes:Literal%3E%3C/fes:PropertyIsEqualTo%3E%3Cfes:PropertyIsGreaterThan%3E%3Cfes:ValueReference%3E'app:rampe/app:Rampe/app:rampeLengde'%3C/fes:ValueReference%3E%3Cfes:Literal%3E800%3C/fes:Literal%3E%3C/fes:PropertyIsGreaterThan%3E%3C/And%3E%3C/fes:Filter%3E
+
+
+Frank URL encodet
+http://wfs.geonorge.no/skwms1/wfs.tilgjengelighet_tettsted?service=WFS&request=GetFeature&version=2.0.0&srsName=urn:ogc:def:crs:EPSG::3857&typeNames=app:TettstedInngangBygg&FILTER=%3Cfes:Filter%20xmlns:app=%22http://skjema.geonorge.no/SOSI/produktspesifikasjon/TilgjengelighetTettsted/1.2%22%3E%3Cfes:PropertyIsGreaterThan%3E%3Cfes:ValueReference%3Eapp:rampe/app:Rampe/app:rampeLengde%3C/fes:ValueReference%3E%3Cfes:Literal%3E800%3C/fes:Literal%3E%3C/fes:PropertyIsGreaterThan%3E%3C/fes:Filter%3E
