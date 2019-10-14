@@ -4,7 +4,7 @@ class AttributeForm(object):
     """Saves attributes and assosiated gui widgets"""
 
 
-    def __init__(self, attribute, comboBox=None, lineEdit=None, comboBoxText=None, label=None):
+    def __init__(self, attribute, location, comboBox=None, lineEdit=None, comboBoxText=None, label=None):
         """Constructor
 
         :param attribute: The name of the attribute in layer
@@ -21,6 +21,7 @@ class AttributeForm(object):
         """
 
         self.attribute = attribute
+        self.location= location
         self.comboBox = comboBox
         self.lineEdit = lineEdit
         self.label = label
@@ -52,6 +53,15 @@ class AttributeForm(object):
         """
 
         return self.attribute
+
+    def getLocation(self):
+        """returns the location of the object
+
+        :returns: location of attribute
+        :rtype: str
+        """
+
+        return self.location
 
     def value(self):
         """returns the value constraint, if alternative combobox is set, return that value, if lineedit, ruturn value freom line edit, else return from combobox
